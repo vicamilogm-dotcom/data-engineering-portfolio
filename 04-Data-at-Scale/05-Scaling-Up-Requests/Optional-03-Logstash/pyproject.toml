@@ -21,6 +21,9 @@ isort = "^5.10.1"
 PyYAML = "^6.0"
 dockerfile = "^3.2.0"
 
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.3"
+
 [tool.black]
 line-length = 160
 target-version = ["py38"]

@@ -18,6 +18,9 @@ great-expectations = "^0.17.19"
 jupyter = "^1.0.0"
 
 
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.3"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

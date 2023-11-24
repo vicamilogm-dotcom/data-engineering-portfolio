@@ -23,6 +23,7 @@ dockerfile = "^3.2.0"
 
 [tool.poetry.group.dev.dependencies]
 requests = "^2.31.0"
+pytest = "^7.4.3"
 
 [tool.black]
 line-length = 160
