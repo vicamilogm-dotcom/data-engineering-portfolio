@@ -128,7 +128,7 @@ As you run jobs and update your code in folder `dags`, this database will gets u
 - request a generator of "Breaking Bad" 🎥 quotes
 - save the received quote (only if this quote has not been saved yet)
 
-For the quotes generator, you will use this [api](https://breakingbadquotes.xyz/).
+For the quotes generator, you will use this [API](https://breaking-bad.lewagon.com/v1/quotes) - This is le wagon's mirror of this [educational API](https://breakingbadquotes.xyz/) to keep things stable.
 
 For the saving system, you will use a CSV file. [This kind of files could be considered as databases in development environments](https://en.wikipedia.org/wiki/Comma-separated_values).
 

@@ -48,7 +48,7 @@ You'll create your first models in staging, which are refined versions of the `s
   - Add a column called `row_created_at_local` which logs the `CURRENT_DATETIME` at which the row is created in the table, in the `America/Los_Angeles` timezone
   - Filter the records
     - get rid of the records that are "dead"
-    - only keep the data that was `created_at_local` in the last 90 days of data
+    - only keep the data that was `created_at_local` in the last 500 days of data
 
   <details>
     <summary markdown='span'>💡 Hint</summary>
@@ -60,7 +60,7 @@ You'll create your first models in staging, which are refined versions of the `s
   - `test_hackernews_full_structure`, and
   - `test_hackernews_full_content`
 
-## 4️⃣ Configure `stg_hackernews_comment.sql` 
+## 4️⃣ Configure `stg_hackernews_comment.sql`
 
 - Under the `models/staging/` folder, create a file called `stg_hackernews_comment.sql`.
 - Make this model
@@ -93,7 +93,6 @@ You'll create your first models in staging, which are refined versions of the `s
   - filters only news that are a `story`
 - Column renaming : you can rename the columns
   - `id` becomes `story_id`
-  - `parent_id` becomes `story_parent_id`
   - and keep only a subset of columns so that your final list of fields is :
 
 - Hence your final list of columns should be :

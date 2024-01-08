@@ -13,7 +13,6 @@ lewagonde = { path = "../../../common/lewagonde/", develop = true }
 
 [tool.poetry.dev-dependencies]
 ipython = "^8.8.0"
-pytest = "^7.2.0"
 ipdb = "^0.13.11"
 
 [tool.poetry.group.dev.dependencies]

@@ -91,7 +91,7 @@ You need four tasks:
 ### c) `transform` task_id
 - as a [PythonOperator](https://airflow.apache.org/docs/apache-airflow/2.2.0/howto/operator/python.html)
 - that should trigger the `transform` function with the proper arguments (don't fill the python function yet)
-- The transformed joke should be saved to the silver folder under the name joke_{execution_date}.json (for instance: */app/airflow/data/silver/joke_20220521.json*).
+- The transformed joke should be saved to the silver folder under the name silver/swedified_joke_{execution-date}.json (for instance: */app/airflow/data/silver/swedified_joke_20220521.json*).
 
 
 ### d) `load` task_id

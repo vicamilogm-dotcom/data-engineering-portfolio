@@ -69,5 +69,5 @@ def test_hackernews_full_content():
 
     if len(df) >= 1:
         assert (
-            df["num_days"][0] <= 90
-        ), "You loaded more than 90 days of data in stg_hackernews_full"
+            df["num_days"][0] <= 500
+        ), "You loaded more than 500 days of data in stg_hackernews_full"

@@ -1,7 +1,7 @@
 ## High level goal
 
 There are 3 main issues in the previous setups we've done, that are not optimal
-1. When picking data from the last 90 days of the Hackernews dataset, we've harcoded in the code the value `90` : this should never be the case. This variable should be centralized somewhere
+1. When picking data from the last 500 days of the Hackernews dataset, we've harcoded in the code the value `500` : this should never be the case. This variable should be centralized somewhere
 2. When we were counting the `num_comments`, `num_stories`, the first and the last time those comments or stories were written : we were writing a lot of duplicated code.
 3. If we were to document the project more, we would be defining the same fields multiple times, in different places. We should centralize this documentation.
 
@@ -9,7 +9,7 @@ There are 3 main issues in the previous setups we've done, that are not optimal
 
 ## 1️⃣ Create variables
 
-- In the `dbt_project.yml`, introduce a variable called `last_x_days_history`, that you'll set to `90`. And use that variable when building the `stg_hackernews_full.sql` model. Search the DBT documentation yourself to understand how things should be setup. Correction is in the `stg_hackernews_full.sql` and `dbt_project.yml` files
+- In the `dbt_project.yml`, introduce a variable called `last_x_days_history`, that you'll set to `500`. And use that variable when building the `stg_hackernews_full.sql` model. Search the DBT documentation yourself to understand how things should be setup. Correction is in the `stg_hackernews_full.sql` and `dbt_project.yml` files
 - Make sure 2 of the tests are green by runnin :
   - `make test_dbt_project_created`, and
   - `make test_dbt_variable_created`
