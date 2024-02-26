@@ -14,6 +14,25 @@ def get_env_vars():
     pass  # YOUR CODE HERE
 
 
+def get_connection(user, password):
+    """
+    Establish a connection to the PostgreSQL database.
+
+    Parameters
+    ----------
+    user : str
+        PostgreSQL username.
+    password : str
+        PostgreSQL password.
+
+    Returns
+    -------
+    psycopg2.extensions.connection
+        Database connection object.
+    """
+    pass  # YOUR CODE HERE
+
+
 def get_words():
     """
     Prompt user for words to search for.
