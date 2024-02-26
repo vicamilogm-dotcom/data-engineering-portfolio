@@ -44,8 +44,4 @@ def test_filter_coordinates(spark):
 
 
 def test_rename_columns(spark):
-    # $CHALLENGIFY_BEGIN
-    df = spark.createDataFrame([(1,)], ["a b"])
-    df = rename_columns(df)
-    assert "a_b" in df.columns
-    # $CHALLENGIFY_BEGIN
+    pass  # YOUR CODE HERE

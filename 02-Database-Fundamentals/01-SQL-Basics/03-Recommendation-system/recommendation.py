@@ -11,8 +11,6 @@ def get_env_vars():
     str, str
         PostgreSQL username and password.
     """
-    # $CHALLENGIFY_END
-    return os.environ.get("POSTGRES_USER"), os.environ.get("POSTGRES_PASSWORD")
     pass  # YOUR CODE HERE
 
 
