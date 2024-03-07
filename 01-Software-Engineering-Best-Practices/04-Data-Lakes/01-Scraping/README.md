@@ -49,6 +49,63 @@ print(title)  # Outputs: Web scraping - Wikipedia
 
 ### 2. Parsing the HTML:
 
+⏰ Warning this can be quite a timely task especially if you are new to web scraping. Give it a go and if you get stuck after 30 mins take the solution from the hint below:
+
+<details>
+<summary markdown='span'>💡 Solution</summary>
+
+```python
+    URL = "https://news.ycombinator.com/front"
+    response = requests.get(URL, params={"day": date})
+
+    if response.status_code != 200:
+        print("Failed to fetch the webpage.")
+        exit()
+
+    stories = []
+
+    soup = BeautifulSoup(response.content, "html.parser")
+
+    title_lines = soup.find_all("span", class_="titleline")
+    sub_lines = soup.find_all("span", class_="subline")
+
+    for rank, (title_line, sub_line) in enumerate(zip(title_lines, sub_lines), 1):
+        title_tag = title_line.find("a")
+        title = title_tag.text
+        try:
+            site = title_line.find("span", class_="sitestr").text
+        except AttributeError:
+            site = "https://news.ycombinator.com/"
+        link = title_tag["href"]
+        if not link.startswith("http"):
+            link = "https://news.ycombinator.com/" + link
+        score = int(sub_line.find("span", class_="score").text.replace(" points", ""))
+        author = sub_line.find("a", class_="hnuser").text
+        try:
+            comments_number = int(
+                sub_line.find_all("a")[-1].text.replace("\xa0comments", "")
+            )
+        except ValueError:
+            comments_number = 0
+
+        story = {
+            "rank": rank,
+            "title": title,
+            "site": site,
+            "link": link,
+            "score": score,
+            "author": author,
+            "comments_number": comments_number,
+        }
+        stories.append(story)
+
+    stories_df = pd.DataFrame(stories)
+    return stories_df
+```
+
+</details>
+
+
    a. Use BeautifulSoup to parse the returned HTML.
 
    b. Locate the relevant HTML elements containing story details, like titles, links, and author names.

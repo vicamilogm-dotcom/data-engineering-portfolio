@@ -59,14 +59,11 @@ Once you are done run
 make test
 ```
 
-Make sure you reach 1/5 and then move on!
+Make sure you reach 2/5 and then move on!
 
 ---
 
-**3.**
-Certainly, here's the problem statement formatted according to your example:
-
----
+## Rental Trends
 
 **Backstory**: The management team wants to understand the weekly rental trends over a 5-month period. Given the short duration of the data, a finer granularity is required for a more accurate analysis. This information will help in planning inventory and marketing strategies.
 
@@ -86,11 +83,11 @@ Once you are done run
 make test
 ```
 
-Make sure you reach 1/5 and then move on!
+Make sure you reach 3/5 and then move on!
 
 ---
 
-**4.**
+## Actor collaboration
 
 **Backstory**: The company has observed that certain actors frequently collaborate on projects. Recognizing frequent collaborations could be a unique selling point in marketing campaigns or special screening events.
 
@@ -98,6 +95,13 @@ Make sure you reach 1/5 and then move on!
 - **actor1**: The full name of the first actor in the pair
 - **actor2**: The full name of the second actor in the pair
 - **films_together**: The total number of films in which both actors have appeared together
+
+❗️ Only include pairs that have appeared together in **more than three** films together!
+
+Use this to order the query
+```sql
+ORDER BY films_together DESC, actor1, actor2;
+```
 
 ❓ Complete the query inside `co_stars_query.sql`
 
@@ -107,11 +111,11 @@ Once you are done run
 make test
 ```
 
-Make sure you reach 1/5 and then move on!
+Make sure you reach 4/5 and then move on!
 
 ---
 
-**5.**
+## Customer retention
 
 **Backstory**: The company is concerned about customer retention and is planning a re-engagement campaign. To target the campaign effectively, they need to identify customers who haven't been active recently.
 
@@ -128,7 +132,7 @@ Once you are done run
 make test
 ```
 
-Make sure you reach 1/5 and then move onto the next exercise!
+Make sure you reach 5/5 and then move onto the next exercise!
 
 ## 🏁 Finished
 

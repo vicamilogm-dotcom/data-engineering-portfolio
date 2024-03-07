@@ -234,7 +234,7 @@ This task elaborates on the concept of a base image and how it can be used in re
 1. Run the container to make sure it’s functional -- it should start the fastapi server listening on the localhost interface and port 8000 - Head to [localhost:8000](http:localhost:8000). You should see `Hello World`
 1. Inspect the size and layers with `dive`
     ```bash
-    docker run --rm -it /var/run/docker.sock:/var/run/docker.soc wagoodman/dive:latest <your_image_name:tag>
+    docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock wagoodman/dive:latest <your_image_name:tag>
     ```
 1. Inspect the layers, check the image size, and check the wasted space.
 

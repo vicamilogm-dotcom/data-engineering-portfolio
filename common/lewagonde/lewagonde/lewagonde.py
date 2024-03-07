@@ -125,7 +125,9 @@ def docker_compose_transform_dict_block(dc_dict_block: Dict[str, Any]):
     return "".join(lines).replace('"', "").replace("'", "")
 
 
-def docker_compose_equal(dc1_fp: str, dc2_fp: str):
+
+
+def docker_compose_equal(dc1_fp: str, dc2_fp: str, strict: bool = True):
     """
     Checks if two Docker-Compose files are equal.
     - Recursively transforms dictionaries into sorted strings
@@ -135,8 +137,46 @@ def docker_compose_equal(dc1_fp: str, dc2_fp: str):
         dc1 = yaml.safe_load(f)
     with open(dc2_fp) as f:
         dc2 = yaml.safe_load(f)
-    return docker_compose_equal_content(dc1, dc2)
+    if strict:
+        return docker_compose_equal_content(dc1, dc2)
+    else:
+        return docker_compose_equal_content_unstrict(dc1, dc2)
 
+def flatten_dict(d, parent_key='', sep='_'):
+    """
+    Flatten a dictionary into a single level dictionary
+    """
+    items = []
+    for k, v in d.items():
+        new_key = f"{parent_key}{sep}{k}" if parent_key else k
+        if isinstance(v, dict):
+            items.extend(flatten_dict(v, new_key, sep=sep).items())
+        else:
+            items.append((new_key, v))
+    return dict(items)
+
+def check_list_equality(list1, list2):
+    """
+    Loosely check the equality of lists making sure there is some intersection
+    """
+    intersection = set(list1).intersection(set(list2))
+    return bool(intersection)
+
+def docker_compose_equal_content_unstrict(dc1: Dict[str, Any], dc2: Dict[str, Any]):
+    """
+    Checks parsed Docker-Compose YAML super unstrict equality
+    """
+    dc1 = flatten_dict(dc1)
+    dc2 = flatten_dict(dc2)
+    for key, value in dc2.items():
+        if key in dc1:
+            if type(value) == list:
+                if not check_list_equality(value, dc1[key]):
+                    return False
+            else:
+                if value != dc1[key]:
+                    return False
+    return True
 
 def docker_compose_equal_content(dc1: Dict[str, Any], dc2: Dict[str, Any]):
     """

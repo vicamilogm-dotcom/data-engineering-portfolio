@@ -12,6 +12,20 @@ docker volume create pgdata-0201
 
 Launch the database, then connect via dbeaver (don't forget you need to port forward again vm -> host)
 
+Setup your `.env`
+
+```bash
+cp .env.sample .env
+```
+
+Edit the environment variables, then run:
+
+```bash
+direnv reload
+```
+
+Launch the database!
+
 ```bash
 docker run -p 5410:5432 -e POSTGRES_USER=$POSTGRES_USER -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD -v pgdata-0201:/var/lib/postgresql/data postgres:15.4
 ```
@@ -70,7 +84,7 @@ make test
 - Your output should consist of two columns: `month` (represented as a number from 1 to 12) and `monthly_revenue` (sum of all payment amounts for that month).
 - Order the result by month in ascending order.
 
-Once you are happy put your query into `rentals_query.sql` and run
+Once you are happy put your query into `monthly_revenue_query.sql` and run
 
 ```
 make test

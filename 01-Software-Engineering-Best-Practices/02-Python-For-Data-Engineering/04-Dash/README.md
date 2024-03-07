@@ -2,7 +2,7 @@
 
 🎯 We now want to leverage those csvs we created in the last exercise to create a simple dashboard using plotly and dash it should end up looking something like this:
 
-<img src=https://wagon-public-datasets.s3.amazonaws.com/data-engineering/W0D2/example-dash.png>
+<img src="https://wagon-public-datasets.s3.amazonaws.com/data-engineering/W0D2/example-dash.png">
 
 For this exercise the code laying out the page is already in `dashboard.py` feel free to modify it as you see fit.
 

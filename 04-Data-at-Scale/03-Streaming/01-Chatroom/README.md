@@ -15,11 +15,6 @@ We'll build that in three steps:
 <img src="https://storage.googleapis.com/lewagon-data-engineering-bootcamp-assets/assets/chat-rabbitmq.png" width=600>
 
 2. One of the students will open up their chat server for everyone else. When you'll connect to it you'll get subscribed to messages from everyone else!
-3. We'll replace our RabbitMQ implementation with a cloud service, like GCP PubSub.
-
-**V2 with PubSub**
-
-<img src="https://storage.googleapis.com/lewagon-data-engineering-bootcamp-assets/assets/chat-pubsub.png" width=600>
 
 ## Our RabbitMQ server
 
@@ -143,7 +138,7 @@ Now, notice in the `main` function how `print_callback` is passed as the argumen
   Functions that are passed to other functions and called "on demand" are usually called **callbacks**.
 </details>
 
-Done? In one terminal, run
+Done? In two terminal windows, run
 
 **The subscriber**
 
@@ -154,7 +149,7 @@ python lwqueue/rabbitmq_subscriber.py --host localhost --port 5672 --mode simple
 **The publisher**
 
 ```bash
-python lwqueue/rabbitmq_send_message.py --host localhost --port 5672 --message "Hello world" --username $USER
+python lwqueue/rabbitmq_send_message.py --host localhost --port 5672 --message "Hello world" --username $USER --rmq-username rmq --rmq-password $RABBITMQ_DEFAULT_PASS
 ```
 
 What happens?
@@ -216,7 +211,7 @@ We wouldn't want to share our root user password though
 <summary markdown='span'>Solution 💡</summary>
 
 ```bash
- docker exec -it <your rabbit mq container> add_user messaging_user abc123
+docker exec -it <your rabbit mq container> rabbitmqctl add_user messaging_user abc123
 docker exec -it <your rabbit mq container> rabbitmqctl set_permissions -p / messaging_user ".*" "" "^$"
 ```
 
@@ -226,6 +221,16 @@ docker exec -it <your rabbit mq container> rabbitmqctl set_permissions -p / mess
 Share the following with your mates (in Slack / Zoom / Teams):
 - Your server IP address
 - The RabbitMQ password over [Password Pusher](https://pwpush.com/), make sure you increase the number of views to 100 for everyone to be able to see it.
+
+<details>
+<summary markdown='span'>💡 How to send messages to a classmates server</summary>
+
+```bash
+python lwqueue/rabbitmq_send_message.py --host <classmates_vm_ip> --port 5672 --message <your_message> --username $USER --rmq-username <classmates_rmq_username> --rmq-password <classmates_rmq_password>
+```
+
+</details>
+
 
 Now, are you receiving messages from your peers? No trash talking allowed... officially 😉!
 

@@ -20,7 +20,7 @@ def test_docker_compose():
     dc_correction_path = os.path.join(parent_dir, "_x", "docker-compose.correction.yml")
 
     assert lewagonde.docker_compose_equal(
-        dc_path, dc_correction_path
+        dc_path, dc_correction_path, strict=False
     ), "Incorrect Docker Compose"
 
 

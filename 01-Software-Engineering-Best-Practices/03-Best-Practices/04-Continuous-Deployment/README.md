@@ -316,6 +316,7 @@ The only difficulty is to give GitHub VMs your Google Cloud Credentials.
   - Service Account User (roles/iam.serviceAccountUser): to deploy as the service account
   - Storage Admin (roles/storage.admin): to upload files
   - Cloud Build Editor (roles/cloudbuild.builds.editor): to build the application
+  - Artifact Registry Reader (roles/artifactregistry.reader): to read the application's container image
 - "Key" --> "Create new KEY" and download the JSON (keep it safe!)
 
 👉 Now, go to your github repo, "Settings", "Secrets and variables", "Actions"

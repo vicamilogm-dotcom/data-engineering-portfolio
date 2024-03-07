@@ -47,7 +47,8 @@ def scrape_hn(date: str) -> pd.DataFrame:
             site = title_line.find("span", class_="sitestr").text
         except AttributeError:
             site = "news.ycombinator.com"
-        link = title_tag["href"]
+        if not link.startswith("http"):
+            link = "https://news.ycombinator.com/" + link
         score = int(sub_line.find("span", class_="score").text.replace(" points", ""))
         author = sub_line.find("a", class_="hnuser").text
         try:

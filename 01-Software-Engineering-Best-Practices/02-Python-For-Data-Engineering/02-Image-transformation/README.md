@@ -75,7 +75,7 @@ def process_image(path: str) -> np.ndarray:
 Test your function with this command:
 
 ```bash
-pytest tests/test_processpy::TestImageProcessing::test_process_image
+pytest tests/test_process.py::TestImageProcessing::test_process_image
 ```
 
 # Write image

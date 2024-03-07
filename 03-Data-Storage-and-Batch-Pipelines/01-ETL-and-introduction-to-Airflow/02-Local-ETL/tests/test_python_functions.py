@@ -87,7 +87,7 @@ def test_load_to_database():
     local_etl.load("tests/test_data/swedified_joke.json", hook)
     assert hook.get_records("SELECT COUNT(*) FROM swedified_jokes;")[0][0] == 1
     joke = (
-        "Chuck Norris doesn't use a microwave to pop his popcorn. He simply sits the package on the counter "
+        "Chuck Norris doesnt use a microwave to pop his popcorn. He simply sits the package on the counter "
         "and the kernals jump in fear of a round house kick"
     )
     swedified_joke = (

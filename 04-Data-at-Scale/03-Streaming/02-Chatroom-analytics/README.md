@@ -32,12 +32,14 @@ A good starting point are the docs https://clickhouse.com/docs/en/sql-reference/
 <summary markdown='span'>💡 Solution </summary>
 
 ```sql
-CREATE TABLE IF NOT EXISTS user_messages (
+CREATE TABLE IF NOT EXISTS chat.user_messages (
     username String,
     message String,
     received_at DateTime
 ) ENGINE = MergeTree() ORDER BY received_at
 ```
+
+If you can't workout where to run this think of how we did it with postgres and the `psql` command!
 
 </details>
 

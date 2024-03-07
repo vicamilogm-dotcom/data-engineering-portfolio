@@ -111,10 +111,10 @@ We want to achieve two goals here:
 **❓Add a database service**
 
 1. Copy the content of `docker-compose-2.yml` into `docker-compose-3.yml`
-1. We are now using the `app` folder instead of `api-no-database`. Change the mounted directory accordingly in the docker compose file
+1. We are now using the `api` folder instead of `api-no-database`. Change the mounted directory accordingly in the docker compose file
 1. Create a second service for the relational database, based on the [postgreSQL 14.2 image](https://hub.docker.com/_/postgres)
 1. As described in the [image docs](https://hub.docker.com/_/postgres#:~:text=The%20only%20variable%20required%20is%20POSTGRES_PASSWORD%2C%20the%20rest%20are%20optional.), add the only mandatory env variable for this image: the superuser password
-    ```yml
+    ```
     environment:
       - POSTGRES_PASSWORD=postgres
     ```
@@ -130,7 +130,7 @@ We want to achieve two goals here:
     - Change the script's permission to make it executable on your system `chmod +x database/01-init.sh`
 
 1. Add the the [environment](https://docs.docker.com/compose/compose-file/05-services/#environment) variables required by `01-init.sh`:
-    ```yml
+    ```
     - APP_DB_USER=lewagon
     - APP_DB_PASS=password
     - APP_DB_NAME=movies
@@ -164,7 +164,7 @@ Can you figure out why? Try to solve it by yourself if you can! (Think how the A
 <details>
   <summary markdown='span'>💡 Hints</summary>
 
-The API needs to have postgres `POSTGRES_DATABASE_URL` (which includes user, password, host, etc...). Have a look at line 6 of `database.py`!
+The API needs to have postgres `POSTGRES_DATABASE_URL` (which includes user, password, host, etc...). Have a look at `database.py`!
 
 👉 Update your `docker-compose-3.yml` with the correct connection URL
 
