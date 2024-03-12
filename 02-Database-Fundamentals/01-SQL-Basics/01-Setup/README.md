@@ -39,11 +39,11 @@ CREATE DATABASE pagila;
 Then, execute the following two commands back in the terminal to get the data into the database
 
 ```bash
-curl -L https://raw.githubusercontent.com/devrimgunduz/pagila/master/pagila-schema.sql | docker exec -i <your_container> psql --username=$POSTGRES_USER --dbname=pagila -a -f-
+curl -L https://raw.githubusercontent.com/devrimgunduz/pagila/e1e5a855c46176bc0e17b7e8dea2f61e555fb378/pagila-schema.sql | docker exec -i <your_container> psql --username=$POSTGRES_USER --dbname=pagila -a -f-
 ```
 
 ```bash
-curl -L https://raw.githubusercontent.com/devrimgunduz/pagila/master/pagila-data.sql | docker exec -i <your_container> psql --username=$POSTGRES_USER --dbname=pagila -a -f-
+curl -L https://raw.githubusercontent.com/devrimgunduz/pagila/e1e5a855c46176bc0e17b7e8dea2f61e555fb378/pagila-data.sql | docker exec -i <your_container> psql --username=$POSTGRES_USER --dbname=pagila -a -f-
 ```
 
 You are now ready to begin using the database!
