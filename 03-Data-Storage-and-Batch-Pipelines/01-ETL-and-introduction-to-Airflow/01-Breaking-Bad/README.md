@@ -58,11 +58,12 @@ As explained above, you will create a light docker-compose with the minimal requ
 
 - You'll need 3 environment variables, and to create an `.env` file to set your password to the value of your choice.
 
-    ```bash
-    - POSTGRES_DB=db
-    - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
-    - POSTGRES_USER=airflow
-    ```
+```bash
+- POSTGRES_DB=db
+- POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+- POSTGRES_USER=airflow
+```
+
 - A volume to store PostgreSQL data into a local folder named database (`./database/:/var/lib/postgresql/data`)
 - Map your localhost port 5433 to the postgres default container port 5432
 

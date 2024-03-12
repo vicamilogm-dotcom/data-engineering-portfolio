@@ -112,9 +112,7 @@ make test_dag_and_task_basic
 make test
 ```
 
-# 3️⃣ Advanced DAG: one task per DBT model (Optional - keep for later)
-
-**🎯 Keep this challenge only for after you're done with the third challenge of the day about Protocol Buffer**
+# 3️⃣ Advanced DAG: one task per DBT model (Optional)
 
 ## Setup
 

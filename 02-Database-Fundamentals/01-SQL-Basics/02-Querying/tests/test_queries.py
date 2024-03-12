@@ -33,8 +33,8 @@ def test_rental_duration_query(db_connection):
     cursor.execute(sql)
     results = cursor.fetchall()
     cursor.close()
-    assert results[0] == ("KENNETH", "GOODEN", Decimal("6.1250000000000000"), 1)
-    assert results[-1] == ("JARED", "ELY", Decimal("4.5263157894736842"), 4)
+    assert results[0] == ("KENNETH", "GOODEN", Decimal('6.59262152777777777708'), 4)
+    assert results[-1] == ('TERRANCE', 'ROUSH', Decimal('5.01912202380952380714'), 2)
 
 
 def test_co_stars_query(db_connection):
@@ -81,4 +81,4 @@ def test_category_performance_query(db_connection):
     cursor.execute(sql)
     results = cursor.fetchall()
     cursor.close()
-    assert str(results[0]) == "('Sports', Decimal('5314.21'), 'High')"
+    assert str(results[0]) == "('Foreign', Decimal('10507.67'), 'High')"

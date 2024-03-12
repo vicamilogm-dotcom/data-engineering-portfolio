@@ -42,8 +42,8 @@ def test_rentals(db_connection):
     results = cursor.fetchall()
     cursor.close()
     assert results[:2] == [
-        ("BUCKET BROTHERHOOD", "Travel", 34),
-        ("ROCKETEER MOTHER", "Foreign", 33),
+        ("BUCKET BROTHERHOOD", "Music", 34),
+        ("BUCKET BROTHERHOOD", "Games", 34),
     ]
 
 

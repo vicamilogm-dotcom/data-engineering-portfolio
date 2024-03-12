@@ -168,7 +168,7 @@ The API needs to have postgres `POSTGRES_DATABASE_URL` (which includes user, pas
 
 👉 Update your `docker-compose-3.yml` with the correct connection URL
 
-```yml
+```yaml
 environment:
     - POSTGRES_DATABASE_URL=...# postgresql+psycopg2://<username>:<pwd>@<hostname>:<PORT>/<db_name>
 ```
