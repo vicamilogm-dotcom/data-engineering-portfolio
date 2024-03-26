@@ -22,18 +22,18 @@ In our case, we will use Docker to launch Minikube.
 📚 Take 5 min to read [this amazing summary article 📚](https://medium.com/google-cloud/kubernetes-101-pods-nodes-containers-and-clusters-c1509e409e16) that complement this morning's lecture.
 
 
-# 1️⃣ K8s Power User Setup 🎁 
+# 1️⃣ K8s Power User Setup 🎁
 
 ### ZSH autocompletions
 
 Add the two following lines at the end of your `~/.zshrc` file then reopen a new terminal
 
 ```bash
-[[ $commands[kubectl] ]] && source <(kubectl completion zsh) 
+[[ $commands[kubectl] ]] && source <(kubectl completion zsh)
 [[ $commands[minikube] ]] && source <(minikube completion zsh)
 ```
 
-If you type `minikube <TAB>` or `kubectl <TAB>` it should give you a list of commands 
+If you type `minikube <TAB>` or `kubectl <TAB>` it should give you a list of commands
 
 ### VScode Extensions
 
@@ -94,7 +94,7 @@ docker build -t app .
 
 Let's create our first service on Kubernetes. A service is
 - an **abstraction** that defines a set of **Pods** running in your cluster
-- and a **policy** by which to reach them. 
+- and a **policy** by which to reach them.
 
 Sometimes this pattern is called a [**micro-service**](https://en.wikipedia.org/wiki/Microservices).
 
@@ -136,8 +136,8 @@ In the spec, we specify that it is a **LoadBalancer service**.
 
 This specification creates a new Service object named "fastapi-service"
 
-- `targetPort` 8000: The port of the pods (where the fastAPI is running). 
-- 
+- `targetPort` 8000: The port of the pods (where the fastAPI is running).
+-
 - `port` 5000: The exposed port external users use to access the Service
 
 
@@ -302,6 +302,6 @@ minikube stop
 ```bash
 make test
 git add --all
-git commit -m "020501 done"
+git commit -m "Minikube-and-Kubectl challenge completed"
 ggpush
 ```
