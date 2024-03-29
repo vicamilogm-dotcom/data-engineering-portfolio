@@ -56,8 +56,8 @@ with DAG(
 ) as dag:
     quotes_file = f"{AIRFLOW_HOME}/data/quotes.csv"
 
-    get_quote_and_save_if_new_task = None # YOUR CODE HERE
-
     create_file_if_not_exist_task = None # YOUR CODE HERE
+
+    get_quote_and_save_if_new_task = None # YOUR CODE HERE
 
     
