@@ -41,9 +41,10 @@ You'll create your first models in staging, which are refined versions of the `s
   - It should simply be reading from the `bigquery-public-data.hacker_news.full` table.
   - Keep all the columns but rename some of them :
     - `url` to `original_url`
+    - `dead` to `is_dead`
+    - `by` to `author`
     - `parent` to `parent_id`
     - `deleted` to `is_deleted`
-    - `dead` to `is_dead`
   - Convert the `timestamp` field into a `DATETIME`, in the `America/Los_Angeles` timezone, and call the field `created_at_local`
   - Add a column called `row_created_at_local` which logs the `CURRENT_DATETIME` at which the row is created in the table, in the `America/Los_Angeles` timezone
   - Filter the records
