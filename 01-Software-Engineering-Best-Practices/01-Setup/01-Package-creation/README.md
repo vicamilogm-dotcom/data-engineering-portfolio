@@ -183,7 +183,8 @@ There are plenty of solutions for private repositories even hosting them [yourse
 ❓ Add the token to the `.env` file:
 
 ```bash
-GEMFURY_TOKEN=<your token>
+GEMFURY_TOKEN=<your_token>
+GEMFURY_PASSWORD=<your_gemfury_password>
 ```
 
 **Now to publish to your private repository you can follow this workflow!**
@@ -192,7 +193,7 @@ GEMFURY_TOKEN=<your token>
 # Configure poetry to read your Gemfury repositories:
 poetry config repositories.fury https://pypi.fury.io/<user.lower_github_nickname>/
 
-poetry config http-basic.fury $GEMFURY_TOKEN ""
+poetry config http-basic.fury $GEMFURY_TOKEN $GEMFURY_PASSWORD
 
 # Push the package and any future build versions with:
 poetry publish --build --repository fury
