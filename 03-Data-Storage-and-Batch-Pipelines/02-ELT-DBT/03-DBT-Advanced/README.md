@@ -48,10 +48,11 @@ You've built a few models already - some folks in your company may need to use y
   - 1 that checks that `user_id` is unique and always populated
   - 1 that checks that `num_comments` is always greater or equal to 0
   - 1 that checks that `num_stories` is always greater or equal to 0
- <details>
-  <summary markdown='span'>💡 Hint</summary>
-    For the "always greater or equal to 0", check on the internet : you will need to install a DBT package that enables you to very simply configure this type of test : [dbt_utils](https://hub.getdbt.com/dbt-labs/dbt_utils/0.8.6/). Install the 0.8.6 version. You'll need to create a `packages.yml` file at the same level as the `dbt_project.yml` file.
-  </details>
+
+<details>
+<summary markdown='span'>💡 Hint</summary>
+  For the "always greater or equal to 0", have a look around on the internet. You will need to install a DBT package that enables you to very simply configure this type of test: [dbt_utils](https://hub.getdbt.com/dbt-labs/dbt_utils/0.8.6/). Install the 0.8.6 version. You'll need to create a `packages.yml` file at the same level as the `dbt_project.yml` file.
+</details>
 
 - Run `make test` and push your code to git.
 
