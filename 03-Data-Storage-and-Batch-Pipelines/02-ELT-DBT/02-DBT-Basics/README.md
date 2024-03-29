@@ -57,7 +57,7 @@ You'll create your first models in staging, which are refined versions of the `s
   </details>
 
 - Run this model by executing the following command in your terminal : `dbt run -m stg_hackernews_full` and check that it's been created in BigQuery : `dbt run -m stg_hackernews_full`
-- 🧪 Run `make test test_hackernews_full` : 2 tests should have passed :
+- 🧪 Run `make test_hackernews_full` : 2 tests should have passed :
   - `test_hackernews_full_structure`, and
   - `test_hackernews_full_content`
 
@@ -110,7 +110,7 @@ You'll create your first models in staging, which are refined versions of the `s
   , row_created_at_local
   ```
 - Run this model : `dbt run -m stg_hackernews_story`
-- 🧪 Run `make test test_hackernews_story_comment` : 2 tests should have passed :
+- 🧪 Run `make test_hackernews_story_comment` : 2 tests should have passed :
   - `test_hackernews_story_structure`, and
   - `test_hackernews_comment_structure`
 - You can now run all tests and generate the test outputs : run `make test`
