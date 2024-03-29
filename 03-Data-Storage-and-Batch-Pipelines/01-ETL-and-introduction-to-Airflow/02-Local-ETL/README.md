@@ -46,7 +46,7 @@ PostgresOperator(
 You just have to add your `POSTGRES_PASSWORD` in a new `.env` file, then:
 
 ```
-docker-compose up
+docker compose up
 ```
 
 You should be able to:
@@ -133,7 +133,7 @@ See below for tips if you are stuck!
 In case you want to replay your challenge history from scratch, you can reset your airflow metadata database as if the were never run before
 
 ```bash
-docker-compose exec webserver poetry run airflow db reset
+docker compose exec webserver poetry run airflow db reset
 ```
 
 Otherwise, you can also `sudo rm -rf database` entirely, but that's not a great skill to master in real life ;)
@@ -151,9 +151,9 @@ You can click on "Log" to inspect logs
 You can access your logs from your terminal, but mixing logs of 3 services at once can be messy. Simply open 3 terminal, each with one of the commands:
 
 ```bash
-docker-compose logs -f postgres
-docker-compose logs -f scheduler
-docker-compose logs -f webserver
+docker compose logs -f postgres
+docker compose logs -f scheduler
+docker compose logs -f webserver
 ```
 
 **Check logs from logs folder**
@@ -175,7 +175,7 @@ It can be interesting to read our tests to learn how to test your DAGs.
   - `webserver_config.py`
   - `airflow.cfg`
     - check line 185: your `sql_alchemy_conn` refers to that local sqlite!
-    - compare it to that of your currently running app: `docker-compose exec webserver poetry run airflow config get-value database sql_alchemy_conn`
+    - compare it to that of your currently running app: `docker compose exec webserver poetry run airflow config get-value database sql_alchemy_conn`
 - Open our `test_tasks_config.py`
   - line 18 we're using a DagBag to "parse" your dags from your local folder `./dags`. We'll then be able to tests your dag syntax without actually running anything (ex. line 39)
   - Then we also want to make fake "runs" of you dag against the temporary sqlite. For that, we first have to redirect the postgres connection by loading another `tests/scripts/init_connections.sh` from Makefile context. This allows us to override the Postgres hook on your DAB by a SqliteHook in our test (line 19). We can then `hook.run(...)` anything we want and launch your dag via `dag.create_dagrun(...)`. The process of replacing a variable by another one of same name at test time is called "mocking".

@@ -93,7 +93,7 @@ For your scheduler service, you need to add:
 At that point, you should be able to run the following command (that will force rebuild the image of your Dockerfile and recreate your docker-compose):
 
 ```bash
-docker-compose up
+docker compose up
 ```
 
 If this doesn't work:
@@ -103,7 +103,7 @@ If this doesn't work:
 - Run these optional tests which check your Dockerfile & compose syntax, they may give you some hints
 
 ```bash
-# You don't need to pass these tests if your docker-compose runs correctly - they are too strict
+# You don't need to pass these tests if your docker compose runs correctly - they are too strict
 pytest -v tests/test_dockerfile.py
 pytest -v tests/test_docker_compose.py
 ```
@@ -180,7 +180,7 @@ make test_tasks_configs
 
 Once you passed the tests, start your docker-compose:
 ```bash
-docker-compose up
+docker compose up
 ```
 
 Finally, open [your localhost](http://localhost:8080/home) to see how your DAG looks.
@@ -234,20 +234,20 @@ You want to run `airflow db reset`, which will burn down and rebuild the metadat
 
 <details>
   <summary markdown='span'>💡 Hints</summary>
-- You can either use `docker-compose exec <your command>` directly inside your already-running container
-- Or you stop all your running containers first, then try using `docker-compose run -it ....`
+- You can either use `docker compose exec <your command>` directly inside your already-running container
+- Or you stop all your running containers first, then try using `docker compose run -it ....`
 </details>
 
 <details>
   <summary markdown='span'>🎁 Solution</summary>
 
 ```bash
-docker-compose exec webserver poetry run airflow db reset
+docker compose exec webserver poetry run airflow db reset
 
 # OR
-docker-compose down
-docker-compose run -it webserver poetry run airflow db reset
-docker-compose up
+docker compose down
+docker compose run -it webserver poetry run airflow db reset
+docker compose up
 ```
 
 </details>
@@ -256,5 +256,5 @@ docker-compose up
 ## 🏁 Congratulation! `make test` to create test_output.txt, then add, commit and push your code so we can track your progress!
 
 ```bash
-docker-compose down # To free-up your ports for next challenges
+docker compose down # To free-up your ports for next challenges
 ```

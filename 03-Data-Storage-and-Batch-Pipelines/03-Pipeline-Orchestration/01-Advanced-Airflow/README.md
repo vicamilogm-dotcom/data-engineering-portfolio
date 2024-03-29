@@ -27,7 +27,7 @@ c) Data flow between clouds:
 
 The `Dockerfile` and the `docker-compose.yml` are the same as the ones you used previous airflow day, and we have already prepared the `pyproject.toml` for you.
 
-👉 Just create an `.env` file and set `POSTGRES_PASSWORD` to the value of your choice and you should be able to `docker-compose up`
+👉 Just create an `.env` file and set `POSTGRES_PASSWORD` to the value of your choice and you should be able to `docker compose up`
 
 As your three DAGs should have the same config, we already provided them to you. For each of them, you will follow the same process:
 - create the required tasks
@@ -114,7 +114,7 @@ You can do it directly from the Airflow UI: hover the `Admin` tab and select `Co
 Or you can try the CLI by running
 
 ```bash
-docker-compose exec webserver poetry run airflow connections add "google_cloud_connection" \
+docker compose exec webserver poetry run airflow connections add "google_cloud_connection" \
 --add-correct-arguments-here
 ```
 

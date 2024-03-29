@@ -19,7 +19,7 @@ Based on
 
 </details>
 
-🧪 docker-compose up the service, make sure you understand the logs, then open up [http://localhost:7474/browser/](http://localhost:7474/browser/) in your browser, does it work?
+🧪 docker compose up the service, make sure you understand the logs, then open up [http://localhost:7474/browser/](http://localhost:7474/browser/) in your browser, does it work?
 
 ## 2️⃣ Play with Movies dataset
 Type `:play movie graph` 🎥 and be guided directly in the browser! 💻

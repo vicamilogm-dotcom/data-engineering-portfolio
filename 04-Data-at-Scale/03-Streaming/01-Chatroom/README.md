@@ -38,7 +38,7 @@ or if you have changed the envs
 direnv
 ```
 
-Then run the server in the background with `docker-compose up -d`.
+Then run the server in the background with `docker compose up -d`.
 
 You can check that it's up and running by going to the port 15672 in your web browser.
 

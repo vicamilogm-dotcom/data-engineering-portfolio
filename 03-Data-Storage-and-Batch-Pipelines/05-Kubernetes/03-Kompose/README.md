@@ -73,6 +73,6 @@ Once you have fixed the issues, apply your new files with `kubectl apply -f .`
 🤯 If you have written good `docker-compose` files its as easy as just `kompose convert -f docker-compose.yml && kubectl apply -f .` but generally it is recommended to check the translation before applying it to your cluster.
 
 
-❓ Finally access the `frontend` service and verify that it works the same as when we just did `docker-compose up`.
+❓ Finally access the `frontend` service and verify that it works the same as when we just did `docker compose up`.
 
 🏁 In the next exercise we are going to see how we can bring both the frontend and backend together in a single pod!

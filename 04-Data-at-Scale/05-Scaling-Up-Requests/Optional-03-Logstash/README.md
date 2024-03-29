@@ -66,7 +66,7 @@ Finally, as Logstash needs access to the `/usr/shared` files, we need to run the
 
 ❓ Set the user of the container to `root`
 
-🚀 Run `docker-compose up` again - you should now have an extra `logstash` starting! It will error out, as there's nothing defined in `logstash.conf` yet, but you're on the right track!
+🚀 Run `docker compose up` again - you should now have an extra `logstash` starting! It will error out, as there's nothing defined in `logstash.conf` yet, but you're on the right track!
 
 ### `logstash.conf`
 

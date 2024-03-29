@@ -47,7 +47,7 @@ We will use 2 different images, one from `Mongo` and one from `Mongo Express`, w
 ## Get it up and running
 4 ❓ Run
 ```bash
-docker-compose up
+docker compose up
 ```
 and visit `http://localhost:8081` after initialization
 

@@ -357,6 +357,6 @@ my_service_name:
 then
 
 ```bash
-docker-compose up
+docker compose up
 docker attach <running_container_id>
 ```

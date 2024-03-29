@@ -77,8 +77,8 @@ Using the documentation, add the following snippet to your docker compose file. 
 
 **3. Build and test ⚙️**
 
-- Build the stack `docker-compose -f docker-compose-task-1.yml build`
-- Run the stack `docker-compose -f docker-compose-task-1.yml up`
+- Build the stack `docker compose -f docker-compose-task-1.yml build`
+- Run the stack `docker compose -f docker-compose-task-1.yml up`
 - If you head to http://localhost:8000 you should see "hello world"
 - If you head to http://localhost:8089 you should see the locust homepage
 

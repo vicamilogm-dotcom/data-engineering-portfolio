@@ -30,7 +30,7 @@ By the end of the setup, you should have a working stack using docker-compose (P
 
 ❓ **Run your app**
 ```bash
-docker-compose -f docker-compose-basic.yml up
+docker compose -f docker-compose-basic.yml up
 ```
 ☝️ Check your logs: the sql script `01-Streamlit/database/init/f1db.sql` should be executed at startup time.
 ☝️ Connect to DBEAVER to double-check (otherwise, execute it with the DBeaver interface)
@@ -111,7 +111,7 @@ We have a basic Streamlit app now, which we have coded in a single python file. 
 
 ❓ Copy and paste the contents of `docker-compose-basic.yml` to `docker-compose-advanced.yml`, but change the Streamlit file that you run from `"f1dashboard/basic.py"` to `"f1dashboard/advanced.py"`.
 
-❓ Run `docker-compose -f docker-compose-advanced.yml up`
+❓ Run `docker compose -f docker-compose-advanced.yml up`
 
 ❓ Understand your landing page logic.
 

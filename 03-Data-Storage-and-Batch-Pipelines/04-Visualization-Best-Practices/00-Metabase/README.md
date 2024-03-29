@@ -11,7 +11,7 @@ curl --output ./database/init/f1db.sql.gz https://storage.googleapis.com/lewagon
 
 3️⃣ 😁 The docker-compose.yml file has been created for you!
 
-4️⃣ ❓ Run `docker-compose up`
+4️⃣ ❓ Run `docker compose up`
 
 5️⃣ ❓ Log into Metabase
 
