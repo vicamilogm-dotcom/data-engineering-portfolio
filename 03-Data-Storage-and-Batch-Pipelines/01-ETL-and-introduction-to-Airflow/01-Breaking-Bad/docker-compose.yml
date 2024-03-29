@@ -1,32 +1,32 @@
 version: '3'
 services:
-    postgres:
-        image: postgres:14
-        healthcheck:
-            test: ["CMD", "pg_isready -d db -U airflow"]
-            interval: 5s
-            retries: 5
-        restart: always
-        
+  postgres:
+    image: postgres:14
+    healthcheck:
+      test: ["CMD", "pg_isready -d db -U airflow"]
+      interval: 5s
+      retries: 5
+    restart: always
+    
 
-    scheduler:
-        build: .
-        command: poetry run airflow scheduler
-        depends_on:
-            - postgres
-        restart: on-failure
-        
+  scheduler:
+    build: .
+    command: poetry run airflow scheduler
+    depends_on:
+      - postgres
+    restart: on-failure
+    
 
-    webserver:
-        build: .
-        command: poetry run scripts/entrypoint.sh
-        depends_on:
-            - postgres
-            - scheduler
-        restart: on-failure
-        healthcheck:
-            test: ["CMD", "-f", "/home/airflow/airflow-webserver.pid"]
-            interval: 30s
-            timeout: 30s
-            retries: 3
-        
+  webserver:
+      build: .
+      command: poetry run scripts/entrypoint.sh
+      depends_on:
+        - postgres
+        - scheduler
+      restart: on-failure
+      healthcheck:
+        test: ["CMD", "-f", "/home/airflow/airflow-webserver.pid"]
+        interval: 30s
+        timeout: 30s
+        retries: 3
+      
