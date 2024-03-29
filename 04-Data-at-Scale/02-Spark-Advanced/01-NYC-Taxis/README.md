@@ -4,8 +4,7 @@
 
 Your goal is to build a pipeline in spark that will do the following.
 
-1. Take a parquet from https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page here based on a given month and
-   upload it to the raw folder in your bucket.
+1. Take a parquet from [New York City Taxi and Limousine Commission website](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page) (we'll be using the Yellow Taxi Trip records) for a given month and upload it to the raw folder in your bucket.
 2. Perform some basic data cleaning and add some additional columns and store it to the staging area of your bucket.
 3. Create two processed versions of the data one for a data analyst and one for a data scientist.
 4. Implement the training of the the model and save that to the bucket for your data scientist.

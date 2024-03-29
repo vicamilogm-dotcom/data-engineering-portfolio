@@ -11,7 +11,7 @@ create-cluster:
 	gcloud dataproc clusters create $(CLUSTER_NAME) \
 		--project=$(PROJECT_ID) \
 		--region=europe-west1 \
-		--network=spark-vpc
+		--network=spark-vpc \
 		--master-machine-type e2-standard-2 \
 		--master-boot-disk-size 50 \
 		--num-workers 2 \
