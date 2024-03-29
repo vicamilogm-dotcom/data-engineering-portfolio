@@ -38,7 +38,7 @@ def filter_long_trips(
     """
     - Calls prepare_data to get a cleaned DataFrame
     - Keep only rows for which the trip_distance's value is greater than `distance`
-    - Saves the DataFrame to `silver_file` without keeping the DataFrame indexes
+    - Saves the DataFrame to `silver_file` as a CSV without keeping the DataFrame indexes
     """
     pass  # YOUR CODE HERE
 
@@ -49,7 +49,7 @@ def filter_expensive_trips(
     """
     - Calls prepare_data to get a cleaned DataFrame
     - Keep only rows for which the total_amount's value is greater than `amount`
-    - Saves the DataFrame to `silver_file` without keeping the DataFrame indexes
+    - Saves the DataFrame to `silver_file` as a CSV without keeping the DataFrame indexes
     """
     pass  # YOUR CODE HERE
 

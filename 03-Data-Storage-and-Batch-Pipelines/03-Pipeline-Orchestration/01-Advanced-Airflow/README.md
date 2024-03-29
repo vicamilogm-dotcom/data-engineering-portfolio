@@ -62,7 +62,7 @@ The main goal of this DAG is to read the parquet file you saved in `bronze`, to 
 🧐 Granted, this condition makes no real business sense, but it's an easy one, and we've given you the python logic in  `is_month_odd` already - let's move on and focus on Airflow logic!
 
 
-**❓You need to code five tasks (code the DAG first, and only then python-functions)**
+**❓You need to code five tasks (code the tasks and DAG first, then code the python-functions)**
 
 1. [`extract_sensor`](https://airflow.apache.org/docs/apache-airflow/stable/concepts/sensors.html) that should wait for the DAG `extract` to be in the `success` state, and check its state every 10 seconds for a maximum of 10 minutes (after that, it should timeout). No need to specify an external `task_id`, such that it will wait for the DAG itself to succeed
 
