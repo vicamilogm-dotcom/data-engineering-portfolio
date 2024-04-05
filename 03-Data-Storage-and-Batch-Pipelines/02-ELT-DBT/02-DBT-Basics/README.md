@@ -49,7 +49,7 @@ You'll create your first models in staging, which are refined versions of the `s
   - Add a column called `row_created_at_local` which logs the `CURRENT_DATETIME` at which the row is created in the table, in the `America/Los_Angeles` timezone
   - Filter the records
     - get rid of the records that are "dead"
-    - only keep the data that was `created_at_local` in the last 500 days of data
+    - only keep the data that was `created_at_local` in the last 1000 days of data
 
   <details>
     <summary markdown='span'>💡 Hint</summary>

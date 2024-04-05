@@ -34,7 +34,7 @@ Now we want to be able to make sure that our way of calculating the `num_stories
 
 - Surface this new field in BigQuery by running the model again.
 - Run `make test_mart_user` to make sure the structure of your model is correct.
-- **No code is needed in this section** - Now that you have this field handy, it should facilitate your QA : pick a few `user_id` in your BigQuery model, and verify that the `num_comments` or `num_stories` you calculated for this user matches the `num_comments` and `num_stories` you can count on the HackerNews website, that they wrote in the past 90 days.
+- **No code is needed in this section** - Now that you have this field handy, it should facilitate your QA : pick a few `user_id` in your BigQuery model, and verify that the `num_comments` or `num_stories` you calculated for this user matches the `num_comments` and `num_stories` you can count on the HackerNews website, that they wrote in the past 1000 days.
 
 ## 2️⃣ Document your models and add some tests
 
