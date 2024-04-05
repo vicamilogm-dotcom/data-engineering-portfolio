@@ -11,21 +11,21 @@ This time, we'll have to deal with 2 separate containers:
 
 Compared with 1 `docker-compose.yml`, K8s will requires us to explode configuration into many configurations files!
 
-- 4 for Streamlit
+- 3 for Streamlit
   - service
   - deployment
   - secret
 
-- 6 for Postgres
+- 5 for Postgres
   - service
   - deployment (statefulset)
   - secrets
   - volumes
   - volumes claims
 
-- Plus 5 that we'll give you for Google Cloud deployments purposes
+- And for deployment on GKE we'll have to modify 4 existing `.yaml`'s with GCP specific parameters.
   - Streamlit deployment cloud
-  - Postgres deployment cloud
+  - Postgres deployment (statefulset) cloud
   - volumes cloud
   - volumes cloud claim
 
@@ -421,7 +421,7 @@ Now we are ready to put it into the container!
 ## 3.3) Deployment
 
 ❓ First, build the streamlit Dockerfile **inside minikube** (🚨 not in your VM docker deamon)
-You should see it with docker ps along with a dozen other k8s containers...
+You should see it with `docker images` along with a dozen other k8s containers...
 
 ❓ Then, let's create a new `streamlit-deployment.yaml`
 

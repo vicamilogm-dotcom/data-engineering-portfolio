@@ -37,19 +37,19 @@ def map_on_each_chunk(chunk_paths: List[str]) -> List[List[Tuple[str, int]]]:
 
 def shuffle(word_groups_with_counts: List[List[Tuple[str, int]]]) -> List[Tuple[str, List[int]]]:
     """
-    shuffle aggregates word counts for each group into a dictionary word -> list of counts
+    Shuffle aggregates word counts for each group into a list of tuples containing the word and a list of the counts.
 
-    For instance it takes as input
+    For instance it takes as input:
     [
         [("Car", 1), ("Car", 1)],
         [("Dear", 1)],
     ]
 
-    to return
-    {
-        "Car": [1, 1],
-        "Dear": [1]
-    }
+    To return:
+    [
+        ("Car", [1, 1]),
+        ("Dear", [1]),
+    ]
     """
     pass  # YOUR CODE HERE
 
@@ -65,7 +65,7 @@ def final_reduce(shuffled_words: List[Tuple[str, List[int]]]) -> Dict[str,int]:
         }
     Output: {'Car': 2, 'Dear': 1}
     '''
-    
+
     pass  # YOUR CODE HERE
 
 
@@ -82,13 +82,12 @@ def count_words_mapreduce_multiproc(chunk_file_paths: List[str]):
     pass  # YOUR CODE HERE
 
 if __name__=='__main__':
-    
+
     N_SPLIT = 64
     txt_file = "data/The_Data_Engineering_Cookbook.txt"
     txt_files = split_file_into_chunks(txt_file,N_SPLIT)
-    
+
     print("👉Starting map-reduce single processing...")
     start = time.perf_counter()
     pass  # YOUR CODE HERE
     end = time.perf_counter()
-    
