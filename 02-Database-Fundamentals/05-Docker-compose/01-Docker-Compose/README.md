@@ -114,9 +114,9 @@ We want to achieve two goals here:
 1. We are now using the `api` folder instead of `api-no-database`. Change the mounted directory accordingly in the docker compose file
 1. Create a second service for the relational database, based on the [postgreSQL 14.2 image](https://hub.docker.com/_/postgres)
 1. As described in the [image docs](https://hub.docker.com/_/postgres#:~:text=The%20only%20variable%20required%20is%20POSTGRES_PASSWORD%2C%20the%20rest%20are%20optional.), add the only mandatory env variable for this image: the superuser password
-    ```
+    ```yaml
     environment:
-      - POSTGRES_PASSWORD=postgres
+        - POSTGRES_PASSWORD=postgres
     ```
 1. Set the restart policy to `on-failure`
 1. Let's add a small [health check](https://docs.docker.com/compose/compose-file/05-services/#healthcheck) to periodically check if our DB is alive, we'll use a small command to so do relying on [pg_isready](https://www.postgresql.org/docs/current/app-pg-isready.html). Adjust the parameters to **run it every 5s with a 5s timeout and 5 retries**
@@ -130,10 +130,10 @@ We want to achieve two goals here:
     - Change the script's permission to make it executable on your system `chmod +x database/01-init.sh`
 
 1. Add the the [environment](https://docs.docker.com/compose/compose-file/05-services/#environment) variables required by `01-init.sh`:
-    ```
-    - APP_DB_USER=lewagon
-    - APP_DB_PASS=password
-    - APP_DB_NAME=movies
+    ```yaml
+        - APP_DB_USER=lewagon
+        - APP_DB_PASS=password
+        - APP_DB_NAME=movies
     ```
 1. [Map port](https://docs.docker.com/compose/compose-file/05-services/#ports) port 5432 of your container (where postgres runs by default) into port 5433 of your host (the VM). Why 5433? Just to make you think more deeply about which one means what
 
@@ -141,7 +141,7 @@ We want to achieve two goals here:
 
 1. Finally, we need to set a [`depends_on`](https://docs.docker.com/compose/compose-file/05-services/#depends_on) instruction to the `webapi` service so it depends on the `database` service
 
-Build and run the Docker compose stack
+Build and run the Docker compose stack:
 ```bash
 # Validate and run the docker-compose file
 docker compose -f docker-compose-3.yml config
@@ -187,9 +187,9 @@ Then, make sure you tear `down` your stack and spin it back `up` again with your
 **❓ Connect to the database**
 
 1. First check which port you forwarded in Docker compose. If you haven't, add it now! For example:
-    ```yml
+    ```yaml
     ports:
-    - 5432:5432
+        - 5432:5432
     ```
 1. Make sure the correct port is also forwarded from your VM to your host machine!
 1. Connect with dbeaver using the same values for the enviroment variables you set in the docker-compose!
@@ -206,10 +206,10 @@ Then, make sure you tear `down` your stack and spin it back `up` again with your
 make test
 ```
 
-Push it for kitt to track your progress
+Push it for kitt to track your progress:
 ```bash
 git add .
-git commit -m "finalized challenge 020501"
+git commit -m "finalized challenge 020501-Docker-Compose"
 ggpush
 ```
 
