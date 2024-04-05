@@ -60,7 +60,7 @@ It'll help receive high quantities of messages and apply transformations to them
 
 ❓ **Fill in the .env** with the variables: **PROJECT_ID** and **SUBSCRIPTION_NAME**
 
-❓ Now head to the file `subscriber-basic.py` and implement the run function by following the comments inside the function.
+❓ Now head to the file `subscriber-basics.py` and implement the run function by following the comments inside the function.
 
 👉 Now Let's code the callback function. This callback function is meant to be called at each published message
 during the subscription. For a simple subscriber, let's just print the message and ack it.
@@ -71,7 +71,7 @@ during the subscription. For a simple subscriber, let's just print the message a
 Launch the subscriber with this command
 
 ```python
-python app/subscriber-basic.py
+python app/subscriber-basics.py
 ```
 
 Notice that the **subscriber** is now waiting for new messages.
@@ -89,8 +89,7 @@ Head to `app/publisher.py`. You’ll notice that there is already a get message 
 
 👉 following the comments inside the function `run`.
 
-Now you can publish a message once it is generated
-<br>
+Now you can publish a message once it is generated!
 
 ❗️ The **message** must be a **byteString** to be published in Pub/Sub
 
@@ -104,7 +103,7 @@ python app/publisher.py
 Now Launch the subscriber with this command
 
 ```python
-python app/subscriber-basic.py
+python app/subscriber-basics.py
 ```
 
 Even if the publisher is stopped, the subscriber unstacked the queue and ack messages. The messages stays in the pubsub queue until they are acked
@@ -118,7 +117,7 @@ Now lets subscribe to the data with Apache Beam and make some transformations be
 
 First Let's head to subscriber `app/subscriber-beam.py` and go to the `run` function!
 
-We structure of the pipeline:
+The structure of the pipeline:
 
 - data: Pull data from Pub/Sub Topic
 - windowing: Round off the timestamp to an range interval
@@ -169,9 +168,10 @@ gcloud pubsub subscriptions seek $SUBSCRIPTION_NAME --time "2025-01-01T00:00:00Z
 
 
 ## 4.2 Windowing and grouping!
-<br>
-For that we need a windowing and grouping pipeline.<br>
-In the previous challenge, we already implemented those two parts.<br>
+
+For that we need a windowing and grouping pipeline.
+
+In the previous challenge, we already implemented those two parts.
 
 ❓ Add the code from the previous exercise into the **window** and **group sections** now, let's keep the same implementation and try to execute the pipeline with the following command:
 
@@ -192,9 +192,9 @@ Before, we had access to **all the data** before executing the transformation.
 <details>
   <summary markdown='span'>💡 Explanations</summary>
 
-With an unbounded data set, it is impossible to collect all of the elements, since new elements are constantly being added and may be infinitely many<br>
+With an unbounded data set, it is impossible to collect all of the elements, since new elements are constantly being added and may be infinitely many.<br>
 Beam’s default windowing behavior is to assign all elements of a PCollection to a single, global window.
-Before you use a grouping transform such as GroupByKey on an unbounded PCollection, you must at least set a non-global windowing function such as Fixed-time windows to gather data within a time window and trigger the grouping
+Before you use a grouping transform such as GroupByKey on an unbounded PCollection, you must at least set a non-global windowing function such as Fixed-time windows to gather data within a time window and trigger the grouping.
 
 </details>
 
@@ -202,8 +202,8 @@ Before you use a grouping transform such as GroupByKey on an unbounded PCollecti
 ❓ **Implement a windowing pipeline**. You can have a look to this example in the [programming guide](https://beam.apache.org/documentation/programming-guide/#using-fixed-time-windows). Also refer to the **example** from the lecture.
 
 Our workflow is:
-- attach a timestamp
-- put our element into key, value format: (timestamp_rounded, [iot data])
+- Attach a timestamp
+- Put our element into key, value format: (timestamp_rounded, [iot data])
 - Finally create fixed windows of our interval size!
 
 We are now ready to test if this works. But first let's **make sure to empty the queue.**
@@ -215,19 +215,18 @@ In the terminal which is running the subscriber, make sure that every 15 seconds
 <img src="https://wagon-public-datasets.s3.amazonaws.com/data-engineering/W3D4/data-streaming-2.png" width=700>
 
 Now We are ready to load the data to BigQuery!
-<br>
 
 ## 4.3 Load to BigQuery
 
 ❓ First let's create a new table `stream` in your big query dataset with the right schema:
 
-Under schema click on Edit as text and paste the following schema :
+Under schema click on Edit as text and paste the following schema:
 
 ```bash
 Timestamp:TIMESTAMP, Airtight:FLOAT, AtmP:FLOAT, H2OC:FLOAT, Temp:FLOAT
 ```
 
-**📝 Now fill in the `BQ_TABLE` variable in the `.env` project configuration**
+**📝 Now fill in the `BQ_TABLE` variable in your `.env`**
 with the right format:
 ```bash
 BQ_TABLE=<your-project-id>:<your-bq-dataset-name>.<your-table-name>
@@ -250,17 +249,20 @@ python app/subscriber-beam.py \
 Let's head to your gcp console into BigQuery and check that the live streaming is working well
 
 # 🏁Conclusion
-Congratulation🎉 Tou have build a complete real-time Data Streaming ETL pipeline
+Congratulation🎉 Tou have build a complete real-time Data Streaming ETL pipeline.
+
+Don't for get to commit and push your code to github!
 
 
 # (Bonus) Deploy the pipeline to Dataflow
-<br>
+
 The Google Cloud Dataflow Runner uses the Cloud Dataflow managed service. When you run your pipeline with the Cloud Dataflow service, the runner uploads your executable code and dependencies to a Google Cloud Storage bucket and creates a Cloud Dataflow job, which executes your pipeline on managed resources in Google Cloud Platform.
 
 Deployment into Dataflow is easy with Apache Beam, we just have to change the runner option of the pipeline and give the right GCP parameters.
 Here is the [documentation](https://beam.apache.org/documentation/runners/dataflow/) of the needed parameters
 
 To add a parameters to the pipeline you can use command-line arguments when you execute the subscriber-beam.py script as follow:
+
 ```bash
 --runner DataflowRunner
 ```
@@ -271,27 +273,26 @@ You can fill in your `.env` the following variable to be used in your command li
 - REGION
 
 <details>
-    <summary markdown='span'>💡 Hints</summary>
+  <summary markdown='span'>💡 Hints</summary>
 
- ```bash
-  python app/subscriber-beam.py \
-  --id $PROJECT_ID \
-  --subscription-name $SUBSCRIPTION_NAME \
-  --output-table $BQ_TABLE \
-  --runner DataflowRunner \
-  --project $PROJECT_ID \
-  --streaming true \
-  --temp_location gs://$BUCKET_NAME/temp \
-  --staging_location gs://$BUCKET_NAME/staging \
-  --region europe-west4
-
-
- ```
+```bash
+python app/subscriber-beam.py \
+    --id $PROJECT_ID \
+    --subscription-name $SUBSCRIPTION_NAME \
+    --output-table $BQ_TABLE \
+    --runner DataflowRunner \
+    --project $PROJECT_ID \
+    --streaming true \
+    --temp_location gs://$BUCKET_NAME/temp \
+    --staging_location gs://$BUCKET_NAME/staging \
+    --region europe-west4
+```
 
 </details>
 
-Now you can head to Dataflow service within GCP, have a look to your dataflow graph by clicking on the active job name.<br>
-Once it is ready you can launch your publisher
+Now you can head to Dataflow service within GCP, have a look to your dataflow graph by clicking on the active job name.
+
+Once it is ready you can launch your publisher:
 
 ```python
 python app/publisher.py
@@ -302,9 +303,9 @@ python app/publisher.py
 
 🎯 modify pipeline windowing
 
-- create beam.window.TimestampedValue
-apply beam.WindowInto
-apply a MapSessionWindow by getting the window end time within the function process of the class
+- Create `beam.window.TimestampedValue`
+- Apply `beam.WindowInto`
+- Apply a `MapSessionWindow` by getting the window end time within the function process of the class
 
-why do we need a trigger?
-in real time there is no way to group data because we don't have it yet. we have then to trigger the grouping repeatedly
+Why do we need a trigger?
+In real time there is no way to group data because we don't have it yet. We have then to trigger the grouping repeatedly.

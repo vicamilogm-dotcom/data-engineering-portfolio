@@ -54,8 +54,6 @@ We'll use two
 
 ☝️ Notice the syntax of Beam to Apply a method with the pipe ( **|** ) and name it with ( **>>** ).
 
-<br>
-
 ❓ Try to debug your code by mapping a print function to each element of a PCollection :
 ```python
 data | 'Print in Terminal' >> beam.Map(lambda x: print(x))
@@ -72,13 +70,12 @@ You should be able to see your data being printed!
 
 Next step is to save the transformed data in an output File.<br>
 👉Head to the `out` pipeline section and save the data using `output_fps_prefix` variable
-<br>
 
 ```python
-    out = (
-        grouping
-        | "Write to CSV" >> # YOUR CODE HERE
-    )
+out = (
+    grouping
+    | "Write to CSV" >> # YOUR CODE HERE
+)
 ```
 
 You can execute your code with this command:
@@ -95,18 +92,16 @@ make test_first_read
 ```
 
 # 5️⃣ Let's Create a key for each element
-<br>
 
 Inside `windowing` transformation, Let's create a (key,value) Tuple so it will be possible to group the elements by keys later.
 
 ❓ What could be a good way to group the data for this type of data?
 <details>
-    <summary markdown='span'>💡 Hints</summary>
+  <summary markdown='span'>💡 Hints</summary>
 
 for a TimeStamped data, a good strategy of grouping is to create intervals to gather data from the same time window!
 
 </details>
-<br>
 
 👉 Let's code the process by applying a Map method that we name `Map Time Rounded Key per Element` to map a List to a Tuple elements like this one at each line
 
@@ -225,14 +220,16 @@ BQ_TABLE=<your-project-id>:<your-bq-dataset-name>.<your-table-name>
 <details>
   <summary markdown='span'> Google App Crendential Problems? </summary>
 
-Something we may have forgotten to do in the setup day is configure your [GOOGLE_APPLICATION_CREDENTIAL](https://cloud.google.com/sdk/gcloud/reference/auth/application-default/login) (not to be confused with your gcloud CLI crendentials which is already set).
+Something we may have forgotten to do in the setup day is configure your [`GOOGLE_APPLICATION_CREDENTIAL`](https://cloud.google.com/sdk/gcloud/reference/auth/application-default/login) (not to be confused with your gcloud CLI crendentials which is already set).
 
 We advise you to re-use your same virtual-machine service account JSON that you stored in `~/.gcp_keys/le-wagon-de-bootcamp.json`, so that you associate all credendials of the VM to the same key.
 
-Simply add the following env variable to be always accessible in this VM, by adding it your `~/.zshrc`
+To set the environment variable so it's always accessible in your VM, you can add it to your `~/.zshrc` with the following terminal command:
+
+```bash
+export GOOGLE_APPLICATION_CREDENTIALS="~/.gcp_keys/le-wagon-de-bootcamp.json"
 ```
-export GOOGLE_APPLICATION_CREDENTIALS="~.gcp_keys/le-wagon-de-bootcamp.json"
-```
+
 </details>
 
 You can execute your code with this command by enabling the last part of the pipeline:
@@ -251,3 +248,5 @@ python app/beam_sample.py \
 Congratulations 🎉 Tou have built a complete pipeline to transform and load your data. Here is an overview of what you have built during this challenge:
 
 <img src="https://wagon-public-datasets.s3.amazonaws.com/data-engineering/W3D4/0304-02-graphviz-pipeline.svg" height=500>
+
+Don't forget to commit and push your code to github to track your progress on Kitt!
