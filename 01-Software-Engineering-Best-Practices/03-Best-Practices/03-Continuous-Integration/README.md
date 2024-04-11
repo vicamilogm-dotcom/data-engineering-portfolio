@@ -36,7 +36,7 @@ code . # Let's work directly on your package for this challenge
 
 ## Worfklow CI
 
-You now need to write a CI configuration file. Those tools are _generic_, they can build programs in many languages, with many frameworks. We need to be specific and explain to Github Actions that our project is a Python 3 one, that we use `poetry` to handle external dependencies and that we use `nosetests` to run tests.
+You now need to write a CI configuration file. Those tools are _generic_, they can build programs in many languages, with many frameworks. We need to be specific and explain to Github Actions that our project is a Python 3 one, that we use `poetry` to handle external dependencies and that we use `pytest` to run tests.
 
 In order to do that, Github reads the `.python-ci.yml` file located in the folder  `.github/workflows` :
 
