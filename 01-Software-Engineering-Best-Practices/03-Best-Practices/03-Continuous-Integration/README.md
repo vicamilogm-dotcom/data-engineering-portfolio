@@ -163,9 +163,9 @@ The benefit is really important. You have a direct feedback, right in GitHub, ab
 poetry run pytest -k test_unknown_word_is_invalid
 # 💡 See how we just run *one* test and not the whole suite?
 ```
-Using Le Wagon's homemade simple [Dictionary API](https://wagon-dictionary.herokuapp.com/)
-  - [https://wagon-dictionary.herokuapp.com/tomato](https://wagon-dictionary.herokuapp.com/tomato)
-  - [https://wagon-dictionary.herokuapp.com/notomato](https://wagon-dictionary.herokuapp.com/notomato)
+Using Le Wagon's homemade simple [Dictionary API](https://dictionary.lewagon.com/)
+  - [https://dictionary.lewagon.com/tomato](https://dictionary.lewagon.com/tomato)
+  - [https://dictionary.lewagon.com/notomato](https://dictionary.lewagon.com/notomato)
 
 💡 You can `poetry add requests` to make [HTTP requests](http://docs.python-requests.org/en/master/) to this API in Python
 
@@ -190,7 +190,7 @@ class Game:
 
     @staticmethod
     def __check_dictionary(word):
-        response = requests.get(f"https://wagon-dictionary.herokuapp.com/{word}")
+        response = requests.get(f"https://dictionary.lewagon.com/{word}")
         json_response = response.json()
         return json_response['found']
 ```
