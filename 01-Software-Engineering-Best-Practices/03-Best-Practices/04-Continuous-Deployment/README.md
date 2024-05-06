@@ -69,7 +69,7 @@ We just created a CSS stylesheet and the HTML template for the Home page. Let's 
 # pylint: disable=missing-docstring
 
 from flask import Flask, render_template
-from longest_world.game import Game
+from longest_wold.game import Game
 
 app = Flask(__name__)
 
