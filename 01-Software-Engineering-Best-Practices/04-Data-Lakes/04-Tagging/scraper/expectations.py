@@ -8,7 +8,7 @@ def send_message(message: str):
     """
     Send a message to the Wagon Chat channel.
     """
-    base_url = "https://wagon-chat.herokuapp.com"
+    base_url = "https://chat.api.lewagon.com"
     channel = os.environ["LAKE_BUCKET"]
     url = f"{base_url}/{channel}/messages"
 

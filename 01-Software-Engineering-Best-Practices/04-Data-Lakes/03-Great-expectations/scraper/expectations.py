@@ -25,7 +25,7 @@ def send_message(message: str):
     HTTPError:
         If the post request to the chat channel fails.
     """
-    base_url = "https://wagon-chat.herokuapp.com"
+    base_url = "https://chat.api.lewagon.com"
     channel = os.environ["LAKE_BUCKET"]
     url = f"{base_url}/{channel}/messages"
 
