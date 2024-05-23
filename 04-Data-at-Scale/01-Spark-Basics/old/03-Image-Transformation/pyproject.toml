@@ -6,7 +6,7 @@ authors = ["S. Saunier <seb@lewagon.org>"]
 
 [tool.poetry.dependencies]
 python = ">=3.8,<3.11"
-lewagonde = { path = "../../../common/lewagonde/", develop = true }
+lewagonde = { path = "../../../../common/lewagonde/", develop = true } # need to change relative path if used in another challenge
 streamlit = "^1.10.0"
 scikit-image = "^0.19.3"
 torch = "^1.12.0"
@@ -39,6 +39,3 @@ profile = "black"
 line_length = 160
 multi_line_output = 3
 include_trailing_comma = true
-
-[virtualenvs]
-in-project = true

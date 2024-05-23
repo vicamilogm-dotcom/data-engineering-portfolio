@@ -38,6 +38,16 @@ test:
 update:
 	find . -name pyproject.toml -exec sh -c 'echo $$(exec dirname {}) && cd $$(exec dirname {}) && poetry update' \;
 
+	# Refresh all poetry.lock files at once!
+.PHONY: refresh-lock
+refresh-lock:
+	find . -name pyproject.toml -exec sh -c 'echo $$(exec dirname {}) && cd $$(exec dirname {}) && poetry lock --no-update' \;
+
+# Remove all your virtualenvs at once!
+.PHONY: remove-venvs
+remove-venvs:
+	find . -name pyproject.toml -exec sh -c 'echo $$(exec dirname {}) && cd $$(exec dirname {}) && rm -rf .venv' \;
+
 # Delete all your test outputs used by Kitt to track your progress
 .PHONY: del-test-output
 del-test-output:

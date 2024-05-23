@@ -3,6 +3,7 @@ name = "4-ETL-and-introduction-to-Airflow/02-local-etl"
 version = "0.1.0"
 description = ""
 authors = ["S. Saunier <seb@lewagon.org>"]
+package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.8"
@@ -17,7 +18,6 @@ black = "^22.3.0"
 isort = "^5.10.1"
 pytest-mock = "3.2.0"
 apache-airflow-backport-providers-sqlite = "2021.3.3"
-
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.3"
@@ -38,6 +38,3 @@ include_trailing_comma = true
 
 [tool.pytest.ini_options]
 markers = ["optional: not required, nor saved in test_output.txt"]
-
-[virtualenvs]
-in-project = true

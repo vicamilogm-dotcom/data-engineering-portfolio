@@ -3,6 +3,7 @@ name = "00-setup-exercise"
 version = "0.1.0"
 description = ""
 authors = ["Your Name <you@example.com>"]
+package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.8"
@@ -31,9 +32,6 @@ profile = "black"
 line_length = 160
 multi_line_output = 3
 include_trailing_comma = true
-
-[virtualenvs]
-in-project = true
 
 [tool.pytest.ini_options]
 filterwarnings = [

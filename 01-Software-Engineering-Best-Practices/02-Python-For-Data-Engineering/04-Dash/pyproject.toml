@@ -4,6 +4,7 @@ version = "0.1.0"
 description = ""
 authors = ["Oliver Giles <oliver.giles@lewagon.org>"]
 readme = "README.md"
+package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.8"
@@ -13,7 +14,6 @@ dash-html-components = "^2.0.0"
 plotly = "^5.17.0"
 pandas = "^1.5.3"
 dash-bootstrap-components = "^1.5.0"
-
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.3"

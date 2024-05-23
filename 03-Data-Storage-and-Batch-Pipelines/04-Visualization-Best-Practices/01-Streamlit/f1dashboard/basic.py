@@ -84,6 +84,26 @@ def top_drivers():
     pass  # YOUR CODE HERE
 
 
+@st.cache_data
+def lewis_over_the_years():
+    """
+    Get the points from Lewis Hamilton between 2007 and 2018.
+    Use the following table to get the data:
+        - drivers
+        - driver_standings
+        - races
+
+    Returns:
+        pd.DataFrame: The points from Lewis Hamilton over the years, with the columns:
+                        - year
+                        - total_points
+    """
+    st.info(
+        "Write a query to get the points of Lewis Hamilton over the years and visualize the results."
+    )
+    pass  # YOUR CODE HERE
+
+
 def session_state(data):
     """
     Initialize the session state

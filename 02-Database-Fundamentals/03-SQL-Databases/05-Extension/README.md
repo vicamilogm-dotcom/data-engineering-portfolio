@@ -1,6 +1,6 @@
 ## Vector postgres
 
-Apologies for the confusion. A vector database primarily stores vector representations of data, which are arrays of numbers, often in high-dimensional spaces. Here's a brief on their purposes:
+A vector database primarily stores vector representations of data, which are arrays of numbers, often in high-dimensional spaces. Here's a brief on their purposes:
 
 1. **Similarity Search**: Enable similarity search operations, like nearest neighbor searches, which are essential in recommendation systems, image and video recognition, and other AI/ML applications.
 2. **Dimensionality Reduction**: Handle dimensionality reduction efficiently, aiding in managing and processing high-dimensional data.

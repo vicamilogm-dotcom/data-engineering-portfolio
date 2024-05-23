@@ -8,7 +8,6 @@ packages = [
     { include = "taxi_spark"},
 ]
 
-
 [tool.poetry.dependencies]
 python = ">=3.8,<3.12"
 pyspark = "^3.5.0"
@@ -18,7 +17,8 @@ psycopg2-binary = "^2.9.9"
 google-cloud-storage = "^2.11.0"
 python-dotenv = "^1.0.0"
 apache-airflow-providers-google = "^10.10.1"
-
+requests = "^2.32.2"
+docutils = "!=0.21.post1" # issue with the pypi docutils release. Ref https://github.com/python-poetry/poetry/issues/9293
 
 [tool.poetry.group.dev.dependencies]
 ipython = "^8.0.0"
@@ -30,7 +30,6 @@ filterwarnings = [
     "ignore:pkg_resources is deprecated:DeprecationWarning",
     "ignore:Deprecated call to `pkg_resources.declare_namespace:DeprecationWarning",
 ]
-
 
 [build-system]
 requires = ["poetry-core"]

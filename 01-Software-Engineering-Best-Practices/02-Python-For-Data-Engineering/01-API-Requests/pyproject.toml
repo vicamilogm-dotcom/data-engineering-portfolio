@@ -10,7 +10,6 @@ packages = [{include = "pokemon"}]
 python = "^3.8"
 requests = "^2.30.0"
 
-
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.3.1"
 

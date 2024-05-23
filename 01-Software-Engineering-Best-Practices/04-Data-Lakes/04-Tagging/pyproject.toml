@@ -18,7 +18,6 @@ great-expectations = "^0.17.19"
 jupyter = "^1.0.0"
 google-cloud-datacatalog = "^3.15.2"
 
-
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.3"
 

@@ -30,6 +30,3 @@ profile = "black"
 line_length = 160
 multi_line_output = 3
 include_trailing_comma = true
-
-[virtualenvs]
-in-project = true
