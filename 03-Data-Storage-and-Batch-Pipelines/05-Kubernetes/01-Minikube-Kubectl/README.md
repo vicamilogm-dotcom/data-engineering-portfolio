@@ -41,7 +41,7 @@ Before you get started there are some key extensions we need for VSCode to make 
 
 <img src="https://wagon-public-datasets.s3.amazonaws.com/data-engineering/W1D5/extensions.png" width=200>
 
-# 2️⃣Launching Minikube 🚀
+# 2️⃣ Launching Minikube 🚀
 
 To launch Minikube and start a cluster, you'll need to open a terminal and run the following command :
 
@@ -132,17 +132,15 @@ spec:
 In the first part, we specify that the configuration file is for a Service that we named `fastapi-service`.
 
 A selector usually determines the set of Pods targeted by a Service.
-In the spec, we specify that it is a **LoadBalancer service**.
+In the spec, we specify `fastapi-service` is a **LoadBalancer service**.
 
-This specification creates a new Service object named "fastapi-service"
+This specification creates a new Service object named "fastapi-service". But how are the ports working?
 
 - `targetPort` 8000: The port of the pods (where the fastAPI is running).
--
 - `port` 5000: The exposed port external users use to access the Service
 
 
-
-Let's create our service 👇
+Finally apply the `service.yaml` config file to create the service 👇
 
 ```bash
 kubectl apply -f service.yaml
@@ -156,7 +154,7 @@ Let's inspect our new service
 kubectl get service fastapi-service
 ```
 
-You should see something like this (let's not care too much about IP for now)
+You should see something like this (don't worry about IP for now)
 
 ```text
 NAME            TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
@@ -260,9 +258,9 @@ To see the app running we need one last thing: to forward to port from the clust
 kubectl port-forward service/fastapi-service 9000:5000
 ```
 
-This command will forward the service port we defined in the `service.yaml` to 9000 on the localhost of your VM.
+This command will forward the service port we defined in `service.yaml` (port 5000) to port 9000 on the localhost of your VM.
 
-Then forward the port 9000 again to your host machine (MacBook, Windows...) and you should be able to see your running service!
+If you forward port 9000 to your host machine (MacBook, Windows...) and you should be able to access your running service!
 
 # 7️⃣ Using Minikube dashboard 🖼️
 
