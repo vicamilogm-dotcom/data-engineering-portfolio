@@ -1,4 +1,10 @@
-🎯 The goal of this exercise is to put the Streamlit F1 dashboard in production on Kubernetes (k8s), deployed on Google Kubernetes Engine (GKE).
+🎯 The goal of this exercise is to put the Streamlit F1 dashboard app and accompanying Postgres database in production on Kubernetes (k8s).
+
+🖥️☁️ We'll start off with a local deployment using Minikube then deploy in the cloud on Google Kubernetes Engine (GKE).
+
+📦 The Streamlit F1 dashboard is the same dashboard that you worked on in the **Streamlit** challenge in the **Data Visualisation unit**. We've provided the Streamlit code so you can focus on the Kubernetes concepts. Feel free to have a look through the code if you didn't finish the Data Visualisation - Streamlit challenge.
+
+❗ This is a substantial challenge, don't worry if you don't finish it during the bootcamp! It's a fantastic challenge to come back and revisit after you've finished! 💪
 
 # 0️⃣ Context
 
@@ -6,34 +12,35 @@
   <summary markdown='span'> Open me! </summary>
 
 This time, we'll have to deal with 2 separate containers:
-- streamlit (to build from our local Dockerfile)
-- postgres (to build form official dockerhub image)
+- Streamlit (to build from our local Dockerfile)
+- Postgres (to build from official dockerhub image)
 
-Compared with 1 `docker-compose.yml`, K8s will requires us to explode configuration into many configurations files!
+Compared with 1 `docker-compose.yml`, K8s will require us to explode configuration into many configurations files!
 
-- 3 for Streamlit
+- 3 for Streamlit:
   - service
   - deployment
   - secret
 
-- 5 for Postgres
+- 5 for Postgres:
   - service
   - deployment (statefulset)
   - secrets
   - volumes
   - volumes claims
 
-- And for deployment on GKE we'll have to modify 4 existing `.yaml`'s with GCP specific parameters.
+- And for deployment on GKE we'll have to modify 4 existing `.yaml`'s with GCP specific parameters:
   - Streamlit deployment cloud
   - Postgres deployment (statefulset) cloud
   - volumes cloud
   - volumes cloud claim
 
-🔍 Through this we will see a number of important concepts in k8s such as
+🔍 Through this we will see a number of important concepts in k8s such as:
 - secrets
 - volumes
 - communication between services
 - scaling
+- fault tolerance
 
 
 Let's do it! 🏎️
@@ -290,7 +297,7 @@ Finally the most complicated difference is how we use our volume we created befo
 volumes:
 - name: postgres-mount
     persistentVolumeClaim:
-    claimName: postgres-volume-claim
+        claimName: postgres-volume-claim
 ```
 
 The `volumes` section brings our claim into this yaml with the name `postgres-mount`.
@@ -383,7 +390,6 @@ spec:
   selector:
     app: streamlit
 ```
-
 </details>
 
 
@@ -391,7 +397,7 @@ spec:
 
 For our secrets in the original app we used a `secrets.toml` file. In k8s we can actually mount an entire secrets file as a value in the YAML file!
 
-❓ Create a new file `streamlit-secret.yaml`. Here the keys should be the name of the files in your `.streamlit` you used yesterday and the values should be the results of `base64 <file>`!
+❓ Create a new file `streamlit-secret.yaml`. Here the keys should be the name of the files in your `.streamlit` you used in the _Data Visualization - Streamlit_ challenge and the values should be the results of `base64 <file>`!
 ```yaml
 data:
   secrets.toml: <result of base64 secrets.toml>
@@ -422,6 +428,16 @@ Now we are ready to put it into the container!
 
 ❓ First, build the streamlit Dockerfile **inside minikube** (🚨 not in your VM docker deamon)
 You should see it with `docker images` along with a dozen other k8s containers...
+
+<details>
+<summary markdown='span'>💡 How to change docker context</summary>
+Run the following command and follow its instructions:
+
+```bash
+minikube docker-env
+```
+
+</details>
 
 ❓ Then, let's create a new `streamlit-deployment.yaml`
 
@@ -569,7 +585,7 @@ Hopefully our cluster is done provisioning now!
 
 ## 4.4 Putting it all together 🦋
 
-❓ Lets make your local `kubectl` CLT target your GCP new cluster (`minikube` was automatically kubectl target to minikube under the hood):
+❓ Lets make your local `kubectl` target your GCP new cluster (`minikube` was automatically kubectl target to minikube under the hood):
 
 ```bash
 gcloud container clusters get-credentials streamlit-f1 --region europe-west1
@@ -628,10 +644,23 @@ It will reprovision itself *on the other node* everything intact. For a complete
 
 ## 🏁 Lets cleanup so we don't spend too much:
 
+To delete your cluster deployed on GKE 👇
+
 ```bash
 kubectl delete -f . \
 && gcloud container clusters delete streamlit-f1 --region=europe-west1
 ```
 
+To delete your local cluster to free up resources 👇
+
+```bash
+minikube delete
+```
+
+To stop Minikube 👇
+
+```bash
+minikube stop
+```
 
 </details>

@@ -50,7 +50,24 @@ class F1Queries:
                         - total_points
         """
 
-        pass  # YOUR CODE HERE
+        top_drivers = self._run_query(
+            """
+        select
+            concat(forename,' ',surname) as driver_name,
+            sum(points) as total_points
+        FROM
+            drivers
+        inner join
+            driver_standings on drivers.driver_id = driver_standings.driver_id
+        group by
+            concat(forename,' ',surname)
+        order by
+            sum(points) desc
+        limit
+            5
+        """
+        )
+
         return top_drivers
 
     def lewis_over_the_years(self):
@@ -66,7 +83,36 @@ class F1Queries:
                             - year
                             - total_points
         """
-        pass  # YOUR CODE HERE
+
+        lewis_points = self._run_query(
+            """
+        with lewis_id as (
+            select driver_id from drivers where surname = 'Hamilton'
+        ),
+
+        driver_points as (
+            select points, race_id, driver_id from driver_standings
+        ),
+
+        race_results as (
+            select race_id, year from races
+        )
+        select
+            year, sum(points) as total_points
+        from
+            lewis_id
+        inner join
+            driver_points
+        on
+            lewis_id.driver_id = driver_points.driver_id
+        inner join
+            race_results on race_results.race_id = driver_points.race_id
+        where year > 2006
+        group by
+            year
+        """
+        )
+
         return lewis_points
 
 
