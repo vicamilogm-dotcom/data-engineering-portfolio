@@ -1,8 +1,18 @@
-🎯 This exercise will use **poetry** to create a toolbox that will be published and available to install anywhere!
+# 🎯 Goals
 
-# Creating the `de_toolkit` package
+The goal of this exercise is to:
+- Create a command line tool to start and stop your VM using python and shell scripts.
+- Use `poetry` to create the python package and manage dependencies.
+- Publish the package so that your package is available to install anywhere.
+    - Firstly to the public **pypi** repository
+    - Secondly to a private package repository: **Gemfury**
+- Optional: install the package locally if you have a local developer environment.
 
-## Lets start by creating a new poetry package!
+<br>
+
+# 1️⃣ Lets start by creating a new poetry package!
+
+We'll start with creating the package outside of the `data-engineering-challenges` folder so it is entirely separate from the challenges and can have its own github repository.
 
 <details>
 <summary markdown='span'>If you need a quick refresher on python packages</summary>
@@ -21,7 +31,34 @@ Then, open this folder in your VS code Explorer, so that you see your package AN
 code -a . # open the folder in another workspace in the same VS code
 ```
 
-At this point, we will have our README.md, basic pyproject.toml, <user.lower_github_nickname>_de_toolkit to populate, and a tests folder if needed.
+At this point, we will have our `README.md`, a basic `pyproject.toml`, `<user.lower_github_nickname>_de_toolkit` package directory to populate, and a `tests/` folder if needed.
+
+Your `pyproject.toml` should look like this:
+
+```toml
+[toml.poetry]
+name = "<user.lower_github_nickname>-de-toolkit"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <example@email.com>"]
+readme = "README.md"
+packages = [{include = "<user.lower_github_nickname>_de_toolkit"}]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+```
+
+❗ Make sure that your `pyproject.toml` includes the `packages = [{...}]` line. This tells poetry that you want to install the package `<user.lower_github_nickname>_de_toolkit` as a python package. We're building a command line tool so we definitely want our package to be installed!
+
+<details>
+<summary markdown='span'>💡 When wouldn't I want to install my own package?</summary>
+If you were only using poetry purely as an external python package depency manager and didn't want to install your python project locally. An example would be in a DBT or Airflow project, but we can save that idea for later!
+</details>
 
 Lets add [click](https://click.palletsprojects.com/en/8.1.x/) to our project to help develop our CLI:
 ```bash
@@ -46,9 +83,9 @@ if __name__ == '__main__':
     cli()
 ```
 
-Here, we are setting up the skeleton of a CLI using [group](https://click.palletsprojects.com/en/8.1.x/commands/). This is where we will add other commands to flesh it out.
+Here, we are setting up the skeleton of a CLI using [group](https://click.palletsprojects.com/en/8.1.x/commands/) with the `@click.group()` decorator. This is where we will add other commands to flesh it out.
 
-Now, if you run `poetry run python <user.lower_github_nickname>_de_toolkit/main.py`, you should see an empty documentation appear. One of the great features of click is how it uses doc strings in order to generate readable CLI feedback!
+Now, if you run `poetry run python <user.lower_github_nickname>_de_toolkit/main.py`, you should see some empty documentation appear. One of the great features of click is how it uses doc strings in order to generate readable CLI feedback!
 
 💡 **Let's alias** this long command. Add a line to our `pyproject.toml` to create alias `deng`:
 
@@ -58,9 +95,10 @@ deng = '<user.lower_github_nickname>_de_toolkit.main:cli'
 ```
 Now, we can run our CLI with `poetry run deng` instead 👌
 
+<br>
 
-## Core logic
-🎯 The goal of this package is to help you start and stop your VM every morning and evening in one line of code!
+# 2️⃣ Core logic
+🎯 The goal of this package is to help you start and stop your VM at the start and end of every session in one line of code!
 
 At the end, we'll want to use it as follows, from your local machine:
 
@@ -68,7 +106,7 @@ At the end, we'll want to use it as follows, from your local machine:
 2️⃣ `deng stop`: Stop the vm (using `gcloud`)
 3️⃣ `deng connect` Connect directly to VScode inside your challenge folder!
 
-❓ Create a new file `touch <user.lower_github_nickname>_de_toolkit/vm.py` to contain our vm commands and **Try to implement these** in the function shells below using the inbuilt [subprocess](https://docs.python.org/3/library/subprocess.html) module!
+❓ Create a new file `touch <user.lower_github_nickname>_de_toolkit/vm.py` to contain our vm commands. **Try to implement these** in the function shells below using the inbuilt [subprocess](https://docs.python.org/3/library/subprocess.html) module!
 
 ```python
 import click
@@ -90,8 +128,6 @@ def connect():
     # your code here
 ```
 
-<br>
-
 <details>
 <summary markdown='span'>💡 Hints: gcloud commands</summary>
 
@@ -106,10 +142,7 @@ code --folder-uri vscode-remote://ssh-remote+username@<vm ip>/<path inside vm>
 ```
 </details>
 
-<br>
-
-**❓ Add these three commands to our `cli` group using
-`cli.add_command(<your command>)` in main.py**
+❓ Add these three commands to our `cli` group using `cli.add_command(<your command>)` in main.py
 
 Running `poetry run deng` should now list you these 3 options
 
@@ -128,18 +161,16 @@ Commands:
 
 <br>
 
-# Publish to pypi
+# 3️⃣ Publishing your package
+
+## 3.1. Publish to pypi
 <img src="https://wagon-public-datasets.s3.amazonaws.com/data-engineering/W0D1/pypi-logo.png" width=100>
 
 🎯 Now we have our CLI. We want to publish it to make it available from any computer with python without needing the `.py` files.
 
 The python package index (known as pypi) is where packages that you can install directly with `pip` or in our case `poetry`, so that your package can become available on a new setup without having to re-clone the repository.
 
-<br>
-
-
-❓ Signup to [pypi](https://pypi.org/account/register/). Then create an api token from
-[account settings](https://pypi.org/manage/account/) and make sure it has the scope entire account so that it can generate new projects!
+❓ Signup to [pypi](https://pypi.org/account/register/). Then create an api token from [account settings](https://pypi.org/manage/account/) and make sure it has the scope entire account so that it can generate new projects!
 
 **Then create a `.env` at the root of your package** containing the following to store your token:
 
@@ -175,7 +206,7 @@ Now go to [your package](https://pypi.org/project/<user.github_nickname>-de-tool
 
 <br>
 
-# Publish to private repository instead with `Gemfury`
+## 3.2. Publish to private repository instead with Gemfury
 
 
 There are plenty of solutions for private repositories even hosting them [yourself](https://pypi.org/project/pypiserver/)! For ease, we will use [gemfury](https://gemfury.com/), you can login with Github and then go to this [page](https://manage.fury.io/manage/<user.github_nickname>/tokens/full) to get a full access token.
@@ -210,27 +241,28 @@ You can see that this workflow is slightly more long-winded than publishing to p
 
 <br>
 
-# Install your private package to you LOCAL machine
+# 4️⃣ Optional: Install your private package on your LOCAL machine
 
->🚨 *ONLY DO THIS SECTION IF PYTHON IS INSTALLED ON YOUR LOCAL HOST MACHINE, OTHERWISE PLEASE SKIP.*
+>🚨 **ONLY DO THIS SECTION IF PYTHON IS INSTALLED ON YOUR LOCAL HOST MACHINE, OTHERWISE PLEASE SKIP.**
 
+- Assumes you have GCP authentication on your **local** computer
 - You do not need to have python locally installed on your machine for this bootcamp
-- You don't have time to configuring your local machine today
+- You do not have time to configure your local machine today
 
-If you have python and pip installed locally:
+If you have python and pip installed locally, there are two options for installing your package locally:
 
-Option 1: Create a `~/.pip/pip.conf` with these credentials below:
+**Option 1**: Create a `~/.pip/pip.conf` with these credentials below:
 ```bash
 [global]
 trusted-host = pypi.fury.io
 extra-index-url = https://<YOUR_GEMFURY_TOKEN_HERE>@repo.fury.io/<user.lower_github_nickname>/
 ```
-pip will now use Gemfury instead of piPy whenever the package name exists on the former:
+pip will now use Gemfury instead of pipy whenever the package name exists on the former:
 ```bash
 pip install <user.github_nickname>-de-toolkit
 ```
 
-Option 2: Just give the gemfury as a one-off, with pip or pipx
+**Option 2**: Just give the gemfury as a one-off, with pip or pipx:
 
 ```bash
 # Inside your local python virtualenv
@@ -239,6 +271,10 @@ pip install <user.lower_github_nickname>-de-toolkit --index-url https://<your-to
 pipx install <user.lower_github_nickname>-de-toolkit --pip-args='--extra-index-url https://<YOUR_GEMFURY_TOKEN_HERE>@repo.fury.io/<user.lower_github_nickname>/'
 ```
 
+If install was successful, try to run the following commands on your local computer to test it out:
+
 👉 Try to `deng connect` !
-👉 `deng stop` every evening
-👉 `deng start` every morning
+👉 `deng start` at the start of every session
+👉 `deng stop` at the end of every session
+
+<br>
