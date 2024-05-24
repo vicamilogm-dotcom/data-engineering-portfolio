@@ -1,4 +1,4 @@
-# Pandas
+# 🎯 Goal and Introduction
 
 Pandas is crucial for data engineering because it simplifies data manipulation, integration, exploration, and analysis. It offers powerful tools like DataFrames, which enable effortless cleaning, transforming, and reshaping of data. 🧹💪
 
@@ -14,46 +14,62 @@ Once data processing is complete, pandas allows for easy data export or integrat
 
 Overall, pandas serves as a versatile tool for data engineers, boosting productivity and efficiency in their work. 🐼💻
 
-## Data
+<br>
 
-We will use kaggle again this time to use this good reads [dataset](https://www.kaggle.com/datasets/mohamedbakhet/amazon-books-reviews)
+# 0️⃣ Data
 
-```
+We will again use kaggle to source our data. This time we'll use this tabular [Goodreads dataset](https://www.kaggle.com/datasets/mohamedbakhet/amazon-books-reviews).
+
+```bash
 kaggle datasets download -d mohamedbakhet/amazon-books-reviews --unzip -p ./data
 ```
 
-## Goal 🎯
+<br>
 
-We want to use pandas to build an example data pipeline we have our two csvs at the moment `books_data.csv` and `Books_rating.csv` The pipeline has these specifications beyond step 1 you can work in any order the exact instructions are included in all of the doc strings of the functions!
+# 1️⃣ Pandas pipeline
 
-1. Complete `pandas_pipeline/load.py`
-2. Complete `pandas_pipeline/best_books.py` to check the output is good run
+We want to use pandas to build a data pipeline. We have two CSV files at the moment: `books_data.csv` and `Books_rating.csv`. The pipeline specifications are written out below. After completing Step 1 you can work in any order, more specific instructions are included in all of the functions docstring's!
+
+1. Complete `pandas_pipeline/load.py` which loads data relevent data from an input path.
+2. Complete `pandas_pipeline/best_books.py` which will generate a CSV file of the top 10 best performing books based on their average review score.
+🧪 Test
 ```bash
 pytest -k test_best_performing_books_csv
 ```
-3. Complete `pandas_pipeline/category_distribution.py` to check the output is good run
+3. Complete `pandas_pipeline/category_distribution.py` which will generate a CSV file of the book categories distribution.
+🧪 Test
 ```bash
 pytest -k test_category_distribution_csv
 ```
-4. Complete `pandas_pipeline/top_authors.py` to check the output is good run
+4. Complete `pandas_pipeline/top_authors.py` which will generate a CSV of the 10 most impactful authors baset on their average score and number of reviews.
+🧪 Test
 ```bash
 pytest -k test_author_impact_analysis_csv
 ```
-5. Complete `pandas_pipeline/review_years.py` to check the out is good run
+5. Complete `pandas_pipeline/review_years.py` that will calculate the average review scroes over time and save the results to a CSV file
+🧪 Test
 ```bash
 pytest -k test_review_years_csv
 ```
 
-## Finish 🏁
+<br>
 
-Once each of the functions work you can run the entire pipeline with
+# 🏁 Finish
+
+Once each of the functions work run the entire pipeline with:
 
 ```bash
 python pandas_pipeline/pipeline.py
 ```
 
-and push the output of
+And have a look at the output!
+
+🧪 Test all of your code with:
 
 ```bash
 make test
 ```
+
+And don't forget to commit and push all your code to github 🚀
+
+<br>

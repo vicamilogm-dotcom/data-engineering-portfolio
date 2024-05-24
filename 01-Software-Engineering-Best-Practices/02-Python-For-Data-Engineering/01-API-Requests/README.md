@@ -1,19 +1,22 @@
-# API Requests
 
-🎯 The goal of this exercise is to make some `GET` api calls via the python `requests` library
+# ❗ Before you get started
 
-## Before you get started
+If you did not complete the challenge `010103-Linux-and-Bash` on Setup Day, we strongly recommend that you return to finish it at some point throughout this unit to minimise VM costs!
 
-If you did not setup the service to auto stop in the previous unit we recommend that you go back and do `010103-Linux-and-Bash` at some point throughout this first unit to make sure to minimize your vm costs!
+<br>
 
-## Introduction
+# 🎯 Goals
 
+The goal of this exercise is to make some `GET` API calls via the python `requests` library
 
 We will be using the PokeApi to access information about pokemon. Here is the [documentation](https://pokeapi.co/docs/v2). We will begin with some basic calls and then move into functions which require multiple requests to get the proper information!
 
-## Advice for writing api calls
+<br>
 
-1. Check the documentation and write out a call for lets say we wanted to look up a specific pokemon generation via an api call we would find out how to do there here: https://pokeapi.co/docs/v2#games-section
+# 1️⃣ Introduction
+## 1.1. Advice for writing API calls
+
+1. Have a look at the documentation to get familiar with the different API endpoints. Let's say we wanted to look up a specific pokemon generation via an API call. We would find out how to do that here: https://pokeapi.co/docs/v2#games-section
 
 2. Next enter the call directly into the browser so for example look up generation 1 👇
 
@@ -21,17 +24,19 @@ We will be using the PokeApi to access information about pokemon. Here is the [d
 https://pokeapi.co/api/v2/generation/1
 ```
 
-For this to make it easier to interact with in the browser we recommend adding an extension for [firefox](https://addons.mozilla.org/en-GB/firefox/addon/jsonview/) or for [chrome](https://chrome.google.com/webstore/detail/json-viewer/gbmdgpbipfallnflgajpaliibnhdgobh) (if you use any other browser search for your browser + json viewer and you should find something similar!)
+To make the responding JSON object easier to interact with in a web browser we recommend adding an extension for [firefox](https://addons.mozilla.org/en-GB/firefox/addon/jsonview/) or for [chrome](https://chrome.google.com/webstore/detail/json-viewer/gbmdgpbipfallnflgajpaliibnhdgobh). If you use any other browser do a google search for your browser + json viewer and you should find something similar!
 
 3. Check that it returns what you want! 🕵️‍♀️
 
-4. Finally convert it into python so in this example this would be the call to requests
+4. Finally convert it into python. In this example this would be to use the [requests](https://requests.readthedocs.io/en/latest/) library.
 
 ```python
+import requests
+
 requests.get("https://pokeapi.co/api/v2/generation/1")
 ```
 
-## Import requests
+## 1.2. Import requests
 
 ❓ You need to add the requests library to the python file in `pokemon/lookup.py`!
 
@@ -43,7 +48,9 @@ Once you are done you can checkout whether it was done correctly by running the 
 pytest tests/test_lookup.py::test_import_requests
 ```
 
-## Get pokemon
+<br>
+
+# 2️⃣ Get pokemon with your first request
 
 Now go to `lookup.py` **your goal is to complete the first function** `get_pokemon`.
 So far you have the function outline
@@ -54,7 +61,7 @@ def get_pokemon(limit: int = 100, offset: int = 0) -> dict:
     pass  # YOUR CODE HERE
 ```
 
-There is some important information here to help you. The function has the params filled in with types so `limit: int` means your function will accept an integer argument called limit. The `-> dict` tells you that the function should return this type. Finally between the `"""` we have a docstring which describes the intent of a function.
+There is some important information here to help you. The *function signature* has the *parameters* and the corresponding *data types* defined. So `limit: int` means your function will accept an integer argument called limit. The `-> dict` tells you that the function should return an object of type `dict`. Finally between the `"""` just below the function signature is the *docstring* which describes the intent of the function.
 
 ❓ With all of the information try and code this function!
 
@@ -77,48 +84,47 @@ tests/test_lookup.py .                                                          
 =============================================================================================================== 1 passed in 0.60s ================================================================================================================
 ```
 
-**If you do move on to the next section!**
+**If the tests have passed, move on to the next section!**
 
-If not, try to read the message and understand why your function is not passing the test. Go back an iteration and try to update your function until it passes! Using the output of tests to write your code is a really important practice when working on a large codebase with lots of other engineers.
+If not, try to read the message and understand why your function is not passing the test. Go back and try to update your function until it passes! Using the output of tests to write your code is a really important practice when working on a large codebase with lots of other engineers.
 
-## Code the other functions
+<br>
+
+# 3️⃣ Code the other functions
 
 ❓ Now code the other functions inside `lookup.py`
 
-1.
-Code `check_pokemon_move` which checks whether a pokemon can learn a move
-
-Test 🧪:
+1. Code `check_pokemon_move` which checks whether a pokemon can learn a move.
+🧪 Test
 ```bash
 pytest tests/test_lookup.py::test_check_pokemon_move
 ```
-2.
-Code `get_pokemon_types` which gets all the pokemon of a given type or of two types if an optional second type is given
-
-Test 🧪:
+2. Code `get_pokemon_types` which gets all the pokemon of a given type or of two types if an optional second type is given.
+🧪 Test
 ```bash
 pytest tests/test_lookup.py::test_get_pokemon_types
 ```
-3.
-Finally code the most complicated function `get_evolutions` which looks up the pokemon which either it has evolved from, to, or both!
-
-Test 🧪:
+3. Finally code the most complicated function `get_evolutions` which looks up the pokemon which either it has evolved from, to, or both!
+🧪 Test
 ```bash
 pytest tests/test_lookup.py::test_get_evolutions
 ```
 
-## 🏁
+<br>
 
-🚀 Finally run all of the tests:
+# 🏁 Test and push your code
+
+🚀 Finally, to run all of the tests together:
 
 ```bash
 make test
 ```
 
-If they all pass you should push your code and move onto the next exercise!
+If they all pass, push your code and move onto the next exercise!
 
 ```bash
 git add --all
 git commit -m "finished pokemon api exercise"
 git push origin main
 ```
+<br>
