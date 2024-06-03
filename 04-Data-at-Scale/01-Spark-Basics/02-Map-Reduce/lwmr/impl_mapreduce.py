@@ -5,7 +5,7 @@ from multiprocessing import Pool, cpu_count
 from lwmr.text_processing import get_words
 
 
-num_jobs = cpu_count()
+NUM_JOBS = cpu_count()
 
 
 def split_file_into_chunks(txt_path:str, n_chunk:int) -> List[str]:
@@ -57,12 +57,12 @@ def shuffle(word_groups_with_counts: List[List[Tuple[str, int]]]) -> List[Tuple[
 
 def final_reduce(shuffled_words: List[Tuple[str, List[int]]]) -> Dict[str,int]:
     '''
-    take a list of words with their list of ones and reduce it to a list of word with their count within the text
+    take a list of words with their list of ones and reduce it to a dict of words with their count within the text
     e.g: Input :
-        {
-            "Car": [1, 1],
-            "Dear": [1]
-        }
+        [
+            ("Car", [1, 1]),
+            ("Dear", [1]),
+        ]
     Output: {'Car': 2, 'Dear': 1}
     '''
 
