@@ -1,17 +1,17 @@
 # Dask on K8s
 
-🎯 Now the goal is to distribute computation across multiple machines by leveraging **dask** with **k8s**.
+🎯 Now the goal is to distribute computation across multiple machines by leveraging **Dask** with **k8s**.
 
 Dask is a parallel computing library in Python that enables distributed computing and is designed to integrate seamlessly with NumPy, Pandas, and scikit-learn. It allows you to scale from a single machine to a cluster.
 
-We will be able to process over **1,000,000,000** cells of new york taxi data in around **10 seconds** 💪
+We will be able to process over **1,000,000,000** cells of New York taxi data in around **10 seconds** 💪
 
 - That would never fit in your personal machine RAM memory 🤯
 - That would take ages on your personal machine CPU 🤯
 
 ## 1️⃣ Cluster setup!
 
-Lets start by creating a cluster with a lot of **cpus** ideal for distributing our task across!
+Let's start by creating a cluster with a lot of **CPUs**: ideal for distributing our task across!
 
 🚨 **Cost alert** 🚨
 > This will create **4 machines** (of `e2-standard-2`): 2 nodes in each of the 2 node-locations
@@ -37,12 +37,12 @@ gcloud container clusters create mydaskcluster \
 gcloud container clusters delete mydaskcluster --zone=europe-west1-b
 ```
 
-⏰ Keep reading while its provisionning (it can take 10min)
+⏰ Keep reading while its provisioning (it can take 10min)
 
 ## 2️⃣ Adding our helm chart
 
-First, install helm on your VM:
-```
+First, install **helm**** on your VM:
+```bash
 curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 ```
 
@@ -55,13 +55,13 @@ helm repo update
 
 ❓**Checkout `config.yaml` which will be used by helm**
 
-We are telling the cluster what the **worker** pods need in terms of **resources**. Adding the extra pip packages. ❗️ It is super important that the versions of packages you need for your code are the same locally and on the **pods** to allow it to be distributed. Finally we are disabling jupyter we are going to use the **jupyter on your vm!**
-
-</details>
+- We are telling the cluster what the **worker** pods need in terms of **resources**.
+- We are adding the extra pip packages. ❗️ It is super important that the versions of packages you need for your code are the same locally and on the **pods** to allow it to be distributed.
+- Finally we are disabling jupyter we are going to use the **jupyter on your vm!**
 
 ⏰ Hopefully the **GKE cluster** is done provisioning by now!
 
-Kubectl should be now configured to apply your commands to this GKE cluster
+Kubectl should be configured to apply your commands to this GKE cluster:
 
 ```bash
 kubectl config current-context
@@ -74,7 +74,7 @@ kubectl get nodes
 ```
 
 
-Then apply the help chart 👇
+Then apply the **helm** chart 👇
 
 ```bash
 helm install mydask dask/dask -f config.yaml --version=2022.11.0
@@ -89,9 +89,9 @@ kubectl get pods
 kubectl top nodes # how cool is that 😎
 ```
 
-☝️ You can see we have 6 pods running for Dask, with 3 CPU each. That's 18 CPUs for you to distribute your work on! One scheduler-pod is also using a CPU.
+☝️ You can see we have 4 pods running for Dask, with 1 CPU each. That's 4 CPUs for you to distribute your work on! One scheduler-pod is also using a CPU.
 
-We've got 5 spare CPU that we're not using 🥲. Finetuning the cluster is too much work for today, let's move on!
+We've got 3 spare CPUs that we're not using 🥲. Finetuning the cluster is too much work for today, let's move on!
 
 Then you can **port forward** from port **80** (the Dask default) on the `mydask-scheduler` **service** to **8000** on your vm.
 
@@ -112,7 +112,7 @@ This lets us access the dashboard which will allow us to track the computations 
 
 ❓ **Open up `dask.ipynb` with `jupyter` (not vscode) and follow the notebook!**
 
-Some jupyter dask extensions doesn't run in VScode
+Some jupyter dask extensions don't run in VS Code
 
 ## 4️⃣ Taking it further 🕵️
 
