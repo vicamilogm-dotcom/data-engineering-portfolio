@@ -128,7 +128,7 @@ Following the TDD paradigm, we need to add a test:
 # tests/test_game.py
 # [...]
     def test_unknown_word_is_invalid(self):
-        """A word that is not in the english directory should no be valid"""
+        """A word that is not in the English dictionary should not be valid"""
         new_game = Game()
         new_game.grid = list('KWIENFUQW') # Force the grid to a test case:
         assert new_game.is_valid('FEUN') is False
@@ -137,15 +137,15 @@ Following the TDD paradigm, we need to add a test:
 Let's commit this right now:
 
 ```bash
-git add test_game.py
+git add tests/test_game.py
 git commit -m "TDD: Check that attempt exists in the English dictionary"
 git push origin dictionary-api
 ```
 
 Now let's open a Pull Request on GitHub for this branch.
-- 💡 To make a pull request quickly you can use `gh pr create` or to directly open the correct page use `gh pr create --web`!
-- You might find it a bit early but that's something which is actually encouraged by the [GitHub flow](http://scottchacon.com/2011/08/31/github-flow.html): If you are stuck in the progress of your feature or branch and need help or advice, or if you are a developer and need a designer to review your work (or vice versa), or even if you have little or no code but some screenshot comps or general ideas, you open a pull request.
-- At Le Wagon, developers open Pull Request early on for their feature branches to show teammates what they are doing and solicit feedback early. No need to wait to be code-complete to open the Pull Request! Here is a screenshot of our main application, using the `[WIP]` prefix in the pull request titles to showcase the fact that the branch is not ready yet to be merged:
+- 💡 To make a pull request quickly you can use `gh pr create` or to directly open the web page use `gh pr create --web`!
+- You might find it a bit early but opening a Pull Request early is encouraged by the [GitHub flow](http://scottchacon.com/2011/08/31/github-flow.html). If you are stuck in the progress of your feature or branch and need help or advice, or if you are a developer and need a designer to review your work (or vice versa). Even if you have little or no code but some screenshots or general ideas, open a pull request.
+- At Le Wagon, developers open Pull Request early on for their feature branches to show teammates what they are doing and solicit feedback early. No need to wait to be code-complete to open the Pull Request! Here is a screenshot of our main application. Using the `[WIP]` prefix in the pull request titles to showcase the fact that the branch is not ready yet to be merged:
 
 <img src="https://res.cloudinary.com/wagon/image/upload/v1560714921/kitt-wip-prs_obp6e7.png" width=600>
 
@@ -217,7 +217,7 @@ Awesome job 🎉! Invite your buddy as a repo collaborator to review the code in
 
 Adding tests to a repository and coupling GitHub with a service like Github Actions gives the developer peace of mind when adding code, checking for possible regressions, exercising the whole test suite for _every single_ commit!
 
-Before pushing DevOps farther with the next exercise about Continuous Deployment, some final advices:
+Before pushing DevOps farther with the next exercise about Continuous Deployment, some final advice:
 
 - Keep Pull Request diffs as short as possible. A good size is **less than 100 lines** in the diff (`Files changed` tab on the Pull Request)
 - Keep Pull Request focused on a _single_ feature. Add at least a test for each pull request
