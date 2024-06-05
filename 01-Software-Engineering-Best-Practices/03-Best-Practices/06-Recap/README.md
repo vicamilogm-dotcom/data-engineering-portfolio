@@ -1,6 +1,9 @@
 # Workflow dependency & pre commit
 
+
+
 ## Workflow dependency
+
 
 Create a new repo and add this workflow
 
@@ -60,6 +63,7 @@ jobs:
       run: pip install mypy
     - name: Run type checks
       run: mypy .
+
 ```
 
 Add this python file and checkout the results of the action
@@ -72,6 +76,7 @@ def greet(name: int) -> str:
     return 42
 
 greet("world")
+
 ```
 
 - **Why**: Automating these checks ensures code quality and consistency without manual intervention. It catches errors early, making the development process more efficient.
@@ -86,11 +91,10 @@ greet("world")
 
 Allows you to run checks locally before each commit, catching issues earlier in the development cycle.
 
-**Why Use It**:
-
-1. Faster Feedback: Errors are caught on your local machine, not after pushing to the repository.
-2. Consistency: Ensures every developer runs the same checks, making codebase more uniform.
-3. Saves CI Time: By catching issues locally, it reduces the load on the CI pipeline, making it faster for everyone.
+- **Why Use It**:
+  1. Faster Feedback: Errors are caught on your local machine, not after pushing to the repository.
+  2. Consistency: Ensures every developer runs the same checks, making codebase more uniform.
+  3. Saves CI Time: By catching issues locally, it reduces the load on the CI pipeline, making it faster for everyone.
 
 Using both pre-commit hooks and CI checks provides a more robust setup. Pre-commit catches issues earlier, while CI serves as the final gatekeeper before code gets merged.
 
@@ -98,35 +102,33 @@ Setup a file in the root name `pre-commit-config.yaml`
 
 ```yaml
 repos:
-  - repo: 'https://github.com/charliermarsh/ruff-pre-commit'
-    rev: v0.0.265
-    hooks:
-      - id: ruff
-        args:
-          - '--ignore=E501,F821'
-  - repo: 'https://github.com/pre-commit/pre-commit-hooks'
+- repo: https://github.com/charliermarsh/ruff-pre-commit
+  # Ruff version.
+  rev: 'v0.0.265'
+  hooks:
+    - id: ruff
+      args: ["--ignore=E501,F821"]
+
+-   repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v2.3.0
     hooks:
-      - id: check-json
-      - id: check-merge-conflict
-      - id: check-xml
-      - id: check-yaml
-      - id: debug-statements
-      - id: detect-private-key
-      - id: pretty-format-json
-        args:
-          - '--autofix'
-          - '--indent=2'
-          - '--no-sort-keys'
-      - id: sort-simple-yaml
-      - id: trailing-whitespace
-      - id: end-of-file-fixer
-  - repo: 'https://github.com/psf/black'
-    rev: 23.3.0
+    - id: check-json
+    - id: check-merge-conflict
+    - id: check-xml
+    - id: check-yaml
+    - id: debug-statements
+    - id: detect-private-key
+    - id: pretty-format-json
+      args: ['--autofix', '--indent=2', '--no-sort-keys']
+    - id: sort-simple-yaml
+    - id: trailing-whitespace
+    - id: end-of-file-fixer
+
+-   repo: https://github.com/psf/black
+    rev: '23.3.0'
     hooks:
-      - id: black
-        args:
-          - '--line-length=88'
+    - id: black
+      args: ['--line-length=88']
 ```
 
 This is the one used at lewagon
