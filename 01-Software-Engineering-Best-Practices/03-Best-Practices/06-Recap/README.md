@@ -224,7 +224,9 @@ What happens when you run another `git status`?
 
 <details>
 <summary markdown='span'>💡 What just happened?!</summary>
-`pre-commit` should have failed the mypi check and returned something similar to the below image.
+`pre-commit` should have failed the mypi check and returned something similar to the image below:
+
+<img src="https://wagon-public-assets.s3.eu-west-3.amazonaws.com/mtl6ce5fa5iqzgo5se9mm4vj3pa1" width=600>
 
 If you run `git status` you'll see that `test_ci.py` was never committed - so you can fix the file and commit it again!
 </details>
