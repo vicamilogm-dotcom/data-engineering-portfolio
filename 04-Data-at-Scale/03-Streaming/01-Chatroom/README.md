@@ -1,4 +1,4 @@
-# Queues, PubSub
+# Queues
 
 When there is too much data to handle for our workers, when data flow needs to be managed, or processing scheduled, queues come to the rescue.
 
@@ -6,7 +6,7 @@ To decouple our applications, it is good practice to have them talk to one anoth
 
 A fun way to practice with queues is to replace machines by humans and build a chat application 🐦.
 
-We'll build that in three steps:
+We'll build that in a few steps:
 
 1. We'll start with the open source, rock-solid message broker [RabbitMQ](https://www.rabbitmq.com/). Each student will build their own chat server and clients.
 
@@ -18,7 +18,7 @@ We'll build that in three steps:
 
 ## Our RabbitMQ server
 
-Surprise surprise, we'll use Docker Compose to easily deploy RabbitMQ.
+We'll use Docker Compose again to easily deploy RabbitMQ.
 
 Follow the [Docker Hub documentation](https://hub.docker.com/_/rabbitmq) to add `rabbitmq:3.10.6-management` to the `docker-compose.yml`.
 
@@ -32,15 +32,15 @@ Follow the [Docker Hub documentation](https://hub.docker.com/_/rabbitmq) to add 
 ```bash
 direnv allow
 ```
-or if you have changed the envs
+Or if you have changed environment variables, make sure to reload them with:
 
-```reload
-direnv
+```bash
+direnv reload
 ```
 
-Then run the server in the background with `docker compose up -d`.
+Then run the server in a detached state in the background with `docker compose up -d`.
 
-You can check that it's up and running by going to the port 15672 in your web browser.
+You can check that it's up and running by going to port 15672 in your web browser.
 
 <details>
   <summary markdown='span'>💡 Hint</summary>
@@ -64,7 +64,7 @@ The code is heavily inspired by the [official tutorial](https://www.rabbitmq.com
 By the end of this section we should be able to run:
 
 ```bash
-python lwqueue/rabbitmq_subscriber.py --host localhost --port 5672 --rmq-username <RabbitMQ username> --rmq-password <RabbitMQ password> --mode print
+python lwqueue/rabbitmq_subscriber.py --host localhost --port 5672 --rmq-username <RabbitMQ_username> --rmq-password <RabbitMQ_password> --mode print
 ```
 
 to receive messages sent to our chat and print them out to the terminal.
@@ -72,7 +72,7 @@ to receive messages sent to our chat and print them out to the terminal.
 We'll also add the file `lwqueue/rabbitmq_send_message.py` to send a message using
 
 ```bash
-python lwqueue/rabbitmq_send_message.py --host localhost --port 5672 --rmq-username <RabbitMQ username> --rmq-password <RabbitMQ password> --username <your name> --message "<your message here>"
+python lwqueue/rabbitmq_send_message.py --host localhost --port 5672 --rmq-username <RabbitMQ_username> --rmq-password <RabbitMQ_password> --username <your_name> --message "<your message here>"
 ```
 
 ### Shared code
@@ -190,13 +190,13 @@ If you've reached this point, this means you've got RabbitMQ in a Docker network
 - Click on `Firewall` on the left menu
 - Click `CREATE FIREWALL RULE` (right next to `CREATE FIREWALL POLICY`)
   - Give it a name
-  - Give it the target tag `rabbitmq-<your username>`
+  - Give it the target tag `rabbitmq-<your_username>`
   - Source IPv4 ranges: `0.0.0.0/0` which means any IP can access it
   - Protocol and ports. On the internet, search whether the RabbitMQ protocol (AMQP) uses TCP or UDP (😄 can't give you all the answers!)
   - Once you've found the protocol and checked it, type `5672` in the `Ports` input
   - Click `CREATE`
 - Now go back to your virtual machine and click `EDIT`
-  - The target tag `rabbitmq-<your username>` given to your firewall rule above corresponds to a network target tag. Now look for `Network tags` and type `rabbitmq-<your username>`
+  - The target tag `rabbitmq-<your_username>` given to your firewall rule above corresponds to a network target tag. Now look for `Network tags` and type `rabbitmq-<your_username>`
   - Then click `SAVE` which will update your instance
 
 Your RabbitMQ server should be open to the world!
@@ -211,22 +211,22 @@ We wouldn't want to share our root user password though
 <summary markdown='span'>Solution 💡</summary>
 
 ```bash
-docker exec -it <your rabbit mq container> rabbitmqctl add_user messaging_user abc123
-docker exec -it <your rabbit mq container> rabbitmqctl set_permissions -p / messaging_user ".*" "" "^$"
+docker exec -it <your_rabbit_mq_container> rabbitmqctl add_user messaging_user abc123
+docker exec -it <your_rabbit_mq_container> rabbitmqctl set_permissions -p / messaging_user "^chat$" "^chat$" "^$"
 ```
 
 </details>
 
 
 Share the following with your mates (in Slack / Zoom / Teams):
-- Your server IP address
+- Your server IP address and your RabbitMQ username
 - The RabbitMQ password over [Password Pusher](https://pwpush.com/), make sure you increase the number of views to 100 for everyone to be able to see it.
 
 <details>
 <summary markdown='span'>💡 How to send messages to a classmates server</summary>
 
 ```bash
-python lwqueue/rabbitmq_send_message.py --host <classmates_vm_ip> --port 5672 --message <your_message> --username $USER --rmq-username <classmates_rmq_username> --rmq-password <classmates_rmq_password>
+python lwqueue/rabbitmq_send_message.py --host <classmates_vm_ip> --port 5672 --message "your message here" --username $USER --rmq-username <classmates_rmq_username> --rmq-password <classmates_rmq_password>
 ```
 
 </details>
@@ -234,6 +234,6 @@ python lwqueue/rabbitmq_send_message.py --host <classmates_vm_ip> --port 5672 --
 
 Now, are you receiving messages from your peers? No trash talking allowed... officially 😉!
 
-### 🏁 Finish
+# 🏁 Finish
 
 We have a chatroom working but next we are not done here we want to create some analytics for our chatroom!
