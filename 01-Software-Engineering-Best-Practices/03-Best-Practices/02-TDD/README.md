@@ -105,7 +105,7 @@ class TestGame:
             grid = new_game.grid
 
             # verify
-            assert type(grid) == list
+            assert isinstance(grid, list)
             assert len(grid) == 9
             for letter in grid:
                 assert letter in string.ascii_uppercase
@@ -142,7 +142,7 @@ self = <tests.test_game.TestGame object at 0x7f0c169e4af0>
     def test_game_initialization(self):
         new_game = Game()
         grid = new_game.grid
->       assert type(grid) == list
+>       assert isinstance(grid, list)
 E       AssertionError: assert <class 'NoneType'> == list
 E        +  where <class 'NoneType'> = type(None)
 
