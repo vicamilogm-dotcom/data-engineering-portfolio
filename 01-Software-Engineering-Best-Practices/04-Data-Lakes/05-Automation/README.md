@@ -1,15 +1,19 @@
-# Automation!
+# 🎯 Goals
 
-We want to deploy a cloud function and automate it to happen everyday! A cloud function is a small piece of code that runs on the cloud. It is a great way to run small pieces of code without having to worry about servers or infrastructure. We will use a cloud function to run our scraper everyday.
+We have a pipeline that does a fair bit, but how can we automate the process? One way is to deploy a cloud function to automate it to happen everyday! A cloud function is a small piece of code that runs on the cloud. It is a great way to run small pieces of code without having to worry about servers or infrastructure. We will use a cloud function to run our scraper everyday.
 
-## Guide
+You may have heard of the equivalent AWS product: Lambda Functions!
+
+<br>
+
+# 1️⃣ Deploying a Cloud Function
 
 Here's a basic guide to deploying a multi-file Cloud Function:
 
 1. **Project Structure**:
    - Your Cloud Function can have a directory structure similar to this:
 
-     ```
+     ```bash
      /my-function
          |- main.py
          |- helper.py
@@ -40,7 +44,7 @@ Here's a basic guide to deploying a multi-file Cloud Function:
 
    If your function requires third-party libraries, you can list them in a `requirements.txt` file. Google Cloud will install these dependencies when you deploy the function:
 
-   ```
+   ```bash
    flask==1.1.2
    requests==2.25.1
    ```
@@ -71,39 +75,49 @@ Here's a basic guide to deploying a multi-file Cloud Function:
 
    Once deployed, you can use the provided URL to test your function.
 
-Remember, when using multiple files in a Cloud Function, you must ensure that all the necessary files are in the deployment directory or are specified in the `requirements.txt` file. All dependencies must be available at runtime for the function to execute successfully.
+Remember, when using multiple files in a Cloud Function, you must ensure that all the necessary files are in the deployment directory or specified in the `requirements.txt` file. All dependencies must be available at runtime for the function to successfully execute.
 
-## Apply to the scraper bring in all the code you need from the scraper and setup
+<br>
 
-Bring over the code files that you need and generate a requirements.txt from poetry.
+# 2️⃣ Create a Cloud Function for our pipeline
 
-❓ The  first code change you will need is to make main accept an argument (it does not need to be used) and return a string.
+Make sure to read this section in full before you start, you'll need to make some changes to the code to deploy the package as a Cloud Function.
+
+Start by copying over the code files from the previous challenge. You will need to generate a `requirements.txt` from poetry.
+
+❓ The first code change you will need is to make main accept an argument (it does not need to be used) and return a string.
 
 ❓ The second code code change is that the csv needs to be written to `/tmp` this is a special directory that is writable by the cloud function.
 
 😓 Great expectations does not work so well in a cloud function so you should also probably remove that step (you would generally use it inside airflow which we will see later)!
 
-## Make the cloud function run everyday
+<br>
 
-Use the following command !
+# 3️⃣ Make the cloud function run everyday
+
+Use the following command!
 
 ```bash
 gcloud scheduler jobs create http daily_scrape --schedule="0 0 * * *" --http-method=POST --uri=your_function_uri --time-zone=Europe/Paris --headers="Content-Type=application/json" --message-body='{}'
 ```
 
-Give the scheduler permission to run the function
+Give the scheduler permission to run the function:
 
 ```bash
 gcloud projects add-iam-policy-binding YOUR_PROJECT_ID --member=serviceAccount:service-YOUR_PROJECT_NUMBER@gcp-sa-cloudscheduler.iam.gserviceaccount.com --role=roles/cloudfunctions.invoker
 
 ```
 
-Then to run it ahead of time
+Then to run it ahead of time:
 
 ```bash
 gcloud scheduler jobs run daily_scrape
 ```
 
-## Finished 🏁
+<br>
+
+# 🏁 Finish
 
 We now have a fully automated scraper that runs everyday without our intervention!
+
+<br>
