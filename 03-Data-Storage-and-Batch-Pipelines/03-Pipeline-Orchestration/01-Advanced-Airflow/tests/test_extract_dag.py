@@ -13,7 +13,6 @@ os.environ["AIRFLOW_HOME"] = "/app/airflow"
 
 
 class TestExtractDag:
-
     dagbag = DagBag(dag_folder=DAG_BAG, include_examples=False)
 
     def test_dag_config(self):

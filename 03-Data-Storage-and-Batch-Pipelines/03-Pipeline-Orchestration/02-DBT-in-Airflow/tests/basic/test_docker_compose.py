@@ -3,6 +3,7 @@ from yaml import load
 from yaml.loader import SafeLoader
 import pytest
 
+
 @pytest.mark.optional
 def test_docker_compose():
     with open("docker-compose.yml") as f:

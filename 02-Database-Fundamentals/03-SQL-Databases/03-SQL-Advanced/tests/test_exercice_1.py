@@ -17,9 +17,15 @@ with open(exercice_1_1, "r") as f:
 
 
 def test_correct_columns():
-    assert set(["id", "profit_absolute", "profit_percentage"]) <= set(df_1_1.columns), "Some key columns are missing, or are mispelled"
+    assert set(["id", "profit_absolute", "profit_percentage"]) <= set(
+        df_1_1.columns
+    ), "Some key columns are missing, or are mispelled"
 
 
 def test_correct_filters():
-    assert df_1_1.loc[1, "id"] == 2667, "Your filtering is incorrect - the #2 most profitable movie should be the id:2667 (The Blair Witch Project)"
-    assert len(df_1_1) == 5277, "Your filtering is incorrect - the output should display 5277 records"
+    assert (
+        df_1_1.loc[1, "id"] == 2667
+    ), "Your filtering is incorrect - the #2 most profitable movie should be the id:2667 (The Blair Witch Project)"
+    assert (
+        len(df_1_1) == 5277
+    ), "Your filtering is incorrect - the output should display 5277 records"

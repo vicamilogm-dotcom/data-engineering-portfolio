@@ -19,4 +19,3 @@ class Comment(BaseModel):
 
 class LatestCommentsResponse(BaseModel):
     comments: List[Comment]
-

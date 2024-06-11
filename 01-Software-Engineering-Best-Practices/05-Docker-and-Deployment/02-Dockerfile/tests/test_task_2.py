@@ -48,7 +48,17 @@ class TestTask2:
         dockerfile_name = "dockerfile-task-1"
         dockerfile_parsed = dockerfile.parse_file(dockerfile_name)
 
-        keys_to_check = ["FROM", "ARG", "ENV", "RUN", "WORKDIR", "COPY", "EXPOSE", "ENTRYPOINT", "CMD"]
+        keys_to_check = [
+            "FROM",
+            "ARG",
+            "ENV",
+            "RUN",
+            "WORKDIR",
+            "COPY",
+            "EXPOSE",
+            "ENTRYPOINT",
+            "CMD",
+        ]
         for command in dockerfile_parsed:
             # Checks key is present in dictionnary
             assert command.cmd in keys_to_check

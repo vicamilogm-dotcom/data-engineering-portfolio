@@ -60,13 +60,25 @@ class TestTask3:
                 s = re.sub(r"\s+", " ", command.value[0])
                 assert s == dockerfile_validation_1.get(command.cmd)
             else:
-                assert " ".join(command.value) == dockerfile_validation_1.get(command.cmd)
+                assert " ".join(command.value) == dockerfile_validation_1.get(
+                    command.cmd
+                )
 
     def test_dockerfile_task_3_1_keys_only(self):
         dockerfile_name = "dockerfile-task-1"
         dockerfile_parsed = dockerfile.parse_file(dockerfile_name)
 
-        keys_to_check = ["FROM", "ARG", "ENV", "RUN", "WORKDIR", "COPY", "EXPOSE", "ENTRYPOINT", "CMD"]
+        keys_to_check = [
+            "FROM",
+            "ARG",
+            "ENV",
+            "RUN",
+            "WORKDIR",
+            "COPY",
+            "EXPOSE",
+            "ENTRYPOINT",
+            "CMD",
+        ]
         for command in dockerfile_parsed:
             # Checks key is present in dictionnary
             assert command.cmd in keys_to_check
@@ -84,13 +96,25 @@ class TestTask3:
                 s = re.sub(r"\s+", " ", command.value[0])
                 assert s == dockerfile_validation_2.get(command.cmd)
             else:
-                assert " ".join(command.value) == dockerfile_validation_2.get(command.cmd)
+                assert " ".join(command.value) == dockerfile_validation_2.get(
+                    command.cmd
+                )
 
     def test_dockerfile_task_3_2_keys_only(self):
         dockerfile_name = "dockerfile-task-1"
         dockerfile_parsed = dockerfile.parse_file(dockerfile_name)
 
-        keys_to_check = ["FROM", "ARG", "ENV", "RUN", "WORKDIR", "COPY", "EXPOSE", "ENTRYPOINT", "CMD"]
+        keys_to_check = [
+            "FROM",
+            "ARG",
+            "ENV",
+            "RUN",
+            "WORKDIR",
+            "COPY",
+            "EXPOSE",
+            "ENTRYPOINT",
+            "CMD",
+        ]
         for command in dockerfile_parsed:
             # Checks key is present in dictionnary
             assert command.cmd in keys_to_check

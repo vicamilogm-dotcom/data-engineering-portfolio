@@ -2,6 +2,7 @@ import os
 import pytest
 import yaml
 
+
 @pytest.mark.optional
 def test_profiles_yml():
     assert "profiles.yml" in os.listdir("dbt_lewagon")

@@ -9,7 +9,6 @@ os.environ["DBT_DIR"] = "/app/airflow/dbt_lewagon"
 
 
 class TestDagConfig:
-
     dagbag = DagBag(dag_folder=DAG_BAG, include_examples=False)
 
     def test_dag_config(self):

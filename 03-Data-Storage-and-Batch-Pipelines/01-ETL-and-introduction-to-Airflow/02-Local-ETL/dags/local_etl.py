@@ -23,7 +23,9 @@ def translate_joke_to_swedish(joke: str) -> str:
     pass  # YOUR CODE HERE
 
 
-def write_jokes_to_json(swedified_joke_file: str, joke: str, swedified_joke: str) -> None:
+def write_jokes_to_json(
+    swedified_joke_file: str, joke: str, swedified_joke: str
+) -> None:
     """
     Creates a json file named `swedified_joke_file` with two keys 'joke'
     and 'swedified_joke' and their corresponding values.
@@ -83,6 +85,8 @@ with DAG(
 ) as dag:
     data_url = "https://api.chucknorris.io/jokes/random"
     joke_file = f"{AIRFLOW_HOME}/data/bronze/joke_{{{{ ds_nodash }}}}.json"
-    swedified_joke_file = f"{AIRFLOW_HOME}/data/silver/swedified_joke_{{{{ ds_nodash }}}}.json"
+    swedified_joke_file = (
+        f"{AIRFLOW_HOME}/data/silver/swedified_joke_{{{{ ds_nodash }}}}.json"
+    )
 
     pass  # YOUR CODE HERE

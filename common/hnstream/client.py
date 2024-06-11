@@ -20,10 +20,14 @@ def run(host: str, q: str = "comments", unix_time: int = 0, limit: int = 20):
     with grpc.insecure_channel(host) as channel:
         stub = server_pb2_grpc.HnstreamerStub(channel)
         if q == "stories":
-            response = stub.GetNextStories(server_pb2.GetNextRequest(unix_time=unix_time, limit=limit))
+            response = stub.GetNextStories(
+                server_pb2.GetNextRequest(unix_time=unix_time, limit=limit)
+            )
             print(response)
         else:
-            response = stub.GetNextComments(server_pb2.GetNextRequest(unix_time=unix_time, limit=limit))
+            response = stub.GetNextComments(
+                server_pb2.GetNextRequest(unix_time=unix_time, limit=limit)
+            )
             print(response)
 
 

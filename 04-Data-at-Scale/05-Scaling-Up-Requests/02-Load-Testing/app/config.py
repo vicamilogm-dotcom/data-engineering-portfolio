@@ -9,6 +9,5 @@ class Settings(BaseSettings):
     pass  # YOUR CODE HERE
 
 
-
 if __name__ == "__main__":
     settings = Settings()

@@ -55,7 +55,9 @@ def add_HnstreamerServicer_to_server(servicer, server):
             response_serializer=server__pb2.GetNextStoriesResponse.SerializeToString,
         ),
     }
-    generic_handler = grpc.method_handlers_generic_handler("hnstream.Hnstreamer", rpc_method_handlers)
+    generic_handler = grpc.method_handlers_generic_handler(
+        "hnstream.Hnstreamer", rpc_method_handlers
+    )
     server.add_generic_rpc_handlers((generic_handler,))
 
 

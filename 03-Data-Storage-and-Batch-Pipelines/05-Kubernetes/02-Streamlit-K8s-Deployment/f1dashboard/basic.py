@@ -122,7 +122,9 @@ def lewis_over_the_years():
                         - year
                         - total_points
     """
-    st.info("Write a query to get the points of Lewis Hamilton over the years and visualize the results.")
+    st.info(
+        "Write a query to get the points of Lewis Hamilton over the years and visualize the results."
+    )
 
     lewis_points = pd.read_sql_query(
         """

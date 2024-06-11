@@ -27,7 +27,9 @@ class TestTask1:
             "CMD": "app.main:app --host 0.0.0.0 --port 8000",
         }
 
-    @pytest.mark.skip(reason="Can be too rigid - check your solution visually against tests/test_task_1.py")
+    @pytest.mark.skip(
+        reason="Can be too rigid - check your solution visually against tests/test_task_1.py"
+    )
     def test_dockerfile_task_1_strict(self, dockerfile_validation):
         dockerfile_name = "dockerfile-task-1"
         dockerfile_parsed = dockerfile.parse_file(dockerfile_name)
@@ -45,7 +47,17 @@ class TestTask1:
         dockerfile_name = "dockerfile-task-1"
         dockerfile_parsed = dockerfile.parse_file(dockerfile_name)
 
-        keys_to_check = ["FROM", "ARG", "ENV", "RUN", "WORKDIR", "COPY", "EXPOSE", "ENTRYPOINT", "CMD"]
+        keys_to_check = [
+            "FROM",
+            "ARG",
+            "ENV",
+            "RUN",
+            "WORKDIR",
+            "COPY",
+            "EXPOSE",
+            "ENTRYPOINT",
+            "CMD",
+        ]
         for command in dockerfile_parsed:
             # Checks key is present in dictionnary
             assert command.cmd in keys_to_check

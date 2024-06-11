@@ -62,7 +62,7 @@ async def call_api(address):
     print(f"call_api {address} done")
 
 asyncio.run(call_api("one"))
-# --> call_api http1 started... 
+# --> call_api http1 started...
 # --> call_api http1 done
 ```
 
@@ -73,7 +73,7 @@ async def call_many_api():
     await asyncio.gather(call_api("http1"), call_api("http2"))
 
 asyncio.run(call_many_api())
-# --> call_api http1 started... 
+# --> call_api http1 started...
 # --> call_api http2 started...
 # --> call_api http1 done
 # --> call_api http2 done

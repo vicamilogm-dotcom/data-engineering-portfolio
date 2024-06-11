@@ -29,15 +29,19 @@ def test_create_file_if_not_exist_with_existing_file():
     breaking_bad_quotes.create_file_if_not_exist(temp_file)
     assert creation_time == os.path.getctime(temp_file)
 
+
 @pytest.mark.optional
-@responses.activate # Here, we mock (i.e override) the response to any api call by a fake response
+@responses.activate  # Here, we mock (i.e override) the response to any api call by a fake response
 def test_get_quote():
     response = {"quote": "Fake quote", "author": "Walter White"}
-    responses.add(responses.GET, "https://breaking-bad.lewagon.com/v1/quotes", json=response)
+    responses.add(
+        responses.GET, "https://breaking-bad.lewagon.com/v1/quotes", json=response
+    )
 
     quote = breaking_bad_quotes._get_quote()
     assert len(responses.calls) == 1
     assert quote == response["quote"]
+
 
 @pytest.mark.optional
 def test_is_quote_new_with_new_quote():
@@ -49,7 +53,13 @@ def test_is_quote_new_with_new_quote():
 
 
 def test_is_quote_new_with_existing_quote():
-    assert breaking_bad_quotes._is_quote_new("tests/data/existing_quote.csv", "Existing quote") is False
+    assert (
+        breaking_bad_quotes._is_quote_new(
+            "tests/data/existing_quote.csv", "Existing quote"
+        )
+        is False
+    )
+
 
 @pytest.mark.optional
 def test_save_quote():
@@ -62,7 +72,8 @@ def test_save_quote():
         csvreader = csv.reader(file)
         assert [row[0] for row in csvreader] == ["Fake quote"]
 
-@responses.activate # Here, we mock (i.e override) the response to any api call by a fake response
+
+@responses.activate  # Here, we mock (i.e override) the response to any api call by a fake response
 def test_get_quote_and_save_if_new_with_new_quote():
     # Here, we mock (i.e override) the response to any api call by a fake response
     temp_file = "tests/temp/quotes.csv"
@@ -70,13 +81,16 @@ def test_get_quote_and_save_if_new_with_new_quote():
     breaking_bad_quotes.create_file_if_not_exist(temp_file)
 
     response = {"quote": "Fake quote", "author": "Walter White"}
-    responses.add(responses.GET, "https://breaking-bad.lewagon.com/v1/quotes", json=response)
+    responses.add(
+        responses.GET, "https://breaking-bad.lewagon.com/v1/quotes", json=response
+    )
     breaking_bad_quotes.get_quote_and_save_if_new(temp_file)
     with open(temp_file, "r") as file:
         csvreader = csv.reader(file)
         assert [row[0] for row in csvreader] == ["Fake quote"]
 
-@responses.activate # Here, we mock (i.e override) the response to any api call by a fake response
+
+@responses.activate  # Here, we mock (i.e override) the response to any api call by a fake response
 def test_get_quote_and_save_if_new_with_existing_quote():
     # Here, we mock (i.e override) the response to any api call by a fake response
     temp_file = "tests/temp/quotes.csv"
@@ -84,10 +98,14 @@ def test_get_quote_and_save_if_new_with_existing_quote():
     breaking_bad_quotes.create_file_if_not_exist(temp_file)
 
     response = {"quote": "Fake quote 1", "author": "Walter White"}
-    responses.add(responses.GET, "https://breaking-bad.lewagon.com/v1/quotes", json=response)
+    responses.add(
+        responses.GET, "https://breaking-bad.lewagon.com/v1/quotes", json=response
+    )
     breaking_bad_quotes.get_quote_and_save_if_new(temp_file)
     response = {"quote": "Fake quote 2", "author": "Walter White"}
-    responses.add(responses.GET, "https://breaking-bad.lewagon.com/v1/quotes", json=response)
+    responses.add(
+        responses.GET, "https://breaking-bad.lewagon.com/v1/quotes", json=response
+    )
     breaking_bad_quotes.get_quote_and_save_if_new(temp_file)
     breaking_bad_quotes.get_quote_and_save_if_new(temp_file)
     with open(temp_file, "r") as file:

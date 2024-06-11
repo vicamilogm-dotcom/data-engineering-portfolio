@@ -21,7 +21,9 @@ with open(exercice_4, "r") as f:
 
 def test_correct_columns_and_size():
     expected_columns = set(["num_records_bad", "num_records_total", "perc_records_bad"])
-    assert expected_columns == set(df_4.columns), "Some key columns are missing, or are mispelled"
+    assert expected_columns == set(
+        df_4.columns
+    ), "Some key columns are missing, or are mispelled"
 
 
 def test_correct_metric_calculation():
@@ -33,6 +35,12 @@ def test_correct_metric_calculation():
     num_records_total = df_4["num_records_total"][0]
     perc_records_bad = df_4["perc_records_bad"][0]
 
-    assert num_records_bad_expected == num_records_bad, "There should be 40082 bad records"
-    assert num_records_total_expected == num_records_total, "There should be 45463 total records"
-    assert perc_records_bad_expected == perc_records_bad, "There should be 88% of all records that are 'bad'"
+    assert (
+        num_records_bad_expected == num_records_bad
+    ), "There should be 40082 bad records"
+    assert (
+        num_records_total_expected == num_records_total
+    ), "There should be 45463 total records"
+    assert (
+        perc_records_bad_expected == perc_records_bad
+    ), "There should be 88% of all records that are 'bad'"

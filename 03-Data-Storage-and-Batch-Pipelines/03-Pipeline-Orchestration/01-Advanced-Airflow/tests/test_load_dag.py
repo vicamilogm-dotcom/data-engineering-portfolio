@@ -13,7 +13,6 @@ os.environ["AIRFLOW_HOME"] = "/app/airflow"
 
 
 class TestLoadDag:
-
     dagbag = DagBag(dag_folder=DAG_BAG, include_examples=False)
 
     def test_dag_config(self):
@@ -47,7 +46,9 @@ class TestLoadDag:
         assert task.poke_interval == 10
         assert task.timeout == 60 * 10
         assert list(map(lambda task: task.task_id, task.upstream_list)) == []
-        assert list(map(lambda task: task.task_id, task.downstream_list)) == ["upload_local_file_to_gcs"]
+        assert list(map(lambda task: task.task_id, task.downstream_list)) == [
+            "upload_local_file_to_gcs"
+        ]
 
     def test_upload_local_file_to_gcs_task(self):
         dag = self.dagbag.get_dag(dag_id="load")
@@ -74,12 +75,19 @@ class TestLoadDag:
             ti.dry_run()
 
             assert task.gcp_conn_id == "google_cloud_connection"
-            assert ti.task.src == f"/app/airflow/data/silver/yellow_tripdata_2021-0{month}.csv"
+            assert (
+                ti.task.src
+                == f"/app/airflow/data/silver/yellow_tripdata_2021-0{month}.csv"
+            )
             assert ti.task.dst == f"yellow_tripdata_2021-0{month}.csv"
             assert ti.task.bucket is not None
 
-        assert list(map(lambda task: task.task_id, task.upstream_list)) == ["transform_sensor"]
-        assert list(map(lambda task: task.task_id, task.downstream_list)) == ["create_dataset"]
+        assert list(map(lambda task: task.task_id, task.upstream_list)) == [
+            "transform_sensor"
+        ]
+        assert list(map(lambda task: task.task_id, task.downstream_list)) == [
+            "create_dataset"
+        ]
 
     def test_create_dataset_task(self):
         dag = self.dagbag.get_dag(dag_id="load")
@@ -89,8 +97,12 @@ class TestLoadDag:
         assert task.gcp_conn_id == "google_cloud_connection"
         assert task.dataset_id.endswith("gold")
 
-        assert list(map(lambda task: task.task_id, task.upstream_list)) == ["upload_local_file_to_gcs"]
-        assert list(map(lambda task: task.task_id, task.downstream_list)) == ["create_table"]
+        assert list(map(lambda task: task.task_id, task.upstream_list)) == [
+            "upload_local_file_to_gcs"
+        ]
+        assert list(map(lambda task: task.task_id, task.downstream_list)) == [
+            "create_table"
+        ]
 
     def test_create_table_task(self):
         dag = self.dagbag.get_dag(dag_id="load")
@@ -107,8 +119,12 @@ class TestLoadDag:
         assert task.schema_fields[2]["name"] == "total_amount"
         assert task.schema_fields[2]["type"].lower() == "float"
 
-        assert list(map(lambda task: task.task_id, task.upstream_list)) == ["create_dataset"]
-        assert list(map(lambda task: task.task_id, task.downstream_list)) == ["remove_existing_data"]
+        assert list(map(lambda task: task.task_id, task.upstream_list)) == [
+            "create_dataset"
+        ]
+        assert list(map(lambda task: task.task_id, task.downstream_list)) == [
+            "remove_existing_data"
+        ]
 
     def test_remove_existing_data_task(self):
         dag = self.dagbag.get_dag(dag_id="load")
@@ -136,11 +152,23 @@ class TestLoadDag:
             ti.dry_run()
 
             assert ti.task.gcp_conn_id == "google_cloud_connection"
-            assert ti.task.configuration["query"]["query"].lower().startswith("delete from ")
-            assert ti.task.configuration["query"]["query"].lower().endswith(f"gold.trips where date = '2021-0{month}'")
+            assert (
+                ti.task.configuration["query"]["query"]
+                .lower()
+                .startswith("delete from ")
+            )
+            assert (
+                ti.task.configuration["query"]["query"]
+                .lower()
+                .endswith(f"gold.trips where date = '2021-0{month}'")
+            )
 
-        assert list(map(lambda task: task.task_id, task.upstream_list)) == ["create_table"]
-        assert list(map(lambda task: task.task_id, task.downstream_list)) == ["load_to_bigquery"]
+        assert list(map(lambda task: task.task_id, task.upstream_list)) == [
+            "create_table"
+        ]
+        assert list(map(lambda task: task.task_id, task.downstream_list)) == [
+            "load_to_bigquery"
+        ]
 
     def test_load_to_bigquery_task(self):
         dag = self.dagbag.get_dag(dag_id="load")
@@ -171,5 +199,7 @@ class TestLoadDag:
             assert ti.task.source_objects == f"yellow_tripdata_2021-0{month}.csv"
             assert ti.task.destination_project_dataset_table.endswith("gold.trips")
 
-        assert list(map(lambda task: task.task_id, task.upstream_list)) == ["remove_existing_data"]
+        assert list(map(lambda task: task.task_id, task.upstream_list)) == [
+            "remove_existing_data"
+        ]
         assert list(map(lambda task: task.task_id, task.downstream_list)) == []

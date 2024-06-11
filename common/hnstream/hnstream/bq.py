@@ -15,12 +15,16 @@ def get_client():
     """
     creds_dict = json.loads(base64.b64decode(os.environ.get("GCP_CREDS_JSON_BASE64")))
 
-    credentials = service_account.Credentials.from_service_account_info(creds_dict, scopes=["https://www.googleapis.com/auth/cloud-platform"])
+    credentials = service_account.Credentials.from_service_account_info(
+        creds_dict, scopes=["https://www.googleapis.com/auth/cloud-platform"]
+    )
 
     return bigquery.Client(credentials=credentials, project=credentials.project_id)
 
 
-def query_as_list(client, query: str, query_parameters: List[bigquery.ScalarQueryParameter] = None) -> List[Dict[str, Any]]:
+def query_as_list(
+    client, query: str, query_parameters: List[bigquery.ScalarQueryParameter] = None
+) -> List[Dict[str, Any]]:
     """
     Given a BigQuery client, and a query string, runs the query and inject the result into a Pandas DataFrame.
     """
@@ -35,10 +39,14 @@ def query_as_list(client, query: str, query_parameters: List[bigquery.ScalarQuer
     return list(iterator)
 
 
-def query_as_df(client, query: str, query_parameters: List[bigquery.ScalarQueryParameter] = None) -> pd.DataFrame:
+def query_as_df(
+    client, query: str, query_parameters: List[bigquery.ScalarQueryParameter] = None
+) -> pd.DataFrame:
     """
     Given a BigQuery client, and a query string, runs the query and inject the result into a Pandas DataFrame.
     """
     rows = query_as_list(client=client, query=query, query_parameters=query_parameters)
 
-    return pd.DataFrame(data=[list(row.values()) for row in rows], columns=list(rows[0].keys()))
+    return pd.DataFrame(
+        data=[list(row.values()) for row in rows], columns=list(rows[0].keys())
+    )

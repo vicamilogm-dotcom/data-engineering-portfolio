@@ -8,13 +8,15 @@ from airflow.sensors.external_task import ExternalTaskSensor
 from airflow.providers.google.cloud.operators.bigquery import (
     BigQueryCreateEmptyDatasetOperator,
     BigQueryCreateEmptyTableOperator,
-    BigQueryInsertJobOperator
+    BigQueryInsertJobOperator,
 )
 from airflow.providers.google.cloud.transfers.gcs_to_bigquery import (
-    GCSToBigQueryOperator)
+    GCSToBigQueryOperator,
+)
 
 from airflow.providers.google.cloud.transfers.local_to_gcs import (
-    LocalFilesystemToGCSOperator)
+    LocalFilesystemToGCSOperator,
+)
 
 AIRFLOW_HOME = os.getenv("AIRFLOW_HOME")
 
@@ -25,7 +27,6 @@ with DAG(
     end_date=datetime(2021, 12, 31),
     schedule_interval="@monthly",
 ) as dag:
-    
     date = "{{ ds[:7] }}"
     filtered_data_file = f"{AIRFLOW_HOME}/data/silver/yellow_tripdata_{date}.csv"
     wait_for_transform_task = ExternalTaskSensor(
@@ -57,6 +58,6 @@ with DAG(
         task_id="load_to_bigquery",
         # YOUR CODE HERE
     )
-    
+
     # Organise your tasks hierachy here
     pass  # YOUR CODE HERE

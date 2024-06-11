@@ -5,6 +5,7 @@ from .database import SessionLocal
 
 app = FastAPI()
 
+
 # Dependency
 def get_db():
     db = SessionLocal()
@@ -13,9 +14,11 @@ def get_db():
     finally:
         db.close()
 
+
 @app.get("/")
 def read_root(db: Session = Depends(get_db)):
-    return {'running': True}
+    return {"running": True}
+
 
 @app.get("/load-table")
 def load_table(table_name: str, db: Session = Depends(get_db)):

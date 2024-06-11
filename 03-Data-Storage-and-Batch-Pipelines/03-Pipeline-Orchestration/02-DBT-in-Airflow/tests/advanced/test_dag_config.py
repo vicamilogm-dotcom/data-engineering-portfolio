@@ -7,7 +7,6 @@ DAG_BAG = os.path.join(os.path.dirname(__file__), "../../dags/advanced")
 
 
 class TestDagConfig:
-
     dagbag = DagBag(dag_folder=DAG_BAG, include_examples=False)
 
     def test_dag_config(self):

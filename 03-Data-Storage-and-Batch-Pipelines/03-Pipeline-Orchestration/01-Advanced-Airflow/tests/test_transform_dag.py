@@ -21,7 +21,6 @@ os.environ["AIRFLOW_HOME"] = "/app/airflow"
 
 
 class TestTransformDag:
-
     hook = SqliteHook(sqlite_conn_id="sqlite_connection")
     start_date = DateTime(2021, 6, 1, 0, 0, 0, tzinfo=Timezone("UTC"))
     dagbag = DagBag(dag_folder=DAG_BAG, include_examples=False)
@@ -53,29 +52,49 @@ class TestTransformDag:
         assert extract_sensor_task.allowed_states == ["success"]
         assert extract_sensor_task.poke_interval == 10
         assert extract_sensor_task.timeout == 60 * 10
-        assert list(map(lambda task: task.task_id, extract_sensor_task.upstream_list)) == []
-        assert list(map(lambda task: task.task_id, extract_sensor_task.downstream_list)) == ["is_month_odd"]
+        assert (
+            list(map(lambda task: task.task_id, extract_sensor_task.upstream_list))
+            == []
+        )
+        assert list(
+            map(lambda task: task.task_id, extract_sensor_task.downstream_list)
+        ) == ["is_month_odd"]
 
         is_month_odd_task = dag.get_task("is_month_odd")
 
         assert is_month_odd_task.__class__.__name__ == "BranchPythonOperator"
         assert is_month_odd_task.python_callable.__name__ == "is_month_odd"
-        assert list(map(lambda task: task.task_id, is_month_odd_task.upstream_list)) == ["extract_sensor"]
-        assert set(map(lambda task: task.task_id, is_month_odd_task.downstream_list)) == {"filter_long_trips", "filter_expensive_trips"}
+        assert list(
+            map(lambda task: task.task_id, is_month_odd_task.upstream_list)
+        ) == ["extract_sensor"]
+        assert set(
+            map(lambda task: task.task_id, is_month_odd_task.downstream_list)
+        ) == {"filter_long_trips", "filter_expensive_trips"}
 
         filter_long_trips_task = dag.get_task("filter_long_trips")
 
         assert filter_long_trips_task.__class__.__name__ == "PythonOperator"
         assert filter_long_trips_task.python_callable.__name__ == "filter_long_trips"
-        assert list(map(lambda task: task.task_id, filter_long_trips_task.upstream_list)) == ["is_month_odd"]
-        assert list(map(lambda task: task.task_id, filter_long_trips_task.downstream_list)) == ["end"]
+        assert list(
+            map(lambda task: task.task_id, filter_long_trips_task.upstream_list)
+        ) == ["is_month_odd"]
+        assert list(
+            map(lambda task: task.task_id, filter_long_trips_task.downstream_list)
+        ) == ["end"]
 
         filter_expensive_trips_task = dag.get_task("filter_expensive_trips")
 
         assert filter_expensive_trips_task.__class__.__name__ == "PythonOperator"
-        assert filter_expensive_trips_task.python_callable.__name__ == "filter_expensive_trips"
-        assert list(map(lambda task: task.task_id, filter_expensive_trips_task.upstream_list)) == ["is_month_odd"]
-        assert list(map(lambda task: task.task_id, filter_expensive_trips_task.downstream_list)) == ["end"]
+        assert (
+            filter_expensive_trips_task.python_callable.__name__
+            == "filter_expensive_trips"
+        )
+        assert list(
+            map(lambda task: task.task_id, filter_expensive_trips_task.upstream_list)
+        ) == ["is_month_odd"]
+        assert list(
+            map(lambda task: task.task_id, filter_expensive_trips_task.downstream_list)
+        ) == ["end"]
 
         end_task = dag.get_task("end")
 
@@ -98,7 +117,9 @@ class TestTransformDag:
             ti_is_month_odd.dry_run()
             assert ti_is_month_odd.task.op_kwargs == {"date": f"2021-0{month}"}
 
-            ti_filter_long_trips = TaskInstance(filter_long_trips_task, run_id=dagrun.run_id)
+            ti_filter_long_trips = TaskInstance(
+                filter_long_trips_task, run_id=dagrun.run_id
+            )
             ti_filter_long_trips.dry_run()
 
             assert ti_filter_long_trips.task.op_kwargs == {
@@ -108,7 +129,9 @@ class TestTransformDag:
                 "distance": 150,
             }
 
-            filter_expensive_trips_ti = TaskInstance(filter_expensive_trips_task, run_id=dagrun.run_id)
+            filter_expensive_trips_ti = TaskInstance(
+                filter_expensive_trips_task, run_id=dagrun.run_id
+            )
             filter_expensive_trips_ti.dry_run()
 
             assert filter_expensive_trips_ti.task.op_kwargs == {
@@ -152,7 +175,9 @@ def test_is_month_odd():
 
 def test_prepare_data():
     for month in [6, 7]:
-        df = transform.prepare_data("tests/data/bronze/dataframe.parquet", f"2021-0{month}")
+        df = transform.prepare_data(
+            "tests/data/bronze/dataframe.parquet", f"2021-0{month}"
+        )
         assert_dataframe_has_all_values_and_filtered_columns(df, month)
 
 
@@ -161,17 +186,23 @@ def test_filter_long_trips():
 
     for month in [6, 7]:
         remove_temp_file(temp_file)
-        transform.filter_long_trips("tests/data/bronze/dataframe.parquet", temp_file, f"2021-0{month}", 0)
+        transform.filter_long_trips(
+            "tests/data/bronze/dataframe.parquet", temp_file, f"2021-0{month}", 0
+        )
         df = pd.read_csv(temp_file)
         assert_dataframe_has_all_values_and_filtered_columns(df, month)
 
         remove_temp_file(temp_file)
-        transform.filter_long_trips("tests/data/bronze/dataframe.parquet", temp_file, f"2021-0{month}", 1)
+        transform.filter_long_trips(
+            "tests/data/bronze/dataframe.parquet", temp_file, f"2021-0{month}", 1
+        )
         df = pd.read_csv(temp_file)
         assert_dataframe_has_second_values_and_filtered_columns(df, month)
 
         remove_temp_file(temp_file)
-        transform.filter_long_trips("tests/data/bronze/dataframe.parquet", temp_file, f"2021-0{month}", 2)
+        transform.filter_long_trips(
+            "tests/data/bronze/dataframe.parquet", temp_file, f"2021-0{month}", 2
+        )
         df = pd.read_csv(temp_file)
         assert_dataframe_has_no_values_and_filtered_columns(df)
 
@@ -181,16 +212,22 @@ def test_filter_expensive_trips():
 
     for month in [6, 7]:
         remove_temp_file(temp_file)
-        transform.filter_expensive_trips("tests/data/bronze/dataframe.parquet", temp_file, f"2021-0{month}", 2)
+        transform.filter_expensive_trips(
+            "tests/data/bronze/dataframe.parquet", temp_file, f"2021-0{month}", 2
+        )
         df = pd.read_csv(temp_file)
         assert_dataframe_has_all_values_and_filtered_columns(df, month)
 
         remove_temp_file(temp_file)
-        transform.filter_expensive_trips("tests/data/bronze/dataframe.parquet", temp_file, f"2021-0{month}", 3)
+        transform.filter_expensive_trips(
+            "tests/data/bronze/dataframe.parquet", temp_file, f"2021-0{month}", 3
+        )
         df = pd.read_csv(temp_file)
         assert_dataframe_has_second_values_and_filtered_columns(df, month)
 
         remove_temp_file(temp_file)
-        transform.filter_expensive_trips("tests/data/bronze/dataframe.parquet", temp_file, f"2021-0{month}", 4)
+        transform.filter_expensive_trips(
+            "tests/data/bronze/dataframe.parquet", temp_file, f"2021-0{month}", 4
+        )
         df = pd.read_csv(temp_file)
         assert_dataframe_has_no_values_and_filtered_columns(df)

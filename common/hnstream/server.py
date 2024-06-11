@@ -12,9 +12,15 @@ class Hnstreamer(server_pb2_grpc.HnstreamerServicer):
         super().__init__()
         self.client = bq.get_client()
 
-    def GetNextStories(self, request: server_pb2.GetNextRequest, _context) -> server_pb2.GetNextStoriesResponse:
-        stories_after_query, stories_after_params = queries.stories_after(unix_time=request.unix_time, limit=request.limit)
-        stories_list = bq.query_as_list(self.client, stories_after_query, query_parameters=stories_after_params)
+    def GetNextStories(
+        self, request: server_pb2.GetNextRequest, _context
+    ) -> server_pb2.GetNextStoriesResponse:
+        stories_after_query, stories_after_params = queries.stories_after(
+            unix_time=request.unix_time, limit=request.limit
+        )
+        stories_list = bq.query_as_list(
+            self.client, stories_after_query, query_parameters=stories_after_params
+        )
         response = server_pb2.GetNextStoriesResponse()
 
         for story_dict in stories_list:
@@ -25,9 +31,15 @@ class Hnstreamer(server_pb2_grpc.HnstreamerServicer):
 
         return response
 
-    def GetNextComments(self, request: server_pb2.GetNextRequest, _context) -> server_pb2.GetNextCommentsResponse:
-        comments_after_query, comments_after_params = queries.comments_after(unix_time=request.unix_time, limit=request.limit)
-        comments_list = bq.query_as_list(self.client, comments_after_query, query_parameters=comments_after_params)
+    def GetNextComments(
+        self, request: server_pb2.GetNextRequest, _context
+    ) -> server_pb2.GetNextCommentsResponse:
+        comments_after_query, comments_after_params = queries.comments_after(
+            unix_time=request.unix_time, limit=request.limit
+        )
+        comments_list = bq.query_as_list(
+            self.client, comments_after_query, query_parameters=comments_after_params
+        )
         response = server_pb2.GetNextCommentsResponse()
 
         for comment_dict in comments_list:

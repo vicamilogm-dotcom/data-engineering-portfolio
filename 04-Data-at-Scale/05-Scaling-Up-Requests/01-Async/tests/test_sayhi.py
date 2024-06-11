@@ -3,6 +3,7 @@ import pandas as pd
 from lwasync import client_asynchronous
 from lwasync import client_synchronous
 
+
 def test_sync_one():
     response = client_synchronous.make_one_call(index=0)
     assert isinstance(response, dict)
@@ -14,6 +15,7 @@ def test_sync_many():
     assert isinstance(responses, pd.DataFrame)
     assert len(responses) == number_of_calls
 
+
 def test_async_faster():
     number_of_calls = 3
     tsync0 = time.time()
@@ -24,4 +26,6 @@ def test_async_faster():
     client_asynchronous.generate_statistics_async(number_of_calls)
     tasync = time.time() - tasync0
 
-    assert tsync > tasync, "Are your async and sync methods testing the same API endpoint?"
+    assert (
+        tsync > tasync
+    ), "Are your async and sync methods testing the same API endpoint?"

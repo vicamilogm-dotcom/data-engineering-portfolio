@@ -2,6 +2,7 @@ import pytest
 from yaml import load
 from yaml.loader import SafeLoader
 
+
 @pytest.mark.optional
 class TestDockerCompose:
     def test_docker_compose(self):

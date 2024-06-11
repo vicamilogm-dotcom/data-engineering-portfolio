@@ -49,15 +49,14 @@ def get_quote_and_save_if_new(quotes_file: str) -> None:
         _save_quote(quotes_file, quote)
 
 
-
 with DAG(
     "breaking_bad_quotes",
     # YOUR CODE HERE
 ) as dag:
     quotes_file = f"{AIRFLOW_HOME}/data/quotes.csv"
 
-    create_file_if_not_exist_task = None # YOUR CODE HERE
+    create_file_if_not_exist_task = None  # YOUR CODE HERE
 
-    get_quote_and_save_if_new_task = None # YOUR CODE HERE
+    get_quote_and_save_if_new_task = None  # YOUR CODE HERE
 
     

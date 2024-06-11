@@ -20,13 +20,14 @@ def test_python_impl():
     assert cnt.get("apples") == 2, "'apples' is expected to be found 2 times"
     assert cnt.get("i") == 1, "'i' is expected to be found 1 time"
 
+
 def get_test_file_path():
     parent_dir = pathlib.Path(os.path.realpath(__file__)).parent
-    path_test_file = os.path.join(parent_dir,"sample.txt")
+    path_test_file = os.path.join(parent_dir, "sample.txt")
     return path_test_file
 
-def test_mapreduce_impl():
 
+def test_mapreduce_impl():
     cnt = impl_mapreduce.count_words_mapreduce([get_test_file_path()])
     assert cnt.get("apples") == 2, "'Apples' is expected to be found 2 times"
     assert cnt.get("i") == 1, "'I' is expected to be found 1 time"

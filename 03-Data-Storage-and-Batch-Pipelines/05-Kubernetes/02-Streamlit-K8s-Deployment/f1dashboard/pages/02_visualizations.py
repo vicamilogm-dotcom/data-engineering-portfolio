@@ -44,7 +44,9 @@ class DataVisualizations:
 
         lewis_data = self.f1_state.get_query_result("lewis_over_the_years")
         lewis_data["year"] = pd.to_datetime(lewis_data["year"], format="%Y")
-        line_chart = alt.Chart(lewis_data).mark_line().encode(y="total_points", x="year")
+        line_chart = (
+            alt.Chart(lewis_data).mark_line().encode(y="total_points", x="year")
+        )
 
         st.altair_chart(line_chart, use_container_width=True)
 

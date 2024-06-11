@@ -6,7 +6,9 @@ import pathlib
 
 
 challenge_level_dir = pathlib.Path(os.path.realpath(__file__)).parent.parent
-packages_path = pathlib.Path(os.path.join(challenge_level_dir, "dbt_lewagon/packages.yml"))
+packages_path = pathlib.Path(
+    os.path.join(challenge_level_dir, "dbt_lewagon/packages.yml")
+)
 
 
 def test_packages_created():

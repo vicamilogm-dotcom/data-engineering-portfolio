@@ -7,7 +7,6 @@ DBT_DIR = os.getenv("DBT_DIR")
 
 
 class TestTasksConfigs:
-
     dagbag = DagBag(dag_folder=DAG_BAG, include_examples=False)
 
     def test_tasks(self):

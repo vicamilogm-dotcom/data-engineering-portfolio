@@ -10,6 +10,7 @@ app = FastAPI()
 # Add a unique app_instance_id, which changes every time the app is started
 app_instance_id = str(datetime.utcnow())
 
+
 @app.get("/say-hi")
 async def root():
     await asyncio.sleep(0.2)
@@ -22,11 +23,13 @@ async def fast_run():
     await asyncio.sleep(2)
     return payload
 
+
 @app.get("/slow-run")
 async def slow_run():
     payload = {"app_instance_id": app_instance_id}
     time.sleep(2)
     return payload
+
 
 @app.get("/standard-run")
 def standard_run():

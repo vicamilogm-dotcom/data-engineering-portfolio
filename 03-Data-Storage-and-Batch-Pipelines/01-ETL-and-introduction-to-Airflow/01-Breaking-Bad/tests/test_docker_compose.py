@@ -3,13 +3,18 @@ from tests import lewagonde
 from yaml import load
 from yaml.loader import SafeLoader
 
+
 @pytest.mark.optional
 def test_docker_compose():
     with open("docker-compose.yml") as f:
         docker_compose_data = load(f, SafeLoader)
 
     assert docker_compose_data.get("version") == "3"
-    assert set(docker_compose_data.get("services", {}).keys()) == {"postgres", "scheduler", "webserver"}
+    assert set(docker_compose_data.get("services", {}).keys()) == {
+        "postgres",
+        "scheduler",
+        "webserver",
+    }
     postgres = docker_compose_data["services"]["postgres"]
     assert postgres.get("image").startswith("postgres:14") is True
     assert lewagonde.dict_or_kvlist_to_dict(postgres.get("environment")) == {
@@ -38,7 +43,7 @@ def test_docker_compose():
     assert lewagonde.dict_or_kvlist_to_dict(scheduler.get("environment")) == {
         "AIRFLOW__CORE__EXECUTOR": "LocalExecutor",
         "AIRFLOW__DATABASE__SQL_ALCHEMY_CONN": "postgresql+psycopg2://airflow:$POSTGRES_PASSWORD@postgres:5432/db",
-        "AIRFLOW__CORE__LOAD_EXAMPLES": "false"
+        "AIRFLOW__CORE__LOAD_EXAMPLES": "false",
     }
     assert set(scheduler.get("volumes")) == {
         "./dags:/app/airflow/dags",
@@ -68,7 +73,10 @@ def test_docker_compose():
     }
     assert webserver.get("ports") == ["8080:8080"]
     assert webserver.get("healthcheck", {}).get("test") == [
-        "CMD", "-f", "/home/airflow/airflow-webserver.pid"]
+        "CMD",
+        "-f",
+        "/home/airflow/airflow-webserver.pid",
+    ]
     assert webserver.get("healthcheck", {}).get("interval") == "30s"
     assert webserver.get("healthcheck", {}).get("timeout") == "30s"
     assert webserver.get("healthcheck", {}).get("retries") == 3

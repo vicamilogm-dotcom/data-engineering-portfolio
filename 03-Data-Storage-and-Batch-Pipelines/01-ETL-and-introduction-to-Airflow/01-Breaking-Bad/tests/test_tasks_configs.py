@@ -9,7 +9,6 @@ os.environ["AIRFLOW_HOME"] = "/app/airflow"
 
 
 class TestTasksConfigs:
-
     dagbag = DagBag(dag_folder=DAG_BAG, include_examples=False)
 
     def test_tasks(self):

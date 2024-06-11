@@ -2,16 +2,23 @@ from datetime import date
 
 from pyspark.sql.types import DateType
 
-from taxi_spark.functions.processing import add_time_bins, add_pickup_date, drop_coordinates, aggregate_metrics, \
-    sort_by_date_and_time
+from taxi_spark.functions.processing import (
+    add_time_bins,
+    add_pickup_date,
+    drop_coordinates,
+    aggregate_metrics,
+    sort_by_date_and_time,
+)
 
 
 def test_add_time_bins(spark):
-    data = ["2023-10-29 08:30:00",  # morning
-            "2023-10-29 14:45:00",  # afternoon
-            "2023-10-29 20:15:00",  # evening
-            "2023-10-29 03:00:00",  # night
-            "2023-10-29 23:30:00"]  # night
+    data = [
+        "2023-10-29 08:30:00",  # morning
+        "2023-10-29 14:45:00",  # afternoon
+        "2023-10-29 20:15:00",  # evening
+        "2023-10-29 03:00:00",  # night
+        "2023-10-29 23:30:00",
+    ]  # night
     df = spark.createDataFrame(data, "string").toDF("trip_pickup_datetime")
 
     result_df = add_time_bins(df)
@@ -23,7 +30,9 @@ def test_add_time_bins(spark):
 
 
 def test_add_pickup_date(spark):
-    df = spark.createDataFrame(["2023-10-29 08:30:00"], "string").toDF("trip_pickup_datetime")
+    df = spark.createDataFrame(["2023-10-29 08:30:00"], "string").toDF(
+        "trip_pickup_datetime"
+    )
 
     result_df = add_pickup_date(df)
 
@@ -44,20 +53,35 @@ def test_drop_coordinates(spark):
 
 
 def test_aggregate_metrics(spark):
-    input_df = spark.createDataFrame([
-        (date(2023, 10, 29), "morning", 3.0, 3.0, 4.5),
-        (date(2023, 10, 29), "morning", 8.0, 8.0, 10.5),
-        (date(2023, 10, 29), "afternoon", 3.0, 3.0, 4.5),
-    ], [
-        'pickup_date', 'time_bin', 'fare_amt', 'passenger_count', 'haversine_distance'
-    ])
+    input_df = spark.createDataFrame(
+        [
+            (date(2023, 10, 29), "morning", 3.0, 3.0, 4.5),
+            (date(2023, 10, 29), "morning", 8.0, 8.0, 10.5),
+            (date(2023, 10, 29), "afternoon", 3.0, 3.0, 4.5),
+        ],
+        [
+            "pickup_date",
+            "time_bin",
+            "fare_amt",
+            "passenger_count",
+            "haversine_distance",
+        ],
+    )
 
-    expected_df = spark.createDataFrame([
-        (date(2023, 10, 29), "morning", 5.5, 11.0, 2, 7.5),
-        (date(2023, 10, 29), "afternoon", 3.0, 3.0, 1, 4.5),
-    ], [
-        'pickup_date', 'time_bin', 'avg_fare', 'total_passengers', 'total_trips', 'avg_distance'
-    ])
+    expected_df = spark.createDataFrame(
+        [
+            (date(2023, 10, 29), "morning", 5.5, 11.0, 2, 7.5),
+            (date(2023, 10, 29), "afternoon", 3.0, 3.0, 1, 4.5),
+        ],
+        [
+            "pickup_date",
+            "time_bin",
+            "avg_fare",
+            "total_passengers",
+            "total_trips",
+            "avg_distance",
+        ],
+    )
 
     result_df = aggregate_metrics(input_df)
 
@@ -65,17 +89,23 @@ def test_aggregate_metrics(spark):
 
 
 def test_sort_by_date_and_time(spark):
-    input_df = spark.createDataFrame([
-        (date(2023, 10, 29), "afternoon"),
-        (date(2023, 10, 28), "morning"),
-        (date(2023, 10, 29), "morning"),
-    ], ["pickup_date", "time_bin"])
+    input_df = spark.createDataFrame(
+        [
+            (date(2023, 10, 29), "afternoon"),
+            (date(2023, 10, 28), "morning"),
+            (date(2023, 10, 29), "morning"),
+        ],
+        ["pickup_date", "time_bin"],
+    )
 
-    expected_df = spark.createDataFrame([
-        (date(2023, 10, 28), "morning"),
-        (date(2023, 10, 29), "morning"),
-        (date(2023, 10, 29), "afternoon"),
-    ], ["pickup_date", "time_bin"])
+    expected_df = spark.createDataFrame(
+        [
+            (date(2023, 10, 28), "morning"),
+            (date(2023, 10, 29), "morning"),
+            (date(2023, 10, 29), "afternoon"),
+        ],
+        ["pickup_date", "time_bin"],
+    )
 
     result_df = sort_by_date_and_time(input_df)
 

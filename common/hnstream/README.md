@@ -4,7 +4,7 @@
 
 BigQuery `bigquery-public-data.hacker_news`.
 
-Schema, coming from 
+Schema, coming from
 
 ```[sql]
 SELECT * EXCEPT(is_generated, generation_expression, is_stored, is_updatable)

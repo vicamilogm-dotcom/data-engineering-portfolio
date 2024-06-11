@@ -34,9 +34,9 @@ message Comment {
 }
 
 message GetNextStoriesResponse {
-  repeated Story stories = 1; 
+  repeated Story stories = 1;
 }
 
 message GetNextCommentsResponse {
-  repeated Comment comments = 1; 
+  repeated Comment comments = 1;
 }

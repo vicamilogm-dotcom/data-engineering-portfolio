@@ -1,5 +1,6 @@
 # Asynchronous programming in Python is managed by the `asyncio` library
 import asyncio
+
 # The library to make asynchronous HTTP requests
 import aiohttp
 
@@ -7,7 +8,10 @@ import pandas as pd
 from typing import Any, Dict, List
 import time
 
-async def make_one_call(session: aiohttp.ClientSession, api_url: str, index: int) -> Dict[str, Any]:
+
+async def make_one_call(
+    session: aiohttp.ClientSession, api_url: str, index: int
+) -> Dict[str, Any]:
     """
     Make one call to the API
     """

@@ -3,6 +3,7 @@ import re
 import dockerfile
 import pytest
 
+
 @pytest.fixture
 def dockerfile_validation():
     return [
@@ -23,6 +24,7 @@ def dockerfile_validation():
             "pip3 install --upgrade --no-cache-dir pip && pip3 install poetry && poetry install --only main",
         ),
     ]
+
 
 @pytest.mark.optional
 def test_dockerfile(dockerfile_validation):
