@@ -106,7 +106,7 @@ We need something to trigger our script, this is where **services** come in!
 ❓ Start off by creating a `check_ssh.service` file which triggers our script:
 
 <details>
-    <summary markdown='span'>💡 Service example</summary>
+<summary markdown='span'>💡 Service example</summary>
 
 ```bash
 [Unit]
@@ -122,18 +122,18 @@ WantedBy=multi-user.target
 
 ## 3.2. Creating a timer
 
-❓ Now create a `check_ssh.timer` file to trigger our service every 10 seconds
+❓ Now create a `check_ssh.timer` file to trigger our service every 60 seconds and to commence 5 minutes after we boot up the Virtual machine - we don't want it to be so short that it turns off before you can connect!
 
 <details>
-    <summary markdown='span'>💡 Timer example</summary>
+<summary markdown='span'>💡 Timer example</summary>
 
 ```bash
 [Unit]
 Description=some description
 
 [Timer]
-OnUnitActiveSec=10s
-OnBootSec=10s
+OnUnitActiveSec=60s
+OnBootSec=300s
 
 [Install]
 WantedBy=timers.target
@@ -174,7 +174,7 @@ sudo crontab -e
 ```
 ❓ This will open a file where you should write a line starting your service at a particular time! Now you need to add a line to start our `check_ssh.timer`!
 
-The syntax for cron is a little strange but for instance, to run `echo` once a day at 8pm you would write:
+The syntax for cron is a little strange but for instance, to run `echo` once a day at 10pm you would write:
 
 ```bash
 0 22 * * * echo "I'm going to be printed every day at 10pm"
@@ -201,7 +201,7 @@ Services and cron are two powerful tools in the linux arsenal, here we could hav
   <summary markdown='span'> 💡 Alternative crontab solution without services</summary>
 The above crontab solution uses the flow of:
 - Start a background `check_ssh.timer` on a cron schedule
-- The `check_ssh.timer` executes the `check_ssh.service` based on it's own schedule (e.g. every 60 seconds)
+- The `check_ssh.timer` executes the `check_ssh.service` based on it's own schedule (e.g. every 120 seconds)
 - `check_ssh.service` executes a shell script: `check_ssh.sh`
 - `check_ssh.sh` checks if a user is connected by ssh.
   - If yes: do nothing.
@@ -213,7 +213,7 @@ By using crontab, we can remove a few layers of abstraction to execute only the 
 */15 * * * * /usr/local/check_ssh.sh
 ```
 
-Will execute the shell script every 15 minutes of every hour of every day.
+Will execute the shell script every 15 minutes of every hour of every day (when the virtual machine is on).
 </details>
 
 <br>
