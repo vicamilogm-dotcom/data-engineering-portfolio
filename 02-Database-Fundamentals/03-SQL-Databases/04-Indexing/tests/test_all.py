@@ -65,9 +65,9 @@ def test_table_creation():
     df = lewagonde.read_sql_query(
         "SELECT * FROM ikea_products LIMIT 1;",
         password=os.environ["POSTGRES_PASSWORD"],
-        user="lewagon",
+        user=os.environ.get("USER", ""),
         host="0.0.0.0",
-        port="5433",
+        port="5432",
         dbname="ikea",
     )
     columns = set(
@@ -101,9 +101,9 @@ def test_data_loaded():
     df = lewagonde.read_sql_query(
         "SELECT COUNT(*) AS count FROM ikea_products;",
         password=os.environ["POSTGRES_PASSWORD"],
-        user="lewagon",
+        user=os.environ.get("USER", ""),
         host="0.0.0.0",
-        port="5433",
+        port="5432",
         dbname="ikea",
     )
     assert df["count"].iloc[0] > 10000, "Data doesn't seem to be loaded"
@@ -128,7 +128,23 @@ def test_btree_index():
     ), "BTree index not added, make sure to name it 'index_sku'"
 
 
-def text_fulltext():
+def test_add_text_col():
+    """
+    Test that column 'raw_product_details_text' exists in table 'ikea_products'
+    """
+    _, results = query_perf(
+        sql_query="""
+        SELECT column_name
+        FROM information_schema.columns
+        WHERE table_name = 'ikea_products';
+        """
+    )
+    assert (
+        "raw_product_details_text" in results["column_name"].values
+    ), "Column 'raw_product_details_text' does not exist in table 'ikea_products'"
+
+
+def test_fulltext():
     """
     Test that a full text search index on the raw_product_details was added
     """

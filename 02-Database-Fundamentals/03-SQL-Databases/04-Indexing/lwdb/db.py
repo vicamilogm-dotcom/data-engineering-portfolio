@@ -20,7 +20,7 @@ def query_perf(
     dot_env_fp = os.path.join(parent_dir, ".env")
     lewagonde.load_dot_env(dot_env_fp)
 
-    con = pg.connect()
+    con = pg.connect(database="ikea")
 
     try:
         t0 = time.time()
