@@ -76,7 +76,7 @@ code .
 
 ### Testing Game().__init__
 
-❓ **Try to write your first test**. Follow the 4 steps principles (some can be empty):
+❓ **Try to write your first test**. Follow the 4 steps principles (some can be empty). Remember that we are only trying to write a test that is testing if the game board is valid! We will deal with player input and if the word is actually in a dictionary later 😉
 
 ```python
 # tests/test_game.py
@@ -118,7 +118,8 @@ class TestGame:
 ❓ Now it's time to run it first to make sure those tests are **failing**:
 
 ```bash
-poetry run pytest
+# Add the -v flag for a verbose output OR -vv flag to get the entire traceback!
+poetry run pytest -v
 ```
 
 What next? Now you should **read the error message**, and try to **fix** it, and only this one (don't anticipate). Let's do the first one together:
@@ -185,19 +186,23 @@ class Game:
 
 <br>
 
-## Test n°2: Checking the validity of a word
+## Test n°2: Validiting player input with the gameboard
 
 Let's move to the second method of our `Game` class, using the same feedback loop
 
-- carefully write a unit test
-- run the test
-- get an error message
-- figure out how to fix only this
-- run the test again
-- move to a new error message!
+- Carefully write a unit test
+- Run the test
+- Get an error message
+- Figure out how to fix only this
+- Run the test again
+- Move to a new error message!
 
 
 ❓ **It's your turn to implement a test for this new `is_valid(self, word)` method**!
+
+In this test we only want to test to see if the collection of letters that the player inputs exists in the game board! We will deal with the input word being a real word in the next challenge.
+
+Try to think of edge cases and write tests for both valid and invalid player inputs. Break it down and separate it out into a few sparate tests!
 
 <details><summary markdown='span'>🎁 A possible solution
 </summary>
