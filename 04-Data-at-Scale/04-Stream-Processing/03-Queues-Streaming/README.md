@@ -10,16 +10,16 @@ When there is too much data to handle for our workers, when data flow needs to b
 
 # 1️⃣ Topic Creation 📕
 
-we would create a new Pub/Sub Topic. From the Navigation Menu select Pub/Sub
+We will create a new Pub/Sub Topic. From the Navigation Menu select Pub/Sub.
 
-In the Pub/Sub page (Enable Pub/Sub API if prompted to), click on create topic
+In the Pub/Sub page (Enable Pub/Sub API if prompted to), click on create topic.
 
-You can name it `data-stream` as the below example:
+You can name it `data-stream` as in the below example:
 
 <img src="https://wagon-public-datasets.s3.amazonaws.com/data-engineering/W3D4/0403-03-topic_creation.png" witdh=200>
 
 <details>
-<summary markdown='span'>💡 Create topic in the cli</summary>
+<summary markdown='span'>💡 Create a topic in the cli</summary>
 
 ```bash
 gcloud pubsub topics create <topic name>
@@ -28,16 +28,16 @@ gcloud pubsub topics create <topic name>
 </details>
 
 
-Store your topic id in your .env within the variable `TOPIC_NAME` and make sure to reload your direnv.
+Store your Topic ID in your .env in the variable `TOPIC_NAME` and make sure to reload your direnv.
 You can test that it has been stored by executing this command:
 ```bash
 echo $TOPIC_NAME
 ```
 
-❗If it is not working even after a `direnv reload`, make sure to have a `dotenv` line in your .envrc file
+❗If it is not working even after a `direnv reload`, make sure to have a `dotenv` line in your .envrc file.
 
 
-By default a subscription is created as `\<Topic id\>-sub`. **Let's publish** the first message in the console and pull it via the gcp console subscriber
+By default a subscription is created as `\<Topic id\>-sub`. **Let's publish** the first message in the console and pull it via the GCP console subscriber.
 
 We can see the Pub/Sub in action by clicking on your topic Id and clicking on Publish Message via the tab Messages 👇
 
@@ -53,8 +53,8 @@ Once the message is published, we can go back to our subscription page to pull a
 
 ❗️ Once the message is **acknowledged** (**ack**), it is flushed from the **queue** and won't be sent anymore.
 
-Now that we Have seen how to subscribe to a message in the UI, let's code it in python 🐍.
-It'll help receive high quantities of messages and apply transformations to them as they come in!
+Now that we have seen how to subscribe to a message in the UI, let's code it in python 🐍.
+It will help receive high quantities of messages and apply transformations to them as they come in!
 
 # 2️⃣ Creating a subscriber 🤓
 
@@ -62,11 +62,11 @@ It'll help receive high quantities of messages and apply transformations to them
 
 ❓ Now head to the file `subscriber-basics.py` and implement the run function by following the comments inside the function.
 
-👉 Now Let's code the callback function. This callback function is meant to be called at each published message
-during the subscription. For a simple subscriber, let's just print the message and ack it.
+👉 Now let's code the callback function. This callback function is meant to be called at each published message
+during the subscription. For a simple subscriber, let's just print the message and _ack_ it.
 <br>
 
-❗️ Don't forget to **ack** every message, otherwise it will be kept sent by pubsub.
+❗️ Don't forget to **ack** every message, otherwise Pub/Sub will continue sending it.
 
 Launch the subscriber with this command
 
@@ -75,7 +75,8 @@ python app/subscriber-basics.py
 ```
 
 Notice that the **subscriber** is now waiting for new messages.
-Create some on gcp console as we have done on the first part of the challenge. You should see them coming in the terminal like below 👇
+
+Create some messages in the GCP console as we have done on the first part of the challenge. You should see them appearing in the terminal like below 👇
 
 <img src="https://wagon-public-datasets.s3.amazonaws.com/data-engineering/W3D4/terminal-sub-basic.png">
 
@@ -83,46 +84,47 @@ Now we can implement a **publisher** to send the **real-time** data from challen
 
 # 3️⃣ Publish data ✍️
 
-Back to the first challenge of the day: real-time streaming 💪. To stream the data we first need to source it. Let’s simulate multiple sensors publishing to the same **topic** in **pub/sub**.
+Back to the first challenge of the day: real-time streaming 💪. To stream the data we first need to source it. Let’s simulate multiple sensors publishing to the same **topic** in **Pub/Sub**.
 
-Head to `app/publisher.py`. You’ll notice that there is already a get message that generates a message for a specific sensor as we have seen in the first Challenge
+Head to `app/publisher.py`. You’ll notice that there is already a `get_message_data` method that generates a message for a specific sensor like in the first challenge.
 
-👉 following the comments inside the function `run`.
+👉 Follow the comments inside the function `run`.
 
 Now you can publish a message once it is generated!
 
 ❗️ The **message** must be a **byteString** to be published in Pub/Sub
 
-Let's open a new terminal and launch the publisher and let it publish some messages before to stop it with `ctrl+c`
-Launch the publisher with this command
+Let's open a new terminal and launch the publisher and let it publish some messages before we stop it with `ctrl+c`.
+
+Launch the publisher with this command:
 
 ```python
 python app/publisher.py
 ```
 
-Now Launch the subscriber with this command
+Now launch the subscriber with this command:
 
 ```python
 python app/subscriber-basics.py
 ```
 
-Even if the publisher is stopped, the subscriber unstacked the queue and ack messages. The messages stays in the pubsub queue until they are acked
+Even if the publisher is stopped, the subscriber unstacked the queue and acked the messages. The messages stays in the Pub/Sub queue until they are acked.
 
-you can lauch simultanously in two diffferent terminal the subscriber and the publisher<br>
+You can lauch the publisher and the subscriber simultanously in two different terminals.<br>
 💪 We are streaming data in real-time!
 
-Now lets subscribe to the data with Apache Beam and make some transformations before loading the data into BigQuery
+Now let's subscribe to the data with Apache Beam and make some transformations before loading the data into BigQuery.
 
 # 4️⃣ Subscriber with Apache beam
 
-First Let's head to subscriber `app/subscriber-beam.py` and go to the `run` function!
+First head to subscriber `app/subscriber-beam.py` and go to the `run` function!
 
 The structure of the pipeline:
 
-- data: Pull data from Pub/Sub Topic
-- windowing: Round off the timestamp to an range interval
+- data: pull data from the Pub/Sub Topic
+- windowing: round off the timestamp to make intervals
 - grouping: aggregate the records per sensor per interval
-- out: Write the data to BigQuery
+- out: write the data to BigQuery
 
 We have already implemented the main structure with the file example earlier, now we have to adapt it to streaming mode.
 
@@ -131,23 +133,23 @@ We have already implemented the main structure with the file example earlier, no
 <details>
 <summary markdown='span'>💡 Answer</summary>
 
-Directly from pubsub with apache beam!
+Directly from Pub/Sub with Apache Beam!
 
 </details>
 
 ## 4.1 Data
 
-❓ Implement the data section to read the data from pub/sub and decode it!
+❓ Implement the data section to read the data from Pub/Sub and decode it!
 
-To check that works run the following command:
+To check that it works run the following command:
 ```python
 python app/subscriber-beam.py --id $PROJECT_ID --subscription-name $SUBSCRIPTION_NAME
 ```
-In another terminal **now start the publisher**. It should look something like this 👇
+In another terminal **start the publisher**. It should look something like this 👇
 
 <img src="https://wagon-public-datasets.s3.amazonaws.com/data-engineering/W3D4/data-streaming-1.png">
 
-For now your are streaming the data and printing it to the terminal. Thanks to
+For now you are streaming the data and printing it to the terminal thanks to this line:
 
 ```python
 group | "Print debug" >> beam.Map(lambda x: print(x))
@@ -173,7 +175,7 @@ For that we need a windowing and grouping pipeline.
 
 In the previous challenge, we already implemented those two parts.
 
-❓ Add the code from the previous exercise into the **window** and **group sections** now, let's keep the same implementation and try to execute the pipeline with the following command:
+❓ Add the code from the previous exercise into the **window** and **group sections**. Let's keep the same implementation and try to execute the pipeline with the following command:
 
 ```python
 python app/subscriber-beam.py --id $PROJECT_ID --subscription-name $SUBSCRIPTION_NAME
@@ -192,14 +194,14 @@ Before, we had access to **all the data** before executing the transformation.
 <details>
   <summary markdown='span'>💡 Explanations</summary>
 
-With an unbounded data set, it is impossible to collect all of the elements, since new elements are constantly being added and may be infinitely many.<br>
+With an unbounded data set, it is impossible to collect all of the elements, since new elements are constantly being added and it may be an infinite stream.<br>
 Beam’s default windowing behavior is to assign all elements of a PCollection to a single, global window.
 Before you use a grouping transform such as GroupByKey on an unbounded PCollection, you must at least set a non-global windowing function such as Fixed-time windows to gather data within a time window and trigger the grouping.
 
 </details>
 
 
-❓ **Implement a windowing pipeline**. You can have a look to this example in the [programming guide](https://beam.apache.org/documentation/programming-guide/#using-fixed-time-windows). Also refer to the **example** from the lecture.
+❓ **Implement a windowing pipeline**. You can have a look at this example in the [programming guide](https://beam.apache.org/documentation/programming-guide/#using-fixed-time-windows). Also refer to the **example** from the lecture.
 
 Our workflow is:
 - Attach a timestamp
@@ -218,7 +220,7 @@ Now We are ready to load the data to BigQuery!
 
 ## 4.3 Load to BigQuery
 
-❓ First let's create a new table `stream` in your big query dataset with the right schema:
+❓ First let's create a new table `stream` in your BigQuery dataset with the right schema:
 
 Under schema click on Edit as text and paste the following schema:
 
@@ -249,9 +251,9 @@ python app/subscriber-beam.py \
 Let's head to your gcp console into BigQuery and check that the live streaming is working well
 
 # 🏁Conclusion
-Congratulation🎉 Tou have build a complete real-time Data Streaming ETL pipeline.
+Congratulations! 🎉 Tou have build a complete real-time Data Streaming ETL pipeline.
 
-Don't for get to commit and push your code to github!
+Don't forget to commit and push your code to GitHub!
 
 
 # (Bonus) Deploy the pipeline to Dataflow
@@ -261,11 +263,13 @@ The Google Cloud Dataflow Runner uses the Cloud Dataflow managed service. When y
 Deployment into Dataflow is easy with Apache Beam, we just have to change the runner option of the pipeline and give the right GCP parameters.
 Here is the [documentation](https://beam.apache.org/documentation/runners/dataflow/) of the needed parameters
 
-To add a parameters to the pipeline you can use command-line arguments when you execute the subscriber-beam.py script as follow:
+To add extra parameters to the pipeline you can use command-line arguments when you execute the subscriber-beam.py script as follows:
 
 ```bash
 --runner DataflowRunner
 ```
+
+These arguments will be passed on to our `beam.Pipeline` through the `pipeline_args`.
 
 You can fill in your `.env` the following variable to be used in your command line :
 - PROJET_ID
@@ -290,7 +294,7 @@ python app/subscriber-beam.py \
 
 </details>
 
-Now you can head to Dataflow service within GCP, have a look to your dataflow graph by clicking on the active job name.
+Now you can head to Dataflow service within GCP, have a look at your dataflow graph by clicking on the active job name.
 
 Once it is ready you can launch your publisher:
 

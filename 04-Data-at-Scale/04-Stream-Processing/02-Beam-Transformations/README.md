@@ -3,18 +3,18 @@
 * Group data coming from different IoT sources within a fixed interval of time
 * Load the transformed data into **BigQuery**
 
-✅ Before Thinking about streaming the data, we have provided you an old log file which contains values from different sensors with the timestamp. `Streaming` will be covered in next challenge 🙌
+✅ We'll start with `batch processing` data with Apache Beam. We have provided you an old log file which contains values from different sensors with the timestamp. `Streaming` will be covered in the next challenge 🙌
 
 
 # 1️⃣ Download the data
 
-Let's first download the data that we are going to work with during this challenge.
-To do so, let's execute this command:
+Let's first download the data we will be using in this challenge.
+To do so, execute this command:
 ```bash
 mkdir -p data
 curl https://wagon-public-datasets.s3.amazonaws.com/data-engineering/W3D4/sensors_latency.csv > data/sensors_latency.csv
 ```
-👉 Let's have a quick look at the data in the terminal
+👉 Let's have a quick look at the data in the terminal:
 ```bash
 head data/sensors_latency.csv
 ```
@@ -22,28 +22,30 @@ head data/sensors_latency.csv
 - The `sensor` name
 - The `value` recorded
 - The `timeStamp` corresponding to the time of the record
-<p>💪 Let's build our ETL pipeline with Apache Beam to transform and load this data in BigQuery</p>
+
+💪 Let's build our ETL pipeline with Apache Beam to transform and load this data in BigQuery.
 
 # 2️⃣ Overview of the Pipeline
 
-During this challenge, We are going to use the paradigm of Map/Reduce with Apache Beam and build step-by-step our pipeline<br>
-👇 Here is an overview of this pipeline
+In this challenge, we use the paradigm of Map/Reduce with Apache Beam and we'll build our pipeline step-by-step.
+
+👇 Here is an overview of the pipeline:
 
 <img src="https://wagon-public-datasets.s3.amazonaws.com/data-engineering/W3D4/03-04-02_beam_pipeline.png" witdh=400>
 
 
-👉 Head to `app/beam_sample.py` and let's have a look at the different part of the pipeline within the code inside the function `run`
+👉 Head to `app/beam_sample.py` and have a look at the different parts of the pipeline inside the `run` function.
 
 - First a beam Pipeline is instantiated as `pipeline`
 - `data`: is the part of the pipeline where data will be loaded
-- `windowing`: take as input `data` and will prepare the data to be grouped
-- `grouping`: take as input `windowing` then will group and transform the data by key
-- `out`: write the output of the pipeline
+- `windowing`: takes as input `data` and prepares the data to be grouped
+- `grouping`: takes as input `windowing`, groups the data by key and transforms the result
+- `out`: writes the output of the pipeline
 
 # 3️⃣ Read the data with Beam 🔦
 
-❓ Let's Code the first part of the pipeline `data` in `app/beam_sample.py`:
-We'll use two
+❓ Let's code the first part of the pipeline `data` in `app/beam_sample.py`:
+
 ```python
     data = (
         pipeline
@@ -52,11 +54,11 @@ We'll use two
     )
 ```
 
-☝️ Notice the syntax of Beam to Apply a method with the pipe ( **|** ) and name it with ( **>>** ).
+☝️ Notice the syntax of Beam to apply a method with the pipe ( **`|`** ) and name it with ( **`>>`** ).
 
-❓ Try to debug your code by mapping a print function to each element of a PCollection :
+❓ Try to debug your code by mapping a print function to each element of a PCollection:
 ```python
-data | 'Print in Terminal' >> beam.Map(lambda x: print(x))
+data | 'Print in Terminal' >> beam.Map(print)
 ```
 
 Now you can execute your code with this command:
@@ -64,12 +66,13 @@ Now you can execute your code with this command:
 python app/beam_sample.py
 ```
 
-You should be able to see your data being printed!
+You should see your data being printed!
 
 # 4️⃣ Save Data to an outputFile 💾
 
-Next step is to save the transformed data in an output File.<br>
-👉Head to the `out` pipeline section and save the data using `output_fps_prefix` variable
+Next step is to save the transformed data in an output file.
+
+👉Head to the `out` pipeline section and save the data to a file defined by the user in the `output_fps_prefix` parameter.
 
 ```python
 out = (
@@ -93,17 +96,17 @@ make test_first_read
 
 # 5️⃣ Let's Create a key for each element
 
-Inside `windowing` transformation, Let's create a (key,value) Tuple so it will be possible to group the elements by keys later.
+Inside the `windowing` transformation, let's create a (key,value) tuple so it will be possible to group the elements by keys later.
 
 ❓ What could be a good way to group the data for this type of data?
 <details>
   <summary markdown='span'>💡 Hints</summary>
 
-for a TimeStamped data, a good strategy of grouping is to create intervals to gather data from the same time window!
+For TimeStamped data, a good strategy of grouping is to create intervals to gather data from the same time window!
 
 </details>
 
-👉 Let's code the process by applying a Map method that we name `Map Time Rounded Key per Element` to map a List to a Tuple elements like this one at each line
+👉 Let's code the process by applying a Map method that we name `Map Time Rounded Key per Element` to map a List to a Tuple like this one at each line
 
 ```bash
 # PCollection in
@@ -115,10 +118,10 @@ for a TimeStamped data, a good strategy of grouping is to create intervals to ga
 ...
 ```
 
-* key: rounded value of the timestamp (You can use `strtime_window_rounded` function provided for you)
+* key: rounded value of the timestamp (you can use the `strtime_window_rounded` function we provided for you)
 * value: sensor name and sensor value
 
-❗️ We have manually created the time intervals by rounding the timestamp. Actually Beam is able to create time windows with TimeStamped elements -> Let's leave the next exercise.
+❗️ We have manually created the time intervals by rounding the timestamp. Beam is actually able to create time windows with TimeStamped elements. We'll do that in the next challenge.
 
 
 You can execute your code with this command:
@@ -128,24 +131,24 @@ python app/beam_sample.py \
     --output data/output_intermediate_windowing.txt
 ```
 
-👉 Let's Head to `data/output_intermediate_windowing.txt` and have a look at the intermediary output generated by implement windowing transformations.
+👉 Have a look at `data/output_intermediate_windowing.txt`, the intermediary output generated by implementing windowing transformations.
 
-💡 Each line is tuple the first element being `timestamps` in 15 second intervals. the second element is a list containing the sensor name and value!
+💡 Each line is a tuple. The first element is `timestamps` in 15 second intervals. The second element is a list containing the sensor name and value.
 
 
 🧪 **Test your code**
 ```bash
 make test_windowing
 ```
-With this tuple we are now ready to group!
+With these tuples we are now ready to group!
 
 # 6️⃣ Let's Group/Combine the data
 
-In the previous step, we already created a key for each element. Now, we just need to group & reduce these elements together by taking their mean within each 15-min time interval
+In the previous step, we already created a key for each element. Now, we just need to group & reduce these elements together by taking their mean within each 15-min time interval.
 
-❓ Try to implement the `grouping` transform section so as to achieve the following, using Apache Beam
-- [`GroupByKey`]("https://beam.apache.org/documentation/transforms/python/aggregation/groupbykey/")
-- [`MapTuple`](https://beam.apache.org/documentation/transforms/python/elementwise/map/#:~:text=Eggplant%0A%F0%9F%8D%85Tomato%0A%F0%9F%A5%94Potato-,Example%205%3A%20MapTuple%20for%20key%2Dvalue%20pairs,-If%20your)
+❓ Try to implement the `grouping` transform section to achieve the output below, using Apache Beam's:
+- [`GroupByKey`](https://beam.apache.org/documentation/transforms/python/aggregation/groupbykey/)
+- [`MapTuple`](https://beam.apache.org/documentation/transforms/python/elementwise/map/#example-5-maptuple-for-key-value-pairs)
 
 ```bash
 # PCollection in
@@ -162,9 +165,9 @@ In the previous step, we already created a key for each element. Now, we just ne
 {'Timestamp': '2022-11-25 09:00:30.000000', 'AtmP': 993.7766113281240, 'Temp': 10.66554260253947, ...}
 ```
 
-💡 We advise you to work in two steps: print (or save) the output of the GroupByKey first, then only try work on aggretating the resulting group!
+💡 We advise you to work in two steps: print (or save) the output of the GroupByKey first, and only then work on aggretating the resulting group!
 
-💡 We advise you isolate the pure-python aggregation function logic in a separate `utils.aggregate_sensors` function !
+💡 We advise you to isolate the pure-python aggregation function logic in a separate `utils.aggregate_sensors` function!
 
 <details>
   <summary markdown='span'>💡 Hints</summary>
@@ -203,7 +206,7 @@ with the right format:
 BQ_TABLE=<your-project-id>:<your-bq-dataset-name>.<your-table-name>
 ```
 
-❓ Let's head to `out_bq` part of the pipeline and add `Write to Big Query` transformation using
+❓ Let's head to the `out_bq` part of the pipeline and add a `Write to Big Query` transformation using
 [beam.io.gcp.WriteToBigQuery](https://beam.apache.org/documentation/io/built-in/google-bigquery/#:~:text=on%20the%20runners.-,Writing%20to%20a%20table,-To%20write%20to) (and [here](https://beam.apache.org/releases/pydoc/2.8.0/apache_beam.io.gcp.bigquery.html))
 <br>
 
@@ -215,14 +218,16 @@ BQ_TABLE=<your-project-id>:<your-bq-dataset-name>.<your-table-name>
     custom_gcs_temp_location=...)
 ```
 
-☝️ Here, we are still in **batch-processing** mode. Hence, we suggest you to use the argument `write_disposition=beam.io.BigQueryDisposition.WRITE_TRUNCATE` so that running the pipe is **indempotent**. A small annoying thing is that WRITE_TRUNCATE require a mandatory "temp" location folder in google cloud storage to load data **before** it's then sent to *BigQuery**. You can therefore create a bucker with `gsutil mb -l eu gs://$USER-deng-tmp` and then add the argument `custom_gcs_temp_location=gs://...`
+☝️ Here, we are still in **batch-processing** mode. Hence, we suggest you to use the argument `write_disposition=beam.io.BigQueryDisposition.WRITE_TRUNCATE` so that running the pipe is **idempotent**.
+
+A small annoying thing is that `WRITE_TRUNCATE` requires a mandatory "temp" location folder in Google Cloud Storage to load data **before** it is sent to **BigQuery**. You can create a bucket with `gsutil mb -l eu gs://$USER-deng-tmp` and then add the argument `custom_gcs_temp_location=gs://...`
 
 <details>
-  <summary markdown='span'> Google App Crendential Problems? </summary>
+  <summary markdown='span'> Google Application Credentials problems? </summary>
 
-Something we may have forgotten to do in the setup day is configure your [`GOOGLE_APPLICATION_CREDENTIAL`](https://cloud.google.com/sdk/gcloud/reference/auth/application-default/login) (not to be confused with your gcloud CLI crendentials which is already set).
+You might need to configure your [`GOOGLE_APPLICATION_CREDENTIAL`](https://cloud.google.com/sdk/gcloud/reference/auth/application-default/login) (not to be confused with your gcloud CLI credentials which are already set).
 
-We advise you to re-use your same virtual-machine service account JSON that you stored in `~/.gcp_keys/le-wagon-de-bootcamp.json`, so that you associate all credendials of the VM to the same key.
+We advise you to re-use the same virtual-machine service account key that you stored in `~/.gcp_keys/le-wagon-de-bootcamp.json`, so that you associate all credentials of the VM with the same key.
 
 To set the environment variable so it's always accessible in your VM, you can add it to your `~/.zshrc` with the following terminal command:
 
@@ -232,7 +237,8 @@ export GOOGLE_APPLICATION_CREDENTIALS="~/.gcp_keys/le-wagon-de-bootcamp.json"
 
 </details>
 
-You can execute your code with this command by enabling the last part of the pipeline:
+You can execute your code with this command:
+
 ```bash
 python app/beam_sample.py \
     --input data/sensors_latency.csv \
@@ -240,7 +246,7 @@ python app/beam_sample.py \
     --out-bq True
 ```
 
-👉 Let's head to your gcp console into **BigQuery** and check that the data has loaded in the format you expect!
+👉 Go to **BigQuery** inside your GCP console and check that the data has been loaded in the format you expect!
 
 
 # 🏁 Conclusion
