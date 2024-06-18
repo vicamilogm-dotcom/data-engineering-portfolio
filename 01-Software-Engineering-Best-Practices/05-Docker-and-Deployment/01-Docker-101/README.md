@@ -1,11 +1,18 @@
-🎯 The purpose of this exercise is to:
+# 🎯 Goal
 
-* guide you through common `docker` CLI commands
-* while giving some details about them and the associated Docker concepts
+Docker is the most common tool for containerisation and will be used heavily for the rest of this bootcamp. Being familiar with the basic usage will greatly enhance your learning experience for future units!
 
-** Feel free to skip to next challenge (Dockerfile) if you are already familiar with this**
+The purpose of this exercise is to:
 
-# Docker Hub 💻
+- Guide you through common `docker` CLI commands - with some details and associated Docker concepts
+- Starting, stopping, and cleaning up containers
+- Executing commands inside running containers
+
+If your familiar with Docker already this challenge might be relatively straightforward, but you can never have too much practice in the basics!
+
+<br>
+
+# 1️⃣ Docker Hub 💻
 
 #### Sign up
 Docker Hub is a hosted repository service provided by Docker for finding and sharing container images with your team. Once you create a Docker ID (a user), you will be able to pull and push images to the Hub.
@@ -15,6 +22,7 @@ Create a personal account 👉  [here](https://hub.docker.com/signup).
 #### Login
 
 Open a terminal and type:
+
 ```bash
 docker login
 ```
@@ -24,8 +32,9 @@ You will be prompted for your username and password:
 
 When successful, your terminal should tell you "Login Succeeded" 🙌!
 
+<br>
 
-# Hello-World!
+# 2️⃣ Hello world!
 
 Let's validate our Docker installation by running our first container: `hello-world`. To do so, run the following in your terminal:
 
@@ -39,58 +48,63 @@ Since you do not have any docker images on your VM (as you have only just instal
 * then run a container from this image
 
 This container _only_ prints a message
+
 ```bash
 Hello from Docker!
 ```
 
+#### To see the containers that are running on your VM:
 
-### To see the containers that are running on your VM:
-
-```
+```bash
 docker ps
 ```
 
-Not seeing any? That's normal!
+Not seeing anything? That's normal!
 Your `hello-world` container is not running anymore: it exited as soon as it was done. Its job was simply to print a message.
 
-In fact, the `docker ps` command can take arguments
+But what about viewing all containers? The `docker ps` command has flags to change the output!
 
-### To view all containers (even non-running ones), run:
-```
+#### To view all containers (even non-running ones), run:
+
+```bash
 docker ps -a
 ```
 
 You should see a container here. What is its name? Which image was used to run it? What is its state?
 
-### To view images on your host:
-```
+#### To view images on your VM:
+
+```bash
 docker images
 ```
 
-You should see your `hello-world` image, freshly pulled. You should also have access to other details such as
+You should see your freshly pulled `hello-world` image. You should also have access to other details such as:
 
-* the image ID,
-* the image tag (used to convey important information about the image. By default, the tag is "latest",
-* the image size
+- Image ID
+- Image tag - used to convey information about the image. If no tag is specifed when an image is built it will default to _latest_
+- Image size
 
+<br>
 
-# Common Docker commands
+# 3️⃣ Common Docker commands
 
-## Run a container
+#### Run a container
 
 The [**`docker run`**](https://docs.docker.com/engine/reference/run/) command is used to run a container from an image: you should pass the image name to it, like
+
 ```bash
 docker run <SOME_IMAGE>
 ```
 
-- Docker will use the image from the host (your machine) if it exists
-- If the image is not present in the host, it will go to Docker Hub and pull the image for you 👌!
+- Docker will use the image from the VM if it exists
+- If the image is not present in the VM it will go to Docker Hub and pull the image for you 👌
 
 👉 For instance, run a container from the `postgres` image. You can see [here](https://hub.docker.com/_/postgres) that the postgres image is available on the Hub!
 
 ```bash
 docker run postgres
 ```
+
 this will break...👇
 
 ```bash
@@ -101,25 +115,24 @@ Error: Database is uninitialized and superuser password is not specified.
 
 👉 Check the error message. Try to fix your command and run it again!
 
-The `-e` flag in `docker run -e ...` stands for environment variable. Here, we just created a password for the database superuser, and passed it to the `docker run` command
-</details>
+The `-e` flag in `docker run -e ...` stands for *environment variable*. Here, we just created a password for the database superuser, and passed it to the `docker run` command
 
-🍾 That's it! **No need for a complex installer, no conflicts on your laptop, no long hours scrolling tech forums to fix your problem**: you have a running database with a single command. Running locally is very stable when using a virtual machine. But often you want to use a database without having to set up a whole new machine just for that. Docker can help!
+🍾 That's it! **No need for a complex installer, no conflicts on your laptop, no long hours scrolling tech forums to fix your problem**. You have a running database with a single command. Running a database locally is relatively stable when using a virtual machine. But often you want to use a database without having to set up a whole new machine just for that. Docker can help!
 
-
-Now, you should see an output in your terminal: it looks like your database is initialized and ready to accept connections!
+Try the previous `docker run ...` command with the additional flag and you should see an output in your terminal: it looks like your database is initialized and ready to accept connections!
 
 
 👉 Stop the container by hitting CTRL-C.
 
 
-## Run a container in the background
+#### Run a container in the background
 
 Another thing you can do is to run a container in the background (using the "detached" mode). This way, your terminal prompt will be available.
 
 👉 Try to run a new postgres container in the detached mode and give it a name: `pg`. `docker run --help` or `tldr docker run` are your best friends!
 
-<details><summary markdown='span'>💡 solution</summary>
+<details>
+<summary markdown='span'>💡 solution</summary>
 
 ```bash
 docker run -d -e POSTGRES_PASSWORD=password --name=pg postgres
@@ -127,69 +140,74 @@ docker run -d -e POSTGRES_PASSWORD=password --name=pg postgres
 </details>
 
 You should now see it running in `docker ps`.
-(FYI, if we don't specify the names of our containers, Docker will generate random names for us!)
 
+💡 If you don't specify a name for a container, Docker will generate random name for it!
 
-## Access the Postgres database
+#### Access the Postgres database
 
 Now that your container is running, you might want to run an SQL query.
-Let's first get a bash shell in the container:
+Let's first get a bash shell in the container with the following command:
 
-👉 Run
-```
+```bash
 docker exec -it pg /bin/bash
 ```
 
 What have we done here 🤔? We have asked Docker to run a command (`/bin/bash`: to get a bash shell) in the container, passing the flags:
-* `-i` flag for "interactive" mode: it gets us a standard input **stdin** (by default, a container runs in a non-interactive mode: it does not listen for input from your side). To provide an input, you need to pass this `-i` flag.
-* the `-t` flag stands for "tty", which is a Unix-like operating system command: with this flag, you will get a command prompt.
+- `-i` flag for "interactive" mode: this flag provides us with a standard input **stdin**. By default, a container runs in a non-interactive mode: it does not listen for input from your side. To provide an input, you need to pass this `-i` flag.
+- `-t` flag stands for **tty**, a Unix-like operating system command. This flag provides a terminal interface.
 
-So the combination of these two flags give us access to a "terminal" inside the container 🎉 !
+The combination of these two flags give us access to a "terminal" inside the container 🎉
 
 We can now access our DB using the `psql` CLI:
 
-👉 Run ```psql --username postgres```
+```bash
+psql --username postgres
+```
 
-It gives you access to the Postgresql command line where you can write SQL queries.
+You should now be on the Postgresql command line where you can interact with the database and write SQL queries.
 
 <p><img src="https://github.com/lewagon/fullstack-images/blob/master/reboot-python/psql-docker.png?raw=true" width="500"></p>
 
-👉 Exit the `psql` prompt: `\q` + **Enter**
-👉 Exit the container bash shell: `exit` + **Enter**
 
-# Clean up 🧹
+To exit:
+- `psql` prompt: `\q` + **Enter**
+- Container bash shell: `exit` + **Enter**
 
-## stop & remove containers
+<br>
 
-To stop a container, use the [`docker stop`](https://docs.docker.com/engine/reference/commandline/stop/) command. You will need to pass the container ID, or the container name.
+# 4️⃣ Clean up 🧹
 
-👉 Stop your `pg` container and check the list of running and non-running containers.
+#### Stopping and removing containers
+
+To stop a container use the [`docker stop`](https://docs.docker.com/engine/reference/commandline/stop/) command. You will need to pass the container ID or the container name.
+
+To stop your `pg` container:
 
 ```bash
 docker stop <CONTAINER_ID>
 ```
 
 Now list running and exited containers:
+
 ```bash
 docker ps
 docker ps --filter "status=exited"
 ```
 
-You should see that your container changed its state from `running` to `exited` but it is still there! To remove it from your host, run the `docker rm` command.
-
-👉 Remove your postgres container
+You should see that your container changed its state from `running` to `exited` but it is still there! To remove it from your VM run the `docker rm` command:
 
 ```bash
 docker rm pg
 ```
 
-## remove an image
+#### Removing an image
 
-So you have stopped and removed your postgres container, but how about the postgres image that your host initially pulled from Docker Hub?
+So you have stopped and removed your postgres container but how about the postgres image that your VM initially pulled from Docker Hub?
 
-👉 Do you remember how to list docker images?
+Do you remember how to list docker images?
 
-<details><summary markdown='span'>View solution</summary>
+<details>
+<summary markdown='span'>View solution</summary>
 
 ```bash
 docker images
@@ -197,9 +215,10 @@ docker images
 
 </details>
 
-👉 Try to remove the `postgres` image using [`docker rmi`](https://docs.docker.com/engine/reference/commandline/rmi/) and double check it worked.
+Try to remove the `postgres` image using [`docker rmi`](https://docs.docker.com/engine/reference/commandline/rmi/) and double check it worked.
 
-<details><summary markdown='span'>View solution</summary>
+<details>
+<summary markdown='span'>View solution</summary>
 
 ```bash
 docker rmi postgres
@@ -223,4 +242,12 @@ docker rmi image_name
 docker system prune
 ```
 
-🏁 Congratulation! `make test`, commit and push your code so we can track your progress!
+<br>
+
+# 🏁 Finish
+
+Congratulation on finishing! The commands you went through in this challenge are key to working with Docker and you'll be using them frequently throughout the rest of the bootcamp.
+
+🧪 Run `make test`, commit, and push the output to github so Kitt can track your progress!
+
+<br>
