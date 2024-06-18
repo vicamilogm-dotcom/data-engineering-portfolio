@@ -1,1 +1,1 @@
-Deploying apps with containers locally and on the cloud
+Deploying apps with containers locally and on the cloud.
