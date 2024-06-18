@@ -64,7 +64,7 @@ The code is heavily inspired by the [official tutorial](https://www.rabbitmq.com
 By the end of this section we should be able to run:
 
 ```bash
-python lwqueue/rabbitmq_subscriber.py --host localhost --port 5672 --rmq-username <RabbitMQ_username> --rmq-password <RabbitMQ_password> --mode print
+python lwqueue/rabbitmq_subscriber.py --host localhost --port 5672 --rmq-username <RabbitMQ_username> --rmq-password <RabbitMQ_password> --mode simple
 ```
 
 to receive messages sent to our chat and print them out to the terminal.
