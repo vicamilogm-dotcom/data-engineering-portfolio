@@ -42,10 +42,10 @@ Let's validate our Docker installation by running our first container: `hello-wo
 docker run hello-world
 ```
 
-Since you do not have any docker images on your VM (as you have only just installed Docker),
+You should have run this image during Setup Day to verify your docker install, if not it will:
 
-* it will first pull the `hello-world` image from the Hub
-* then run a container from this image
+- It will first pull the `hello-world` image from docker hub. If the image exists on your host it will use the existing image.
+- Then run a container from this image
 
 This container _only_ prints a message
 
@@ -78,11 +78,12 @@ You should see a container here. What is its name? Which image was used to run i
 docker images
 ```
 
-You should see your freshly pulled `hello-world` image. You should also have access to other details such as:
+You should your `hello-world` image. This command will also show other details such as:
 
 - Image ID
-- Image tag - used to convey information about the image. If no tag is specifed when an image is built it will default to _latest_
+- Image tag - used to convey information about the image, typically the version for pulled images like postgres. If no tag is specifed when an image is built it will default to _latest_
 - Image size
+- When the image was created (built). This is different from when you pulled an image from a remote repository.
 
 <br>
 
@@ -90,7 +91,7 @@ You should see your freshly pulled `hello-world` image. You should also have acc
 
 #### Run a container
 
-The [**`docker run`**](https://docs.docker.com/engine/reference/run/) command is used to run a container from an image: you should pass the image name to it, like
+The [**`docker run`**](https://docs.docker.com/engine/reference/run/) command is used to run a container from an image. You should pass the image name to it:
 
 ```bash
 docker run <SOME_IMAGE>
@@ -105,7 +106,7 @@ docker run <SOME_IMAGE>
 docker run postgres
 ```
 
-this will break...👇
+This will break...👇
 
 ```bash
 Error: Database is uninitialized and superuser password is not specified.
@@ -115,15 +116,13 @@ Error: Database is uninitialized and superuser password is not specified.
 
 👉 Check the error message. Try to fix your command and run it again!
 
-The `-e` flag in `docker run -e ...` stands for *environment variable*. Here, we just created a password for the database superuser, and passed it to the `docker run` command
+The `-e` flag in `docker run -e ...` stands for *environment variable*. Using the appropriate flag and arguments we created a password for the database superuser and passed it to the `docker run` command.
 
 🍾 That's it! **No need for a complex installer, no conflicts on your laptop, no long hours scrolling tech forums to fix your problem**. You have a running database with a single command. Running a database locally is relatively stable when using a virtual machine. But often you want to use a database without having to set up a whole new machine just for that. Docker can help!
 
 Try the previous `docker run ...` command with the additional flag and you should see an output in your terminal: it looks like your database is initialized and ready to accept connections!
 
-
-👉 Stop the container by hitting CTRL-C.
-
+👉 Stop the container by hitting `ctrl + c`.
 
 #### Run a container in the background
 
@@ -164,14 +163,22 @@ We can now access our DB using the `psql` CLI:
 psql --username postgres
 ```
 
-You should now be on the Postgresql command line where you can interact with the database and write SQL queries.
+You should now be on the Postgresql command line where you can interact with the database and write SQL queries. Here's a few to test out, don't forget the `;` at the end of the query!
+
+```sql
+SELECT 1 + 1 as test;
+```
+
+```sql
+SELECT current_user;
+```
 
 <p><img src="https://github.com/lewagon/fullstack-images/blob/master/reboot-python/psql-docker.png?raw=true" width="500"></p>
 
 
-To exit:
-- `psql` prompt: `\q` + **Enter**
-- Container bash shell: `exit` + **Enter**
+To navigate back to your Virtual Machine's terminal:
+- Exit `psql` prompt: `\q` + **Enter**
+- Exit container bash shell: `exit` + **Enter**
 
 <br>
 
@@ -228,7 +235,7 @@ docker images
 
 If you have other containers using the `postgres` image, you will not be able to remove it... You need to get rid of the containers first!
 
-**Cheatsheet: docker cleaning**
+#### Cheatsheet: docker cleaning
 
 ```bash
 # Containers
@@ -248,6 +255,6 @@ docker system prune
 
 Congratulation on finishing! The commands you went through in this challenge are key to working with Docker and you'll be using them frequently throughout the rest of the bootcamp.
 
-🧪 Run `make test`, commit, and push the output to github so Kitt can track your progress!
+🧪 Run `make test`, commit the `test_output.txt`, and push it up to github so Kitt can track your progress!
 
 <br>

@@ -6,9 +6,9 @@ We have a working API that is exposed to the world! But if we wanted to update t
 
 # 0️⃣ Setup
 
-To achieve this we'll need a bit of setup:
+To achieve this we will need a bit of setup:
 
-1. Duplicate the previous challenge to a new repo outside of the `data-engineering-challenges` directory on your Virtual Machine.
+1. Duplicate the previous challenge to a new directory outside of the `data-engineering-challenges` directory on your Virtual Machine.
 1. Initialize the copied directory with git, create a new github repository and push all of the code up to github!
 
 <br>
@@ -33,7 +33,7 @@ To set up, go to your Cloud Run service:
 
 1. Go to the code and make a change to the response of the API
 
-1. Push the code and go and view your repo and you will see the ci/cd pipeline in action automatically as an action!
+1. Push the code and go and view your repo and you will see the CI/CD pipeline in action automatically as an action!
 
     <img src="https://wagon-public-datasets.s3.amazonaws.com/data-engineering/W0D5/repo-action.png">
 
@@ -45,13 +45,13 @@ Cloud Run and Cloud Build offer some safeguards against deploying broken contain
 
 Both mechanisms offer a safety net by ensuring only functional containers make it to production, even in the absence of a full-fledged CI system.
 
-We want to be robust through so lets setup CI!
+We want to be robust through. Let's setup CI for some automated testing!
 
 <br>
 
-# 2️⃣ Setting up ci
+# 2️⃣ Setting up Continuous Integration
 
-We can create a CI action using Github Actions. We've created a template for you to use, read through it and understand what each part of the CI action is doing. If you can't remember where to put the template, have a look at your previous challenges for reference.
+We can create a CI action using Github Actions. We've created a template for you to use, read through it and understand what each part of the CI action is doing. If you can't remember where to put the template have a look at your previous challenges for reference.
 
 ```yml
 name: FastAPI CI and Lint
@@ -123,9 +123,9 @@ jobs:
         exit-code: '1'
 ```
 
-Try to add and push the action. Does something break?
+Add, commit, and push the action. Does something break?
 
-Fix it and checkout the output of the actions!
+Checkout the output of the actions and try to fix it!
 
 They will probably fail but give interesting insights in improving your containers!
 
@@ -133,7 +133,7 @@ They will probably fail but give interesting insights in improving your containe
 
 # 3️⃣ (Optional) Advanced CD
 
-Sometimes you don't want Cloud Build to automatically build and deploy the containers but you do want it build and push the image to the Artifact Registry.
+Sometimes you don't want Cloud Build to automatically build and deploy the containers, but you do want to build and push the image to Artifact Registry.
 
 If you checkout [this github gist](https://gist.github.com/palewire/12c4b2b974ef735d22da7493cf7f4d37) you can attempt to do just that but it gets a little tricky!
 
@@ -145,9 +145,10 @@ If you've made it this far - congratulations 🎉
 
 In these challenges you've learnt the foundations of Docker and how to use it for creating a microservice.
 
-Although we used a really simple API that returned a static JSON object, you can apply the principles we've done here to many different use cases:
-- You could build an API as a small, basic data pipeline that ingests data, cleans it, then loads it into a data lake or data warehouse.
-- Build an API to interact with a database that is hosted on your VM, another server or on a managed cloud service - functionally how a lot of the web works.
-- For machine learning workloads, you can package a model and supporting data preprocessing code into an API to so that it takes model inputs, pre-processes the data, perform inference, and return an output.
+Although we used a simple API that returned a static JSON object, you can apply the principles we've done here to many different use cases:
+- You could build an API as a batch data pipeline that ingests data, cleans it, then loads the cleaned data into a data lake or data warehouse.
+- Build an API to interact with a database that is hosted on your VM, another server or on a managed cloud service.
+- Build and API to wrap around other ETL tools like dbt to trigger runs or tests manually or on a cron schedule.
+- For machine learning workloads you can package a model and supporting data preprocessing code into an API to so that it takes model inputs, pre-processes the data, performs inference, and returns an output.
 
 <br>

@@ -1,16 +1,17 @@
 # 🎯 Goal and Context
-As data engineers, packaging your code through Docker is key to ensure portability and reproducibility of your results on different computers. This way, anyone that opens your code will be able to run without issues. Creating clean and extensible Docker images will also help DevOps engineers downstream as they run and test them inside CI/CD systems or in production (like in Docker Swarm, virtual instances, Kubernetes).
+
+As data engineers, creating services and containerised applications is key to ensure portability, scalability, and deployment on different computers. By using a tool like docker to package and deploy your code, anyone that uses your container will be able to run it without any issues. Creating clean and extensible Docker images will also help DevOps engineers downstream as they run and test them inside CI/CD systems or in production (like in Docker Swarm, virtual instances, Kubernetes).
 
 This exercise will teach you the Docker fundamentals necessary to mount and operate a Docker container.
 You will learn to:
-- Create a `Dockerfile` based on the best practices
+- Create a `Dockerfile` based on best practices
 - Build and tag a Docker image
 - Analyse the content and construction of a Docker image
 - Spin containers up and down
 - Access containers and execute commands inside them with the CLI
 - Push images to remote Docker hubs (DockerHub, GCP Artifact Registry)
 
-For this challenge you'll use a very basic API that's been created using FastAPI. Feel free to have a look at the contents of `app/` and look at the code.
+For this challenge you'll use a very basic API that's been created using FastAPI. Feel free to have a look at the contents of `app/` and review the code.
 
 <br>
 
@@ -28,7 +29,7 @@ Open this challenge in VSCode and head to the `Dockerfile-task-1` file. This wil
 
     *note:* **Do not use ENV as this would mean that your containers would inherit it after the build**
 
-1. Add `ENV PYTHONUNBUFFERED 1` - this forces the `stdout` and `stderr` streams to be unbuffered. Read more about why we set this environment variable in this [explanation](https://stackoverflow.com/questions/59812009/what-is-the-use-of-pythonunbuffered-in-docker-file).
+1. Add `ENV PYTHONUNBUFFERED 1` - this forces the `stdout` and `stderr` streams to be unbuffered. Read more about why we set this environment variable in [this stack overflow post](https://stackoverflow.com/questions/59812009/what-is-the-use-of-pythonunbuffered-in-docker-file).
 
 1. Install python 3.8.10 from [deadsnake ppa](https://launchpad.net/~deadsnakes/+archive/ubuntu/ppa):
     ```Dockerfile
@@ -49,7 +50,7 @@ Open this challenge in VSCode and head to the `Dockerfile-task-1` file. This wil
     apt-get install -y python3-pip
     ```
 
-1. Install fastapi (0.78.0), SQLAlchemy (1.4.36), Alembic (1.7.7) and, uvicorn[standard] (0.17.6). Make sure to specify the selected versions.
+1. Install fastapi (0.78.0), SQLAlchemy (1.4.36), Alembic (1.7.7), and uvicorn[standard] (0.17.6). Make sure to specify the selected versions.
 
 1. Create `WORKDIR` app
 
@@ -63,7 +64,7 @@ Open this challenge in VSCode and head to the `Dockerfile-task-1` file. This wil
     .pytest*
     .venv
     ```
-1. Expose port 8000 to be able to access the server from outside of the container
+1. Expose port 8000
 
 1. Create an `ENTRYPOINT` for `uvicorn`
 
@@ -75,19 +76,19 @@ Open this challenge in VSCode and head to the `Dockerfile-task-1` file. This wil
 1. Build the image using the tag `base-image-fastapi-ubuntu-fat:test`
     <details>
     <summary markdown='span'>💡 Hint</summary>
-    We have provided you with the `make buildTask1` command - have a look at the  `Makefile`!
+    Have a look at the `makefile` - We have provided you with some useful commands!
     </details>
 
-1. Run the container to make sure it’s functional - it should start the fastapi server on the localhost interface and port 8000
+1. Run the container to make sure it’s functional. It should start the fastapi server on the localhost interface and port 8000
     <details>
     <summary markdown='span'>💡 Hint</summary>
-    Look at your `Makefile` - you should find a command to run the container.
+    Look at your `makefile` - you should find a command to run the container.
     </details>
 
 1. Head to [localhost:8000](http://localhost:8000) in your web browser. You should see `Hello World`.
     <details>
     <summary markdown='span'>💡 Hints</summary>
-    If it doesn't work, check that you have forwarded the port from your VM to your local machine.
+    If it doesn't work, check that you have forwarded the port from your host to your local machine.
     <img src='https://wagon-public-datasets.s3.amazonaws.com/data-engineering/port_forwarding_vs_code.png' width=400>
     </details>
 
@@ -134,7 +135,7 @@ Open this challenge in VSCode and head to the `Dockerfile-task-1` file. This wil
     - Find your `IMAGE_NAME` and `IMAGE_TAG` with `Docker images`
     </details>
 
-1. Shut down the uvicorn server by using the shortcut `CTRL` + `c`
+1. Shut down the uvicorn server by using the shortcut `ctrl + c`
 
 Woah, that was a fair chunk of tasks! Lets see how we can improve our Docker image!
 
@@ -144,7 +145,7 @@ Woah, that was a fair chunk of tasks! Lets see how we can improve our Docker ima
 
 # 2️⃣ Caching - easy wins
 
-This tasks illustrates the concept of caching and unwanted dependencies installed via regular commands. When doing a simple `apt install` or `pip install`, by default those package managers install quanlity of life dependencies to make any development work easier. To reduce the size of the Docker image you can easily trim down image size by installing **only** what's necessary and using as few layers as possible.
+This tasks illustrates the concept of caching and unwanted dependencies installed via regular commands. When doing a simple `apt install` or `pip install`, by default those package managers install quality of life dependencies to make any development work on the installed package easier. To reduce the size of the Docker image you can easily trim down your image size by installing **only** what is necessary and using as few layers as possible.
 
 #### ❓ Refactor the Dockerfile from Part 1 to reduce image size
 
@@ -178,12 +179,12 @@ This tasks illustrates the concept of caching and unwanted dependencies installe
 1. Build the image using the tag `base-image-fastapi-ubuntu:test`
     <details>
     <summary markdown='span'>💡 Hint</summary>
-    Use the Docker command or look at your `Makefile`, you should find a command to build your image.
+    Use the Docker command or look at your `makefile`, you should find a command to build your image.
     </details>
 
 1. Run the container to make sure it’s functional. It should start the fastapi server listening on localhost, port 8000. Head to [localhost:8000](http://localhost:3000). You should see `Hello World`.
 
-1. Inspect the size and layers with `dive`
+1. Inspect the images size and layers with `dive`
     ```bash
     docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock wagoodman/dive:latest base-image-fastapi-ubuntu:test
     ```
@@ -204,7 +205,7 @@ That should have cut down on the size of the image pretty considerably! But it w
 
 # 3️⃣ The importance of a base image
 
-This task elaborates on the concept of a base image and how it can be used in real-life scenarios to spin up images/containers easily and efficiently. Previousl, we have installed our own version of python, pip, and other dependencies. However the community has already built many robust base images that we can use as a starting point. Using the right base image can save time, space, and often headaches.
+This task elaborates on the concept of a base image and how it can be used in real-life scenarios when creating your own images and spinning up containers easily and efficiently. Previously we have installed our own version of python, pip, and other dependencies from an ubuntu base image. However the community has already built many robust base images that we can use as a starting point. Using the right base image can save time, space, and often headaches.
 
 ## 3.1. Enhance the performance of your image
 
@@ -218,7 +219,7 @@ This task elaborates on the concept of a base image and how it can be used in re
         This will generate two files: `pyproject.toml` and `poetry.lock` that define your projects dependencies.
         <details>
         <summary markdown='span'>❗ But nothing happened!</summary>
-        You should get a `No dependencies to install or update` message because we have already provide you with the two poetry configuration files `pyproject.toml` and `poetry.lock` 👌.
+        You should get a `No dependencies to install or update` message because we have already provide you with the two poetry configuration files `pyproject.toml` and `poetry.lock` 👌
         </details>
     1. Update the `RUN` instruction:
         ```Dockerfile
@@ -239,11 +240,11 @@ This task elaborates on the concept of a base image and how it can be used in re
     ```
 1. Build image using the tag `base-image-fastapi-fat:test`
 1. Run the container to make sure it’s functional. It should start the fastapi server listening on localhost, port 8000. Head to [localhost:8000](http://localhost:3000). You should see `Hello World`.
-1. Inspect the size and layers with `dive`
+1. Inspect the images size and layers with `dive`:
     ```bash
     docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock wagoodman/dive:latest <your_image_name:tag>
     ```
-1. Inspect the layers, check the image size, and check the wasted space.
+1. Inspect the layers, check the image size, and check for wasted space.
 
 That's simplified our Dockefile but the size of the image is now way higher! Let's look at slimming it down a bit.
 
@@ -251,17 +252,21 @@ That's simplified our Dockefile but the size of the image is now way higher! Let
 
 ## 3.2. Shrink your image size
 
+There are can be multiple different types of base images depending on the application that you are building. Let's look at a slimmer python image.
+
 1. Copy the content of `Dockerfile-task-3-1` into `Dockerfile-task-3-2`
 1. Now switch to the `python:3.8.14-slim` base image
 1. Build the image using the tag `base-image-fastapi:dev`
 1. Run the container to make sure it’s functional
-1. Inspect the size and layers using dive
+1. Inspect the size and layers using `dive`:
     ```bash
     docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock wagoodman/dive:latest <your_image_name:tag>
     ```
-1. Inspect the layers, check the image size, check the wasted space.
+1. Inspect the layers, check the image size, check for wasted space.
 
-That has massively shrunk our image size down from the previous iteration, but it is still slightly higher than the image we build using just ubuntu. There will always be tradeoffs in software development, by using a premade python base image and poetry we can greatly reduce the dev cycle and increase the portability of our code from local to container environment.
+That has massively shrunk our image size down from the previous iteration, but it is still slightly higher than the image we build using just ubuntu. There will always be tradeoffs in software development, by using a premade python base image and poetry we can greatly reduce the development cycle and increase the portability of our code from local to container environment.
+
+For more complex applications, especially where dependency resolution can be a pain, using a base image that someone else has already done the work for can make life easier.
 
 If the app was going into long term production you could investigate further efficiencies with size and building from a lower abstraction base image, like an ubuntu base image instead of a python base image.
 
@@ -271,19 +276,19 @@ If the app was going into long term production you could investigate further eff
 
 # 4️⃣ Inspect what is inside a running container!
 
-So far, we've been focusing on inspecting built **images** with dive.
+So far we've been focusing on inspecting built **images** with dive.
 Let's now *run* an image and inspect what's inside the running container!
 
-- 🆚 Install [VS Code Docker extension](https://code.visualstudio.com/docs/containers/overview)
-- Run your latest `base-image-fastapi:dev` image with interactive shell control:
+- Install the [VS Code Docker extension](https://code.visualstudio.com/docs/containers/overview)
+- Run your latest `base-image-fastapi:dev` image with an interactive shell:
     ```bash
     docker run --rm -it -p 8000:8000 base-image-fastapi:dev /bin/bash
     ```
-- Inspect your current working directory with `pwd` and what is inside with `ls`. You should be able to find your local files copied inside the container!
+- Inspect your current working directory with `pwd` and its contents with `ls`. You should be able to find your local files copied inside the container!
 - Create a new file `toto.py`. Check that it is there with `ls`, then use the VS Code Docker extension to navigate there too!
     <img src="https://wagon-public-datasets.s3.amazonaws.com/data-engineering/docker_extension_vs_code.png" width=200>
 
-- Now exit the container (`exit`, or ctrl-D) so that the container is stopped (`Docker ps` is empty). Run your container again. Now try to find `toto.py`.
+- Now exit the container (`exit`, or `ctrl + d`) so that the container is stopped (`Docker ps` is empty). Run your container again. Now try to find `toto.py`.
 
 It's gone! Containers are the running instances of `images` and they contain additional variables in memory that only exist for the time that the container is running! You will soon see how to "persist" data inside the container, but before then let's get to security!
 
@@ -299,10 +304,12 @@ This task will fix an issue you might have already seen when building your conta
 
 For pip, we don't mind ignoring this. Since we were running as the root user everything has been working smoothly! It points us too a deeper issue though: **in general, when possible, it is better to run containers as a non-root user**. The isolation of containers is mostly broken with tools available only to the root user. So to maximise security non-root is better wherever possible!
 
+This idea is called the [Principle of Least Privilege](https://en.wikipedia.org/wiki/Principle_of_least_privilege). Something we should always have in mind.
+
 #### ❓ Make you image non-root
 
 1. Copy the content of `Dockerfile-task-3-2` into `Dockerfile-nonroot`
-1. Update your `Dockerfile` with the following guide:
+1. Update your `Dockerfile` with the following:
 
     ```Dockerfile
     RUN ...
@@ -327,17 +334,19 @@ For pip, we don't mind ignoring this. Since we were running as the root user eve
 
 ❓ Build the image using the tag `nonroot-image-fastapi:dev` and run the container to make sure it’s functional.
 
-👉 This time, you shouldn't be able to `touch` any file when running it with /bin/bash like we did previously. And you don't have sudo access anymore either, which is exactly what we wanted! Our set up is now more secure and follows the best practices.
+👉 This time, you shouldn't be able to `touch` any file inside the container with `/bin/bash` like we did previously. You don't have `sudo` access anymore either which is exactly what we wanted! Our set up is now more secure and follows best practice.
 
 <br>
 
-# 🏁 Congratulations for completing the challenge!
+# 🏁 Finish
 
-In this challenge we went through the fundamentals of creating docker images and how to optimise on space and developer experience!
+Congratulations on completing the challenge!
+
+In this challenge we went through the fundamentals of creating and managing docker images, how to reduce image size, and optimising the developer experience!
 
 🧪 Run a final `make test` to check all your `Dockerfile`'s
 
-Make sure to commit and push all your code and the test output to github so Kitt can track your progress!
+Make sure to commit and push to github so Kitt can track your progress!
 
 #### Some cool tools (to keep for later)!
 
