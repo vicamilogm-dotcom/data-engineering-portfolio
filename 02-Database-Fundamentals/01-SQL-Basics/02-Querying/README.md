@@ -1,46 +1,42 @@
-# Queries
+# 🎯 Goals
 
 The goal of this exercise it to challenge your ability to make more complicated queries.
 
-We will be using the same database as before so bring across your `.env`
+There will be five questions testing different aspects of SQL SELECT queries!
+
+We will be using the same pagila database as the previous challenge, so copy across your `.env`:
 
 ```bash
 cp ../01-Setup/.env .
 ```
 
-If you stopped your docker container, start it again. Make sure to use port `5410`!
+If you stopped your docker container, start it up again. Make sure to use port `5410`!
 
-🎯 There will be five questions testing different aspects of SQL SELECT queries!
+<br>
 
----
-
-## Rental durations
-
+# 1️⃣ Rental durations
 
 **Backstory**: The company is considering adjusting its pricing strategy based on rental durations. Longer rental durations might indicate that customers are keeping movies for extended periods, either due to personal preference or because they find the current rental periods suitable. Understanding this behavior can help the company decide whether to introduce tiered pricing or offer extended rental packages.
 
 **Problem Statement**: Identify customers who consistently keep their rentals for durations longer than the average customer. Generate a report with the following columns:
 - **first_name**: The first name of the customer
 - **last_name**: The last name of the customer
-- **avg_duration**: The average duration, in days, that the customer keeps a rental
+- **avg_duration**: The average duration, in days, rounded to two decimal places, that the customer keeps a rental
 - **quartile**: A quartile ranking based on their average rental duration compared to all customers (these should be represented as integers 1,2,3, and 4)
 
 Ordered by **avg_duration** in descending order.
 
-❓ Complete the query inside `rental_duration_query.sql`
+🧪 Once you are happy with your query paste it into `rental_duration_query.sql` and run:
 
-Once you are done, run
-
-```
+```bash
 make test
 ```
 
-Make sure you reach 1/5 and then move on!
+Make sure 1/5 tests pass and then move on!
 
+<br>
 
----
-
-## Category performance
+# 2️⃣ Category performance
 
 **Backstory**: The management team is considering adjusting their inventory based on the performance of different film categories. They need data on which categories generate the most revenue so they make informed decisions.
 
@@ -51,19 +47,17 @@ Make sure you reach 1/5 and then move on!
 
 Order by **revenue** in descending order.
 
-❓ Complete the query inside `category_performance_query.sql`
+🧪 Once you are happy with your query paste it into `category_performance_query.sql` and run:
 
-Once you are done run
-
-```
+```bash
 make test
 ```
 
-Make sure you reach 2/5 and then move on!
+Make sure 2/5 tests pass and then move on!
 
----
+<br>
 
-## Rental Trends
+# 3️⃣ Rental Trends
 
 **Backstory**: The management team wants to understand the weekly rental trends over a 5-month period. Given the short duration of the data, a finer granularity is required for a more accurate analysis. This information will help in planning inventory and marketing strategies.
 
@@ -74,20 +68,17 @@ Make sure you reach 2/5 and then move on!
 - **difference**: The difference in rentals from the previous week to understand week-over-week changes
 - **deviation_from_avg**: The deviation of the number of rentals from the 3-week moving average, to identify if a particular week was an outlier or in line with general trends
 
+🧪 Once you are happy with your query paste it into `weekly_trends_query.sql` and run:
 
-❓ Complete the query inside `weekly_trends_query.sql`
-
-Once you are done run
-
-```
+```bash
 make test
 ```
 
-Make sure you reach 3/5 and then move on!
+Make sure 3/5 tests pass and then move on!
 
----
+<br>
 
-## Actor collaboration
+# 4️⃣ Actor collaboration
 
 **Backstory**: The company has observed that certain actors frequently collaborate on projects. Recognizing frequent collaborations could be a unique selling point in marketing campaigns or special screening events.
 
@@ -103,19 +94,17 @@ Use this to order the query
 ORDER BY films_together DESC, actor1, actor2;
 ```
 
-❓ Complete the query inside `co_stars_query.sql`
+🧪 Once you are happy with your query paste it into `co_stars_query.sql` and run:
 
-Once you are done run
-
-```
+```bash
 make test
 ```
 
-Make sure you reach 4/5 and then move on!
+Make sure 4/5 tests pass and then move on!
 
----
+<br>
 
-## Customer retention
+# 5️⃣ Customer retention
 
 **Backstory**: The company is concerned about customer retention and is planning a re-engagement campaign. To target the campaign effectively, they need to identify customers who haven't been active recently.
 
@@ -124,16 +113,20 @@ Make sure you reach 4/5 and then move on!
 - **last_rental_date**: The date when the customer last rented a film
 - **status**: An indicator, either 'Inactive' or 'Active', based on whether the customer has been inactive for more than 6 months
 
-❓ Complete the query inside `last_rental_query.sql`
+🧪 Once you are happy with your query paste it into `last_rental_query.sql` and run:
 
-Once you are done run
-
-```
+```bash
 make test
 ```
 
-Make sure you reach 5/5 and then move onto the next exercise!
+Make sure 5/5 tests pass and then move onto the next exercise!
 
-## 🏁 Finished
+<br>
+
+# 🏁 Finish
 
 This exercise has explored a lot of different types of SELECT problems. Keep in mind that there will be lots of different ways to achieve the same result. Feel free to discuss your solutions with your peers and see if you can find a more efficient way to solve the problems!
+
+🧪 Run `make test`, commit, and push to github so Kitt can track your progress!
+
+<br>
