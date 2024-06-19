@@ -4,6 +4,8 @@ Postgres has some advanced features available, including vectorised text search.
 
 The goal of this exercise will be to leverage the full text search capacity of Postgres to build a recommendation system for films.
 
+Like the previous challenges, iterate towards your solution using DBeaver. To run the unit tests, copy and paste the query into the relevant SQL file in the challenge directory on your VM.
+
 We will use the same database as the previous challenge, so copy across your `.env`.
 
 ```bash

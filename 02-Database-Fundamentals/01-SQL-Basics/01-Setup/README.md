@@ -67,7 +67,7 @@ If you get an error that looks similar to the following when you try to connect 
 
 ```bash
 psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432"
-    failed: FATAL: role "<YOUR_POSTGRES_USERNAME> does not exist"
+failed: FATAL: role "<YOUR_POSTGRES_USERNAME> does not exist"
 ```
 
 You might not have reloaded your `.env` after changing the `POSTGRES_USER` or `POSTGRES_PASSWORD`
@@ -87,7 +87,7 @@ The easiest fix is to do a complete teardown:
 - Recreate the volume and relaunch the container.
 </details>
 
-On the `psql` shell, you can create the pagila database:
+In the `psql` shell, you can create the pagila database:
 ```sql
 CREATE DATABASE pagila;
 ```
@@ -121,7 +121,7 @@ It's time to load the data into our `pagila` database. Navigate back to your VM'
 Then, execute the following two commands back in the terminal to get the data into the database. Read the commands carefully and change the relevant parts.
 
 ```bash
-# Load the schema - defines tables, dtypes, etc
+# Load the schema - defines tables, dtypes, nullable
 curl -L https://raw.githubusercontent.com/devrimgunduz/pagila/e1e5a855c46176bc0e17b7e8dea2f61e555fb378/pagila-schema.sql | docker exec -i <YOUR_CONTAINER_NAME> psql --username=$POSTGRES_USER --dbname=pagila -a -f-
 ```
 
@@ -140,7 +140,7 @@ Lets break down what is happening here:
   - `-f` is specifying the file to execute SQL commands from
   - The single `-` at the end of `-f-` tells `psql` to read SQL commands from `stdin`, allowing us to pipe SQL commands into `psql`
 
-You are now ready to begin using the database!
+While you are could technically start building your queries now, `psql` is a bit clunky to work with. Let's connect our database to a SQL client.
 
 <br>
 
@@ -152,13 +152,15 @@ We have a database with data up and running, but interacting via `psql` isn't th
 
 We'll need to forward some ports to get a connection from DBeaver on our local client to the database inside a container, running on our virtual machine. It's easy to lose track of what ports are moving what data.
 
-By default postgres runs on port 5432, but we *already* have a postgres instance running on our VM (not in a container) that is using port 5432. In the `docker run ...` command to launch the postgres container we mapped port 5432 *inside* the container to port 5410 *outside* the container. We would then forward the appropriate port from your VM to your local computer.
+By default postgres runs on port 5432, but we *already* have a postgres instance running on our VM (not in a container) that is using port 5432. You can test this yourself by running `service postgresql status` in your VM terminal.
+
+In the `docker run ...` command to launch the postgres container we mapped port 5432 *inside* the container to port 5410 *outside* the container. You can then forward this port on your VM to your local computer.
 
 <p><img src="https://wagon-public-assets.s3.eu-west-3.amazonaws.com/mxu52b1j4p48yn68encsm9c2qp67" width="800"></p>
 
 ## 3.2. Connecting via DBeaver
 
-We'll need to make a new database connection via DBeaver.
+With the port forwarded to our local computer, we've opened up the channel for data to move through. We'll need to make a new connection to our database via DBeaver so we can easily interact with it.
 
 Open DBeaver and click the **New Connection** button in the top left, then select `postgres`
 
@@ -187,7 +189,7 @@ You should now be ready for a few warm up queries!
 
 Investigate the schema in DBeaver to familiarize yourself with the data. Once you're ready, let's do a few warm up queries.
 
-Feel free to iterate towards your solution using DBeaver. To test, copy and paste the query into the relevant SQL file in the challenge directory on your VM.
+Feel free to iterate towards your solution using DBeaver. To run the unit tests, copy and paste the query into the relevant SQL file in the challenge directory on your VM.
 
 ## 4.1. Actors
 
@@ -196,7 +198,7 @@ Feel free to iterate towards your solution using DBeaver. To test, copy and past
 - Your output should have two columns: the `actor_id` and the `total_films` in which they have appeared. - Order the result by the number of films in descending order.
 - Only include actors who have acted in more than five films in your result.
 
-🧪 Once you are happy put your query into `actor_query.sql` and run:
+🧪 Once you are happy, copy your query into `actor_query.sql` and run:
 
 ```bash
 make test
@@ -210,7 +212,7 @@ make test
 - Make sure to include films that have never been rented.
 - Arrange the results by the `rental_count` in descending order so that the most rented film appears first.
 
-🧪 Once you are happy with your query paste it into `rentals_query.sql` and run:
+🧪 Once you are happy with your query, copy it into `rentals_query.sql` and run:
 
 ```bash
 make test
@@ -223,7 +225,7 @@ make test
 - Your output should consist of two columns: `month` (represented as a number from 1 to 12) and `monthly_revenue` (sum of all payment amounts for that month).
 - Order the result by month in ascending order.
 
-🧪 Once you are happy put your query into `monthly_revenue_query.sql` and run
+🧪 Once you are happy with your query, copy it into `monthly_revenue_query.sql` and run:
 
 ```bash
 make test

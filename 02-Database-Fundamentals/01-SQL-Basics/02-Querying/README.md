@@ -4,13 +4,15 @@ The goal of this exercise it to challenge your ability to make more complicated 
 
 There will be five questions testing different aspects of SQL SELECT queries!
 
+Build up your queries step by step, iterating towards your solution using DBeaver. To run the unit tests, copy and paste the query into the relevant SQL file in the challenge directory on your VM.
+
 We will be using the same pagila database as the previous challenge, so copy across your `.env`:
 
 ```bash
 cp ../01-Setup/.env .
 ```
 
-If you stopped your docker container, start it up again. Make sure to use port `5410`!
+If you stopped your docker container, start it up again. Make sure to use port 5410!
 
 <br>
 
@@ -26,7 +28,7 @@ If you stopped your docker container, start it up again. Make sure to use port `
 
 Ordered by **avg_duration** in descending order.
 
-🧪 Once you are happy with your query paste it into `rental_duration_query.sql` and run:
+🧪 Once you are happy with your query, copy it into `rental_duration_query.sql` and run:
 
 ```bash
 make test
@@ -47,7 +49,7 @@ Make sure 1/5 tests pass and then move on!
 
 Order by **revenue** in descending order.
 
-🧪 Once you are happy with your query paste it into `category_performance_query.sql` and run:
+🧪 Once you are happy with your query, copy it into `category_performance_query.sql` and run:
 
 ```bash
 make test
@@ -68,7 +70,7 @@ Make sure 2/5 tests pass and then move on!
 - **difference**: The difference in rentals from the previous week to understand week-over-week changes
 - **deviation_from_avg**: The deviation of the number of rentals from the 3-week moving average, to identify if a particular week was an outlier or in line with general trends
 
-🧪 Once you are happy with your query paste it into `weekly_trends_query.sql` and run:
+🧪 Once you are happy with your query, copy it into `weekly_trends_query.sql` and run:
 
 ```bash
 make test
@@ -94,7 +96,7 @@ Use this to order the query
 ORDER BY films_together DESC, actor1, actor2;
 ```
 
-🧪 Once you are happy with your query paste it into `co_stars_query.sql` and run:
+🧪 Once you are happy with your query, copy it into `co_stars_query.sql` and run:
 
 ```bash
 make test
@@ -113,7 +115,7 @@ Make sure 4/5 tests pass and then move on!
 - **last_rental_date**: The date when the customer last rented a film
 - **status**: An indicator, either 'Inactive' or 'Active', based on whether the customer has been inactive for more than 6 months
 
-🧪 Once you are happy with your query paste it into `last_rental_query.sql` and run:
+🧪 Once you are happy with your query, copy it into `last_rental_query.sql` and run:
 
 ```bash
 make test
