@@ -1,6 +1,8 @@
 import glob
 import codecs
 import shutil
+import os
+from pipeline.schemas import bigquery_schemas
 
 
 def guess_encoding(file_path):
@@ -74,5 +76,21 @@ def process_file(csv_file):
             shutil.copyfile(csv_file, csv_file.replace("original", "processed"))
 
 
-for csv_file in glob.glob("data/original/*.csv"):
-    process_file(csv_file)
+def copy_schema_tables(tables_to_copy):
+    csv_files = glob.glob("data/processed/*.csv")
+    os.makedirs("./data/processed_xml/", exist_ok=True)
+
+    print("\nCopying sales data from 'proccessed' to 'processed_xml'...")
+
+    for csv_file in csv_files:
+        if csv_file.split("/")[-1].strip(".csv") in tables_to_copy:
+            shutil.copy(csv_file, csv_file.replace("processed", "processed_xml"))
+    print("\nOperation complete")
+
+
+if __name__ == "__main__":
+    for csv_file in glob.glob("data/original/*.csv"):
+        process_file(csv_file)
+
+    tables_to_copy = list(bigquery_schemas.keys())
+    copy_schema_tables(tables_to_copy)

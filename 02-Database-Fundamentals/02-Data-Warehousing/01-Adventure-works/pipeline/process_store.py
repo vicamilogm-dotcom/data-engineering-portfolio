@@ -1,7 +1,6 @@
 import xml.etree.ElementTree as ET
 import csv
 import re
-import os
 
 
 def clean_xml(xml_str: str) -> str:
@@ -41,7 +40,7 @@ def main():
     Main function to read a TSV file, parse XML strings and write the new rows into a new TSV file.
     """
     with open("data/processed/Store.csv", "r") as infile, open(
-        "data/processed/Store.xyz.csv", "w", newline=""
+        "data/processed_xml/Store.csv", "w", newline=""
     ) as outfile:
         csvreader = csv.reader(infile, delimiter="\t")
         csvwriter = csv.writer(outfile, delimiter="\t")
@@ -58,11 +57,9 @@ def main():
                 for col in list(xml_dict.keys())
             ]
         )
-        os.remove("data/processed/Store.csv")
-        os.rename("data/processed/Store.xyz.csv", "data/processed/Store.csv")
 
 
 if __name__ == "__main__":
-    # example_xml = '<StoreSurvey xmlns=""http://schemas.microsoft.com/sqlserver/2004/07/adventure-works/StoreSurvey""><AnnualSales>3000000</AnnualSales><AnnualRevenue>300000</AnnualRevenue><BankName>Primary Bank &amp; Reserve</BankName><BusinessType>OS</BusinessType><YearOpened>1974</YearOpened><Specialty>Mountain</Specialty><SquareFeet>75000</SquareFeet><Brands>2</Brands><Internet>T1</Internet><NumberEmployees>93</NumberEmployees></StoreSurvey>'
-    # print(parse_xml_to_dict(example_xml))
-    main()
+    example_xml = '<StoreSurvey xmlns=""http://schemas.microsoft.com/sqlserver/2004/07/adventure-works/StoreSurvey""><AnnualSales>3000000</AnnualSales><AnnualRevenue>300000</AnnualRevenue><BankName>Primary Bank &amp; Reserve</BankName><BusinessType>OS</BusinessType><YearOpened>1974</YearOpened><Specialty>Mountain</Specialty><SquareFeet>75000</SquareFeet><Brands>2</Brands><Internet>T1</Internet><NumberEmployees>93</NumberEmployees></StoreSurvey>'
+    print(parse_xml_to_dict(example_xml))
+    # main()

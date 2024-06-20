@@ -1,83 +1,108 @@
-## Setup the data
+# 🎯 Goal
 
-AdventureWorks is a full database example provided by Microsoft and representing a made up bike company AdventureWorks Cycles. We will begin by uploading the data to Big Query and then work on creating some usable data marts!
+Through this unit's challenges you will design a data mart of your own! But to do that we will need some data.
 
+AdventureWorks is a full database example provided by Microsoft and representing a made up bike company AdventureWorks Cycles. We will begin by clearning the data a bit, uploading to Big Query and then work on creating some usable data marts!
 
-### Download the data
+The goal of this challenge is to:
+- Download the data
+- Process the data so it is in a useful format
+- Create a BigQuery Datase and Tables
+- Upload the processed data into BigQuery
 
-First, we will download the data from the Microsoft Github repository.
+<br>
+
+# 0️⃣ Download data
+
+First, download the data from the Microsoft Github repository:
 
 ```bash
 wget https://github.com/Microsoft/sql-server-samples/releases/download/adventureworks/AdventureWorks-oltp-install-script.zip
 ```
 
-Create a data folder and unzip the data into it
+Create a data folder and unzip the data into it:
 
 ```bash
 mkdir -p data/original && unzip AdventureWorks-oltp-install-script.zip -d data/original
 ```
 
-The formatting of some of the CSVs is not ideal for u. Luckily, there is a script to convert the CSVs to a more usable format.
+The formatting of some of the CSVs is not ideal. Luckily there is a script to convert the CSV's to a more usable format.
 
 ```bash
 mkdir -p data/processed && python pipeline/process_csvs.py
 ```
 
-We are going to focus primarily on sales to limit ourselves. There is one CSV that is not quite right. Check out
-`data/processed/store.csv`, what do you think is wrong with it?
+We are going to focus primarily on sales to limit ourselves. There is one CSV that is not quite right. Have a look at `data/processed/store.csv`, what do you think is wrong with it?
 
 <details>
-<summary markdown='span'>Hint</summary>
+<summary markdown='span'>💡 Hint</summary>
 
-The fourth column is XML, which is not that useful to us! We will need to fix this before we can upload the file to Big Query.
+The fourth column is XML, which is not a very useable format for us! We will need to process this column before we can upload the file to Big Query.
 
 </details>
 
-### 🔨 Fix store!
+<br>
 
-Checkout the `pipeline/process_store.py`
+# 1️⃣ Fix store.csv!
 
-1. Fix `parse_xml_to_dict`. There is an example for you to test it on in the `__main__` function. You can check how the function is working using the `__main__` block, which should output a dictionary with keys and values. Try using the imported ET module.
+Checkout the `pipeline/process_store.py`. The goal is to read the from `./data/processed/store.csv`, process the XML data, and save it to `./data/processed_xml/store.csv`. Let's break down the steps to get there.
 
-<details>
-<summary markdown='span'>Processed dictionary</summary>
+1. Finish the `parse_xml_to_dict` function. You can check how the function is working using the `__main__` block, which should output a dictionary with keys and values. Try using the imported ET module.
 
-{'{http://schemas.microsoft.com/sqlserver/2004/07/adventure-works/StoreSurvey}AnnualSales': '3000000', '{http://schemas.microsoft.com/sqlserver/2004/07/adventure-works/StoreSurvey}AnnualRevenue': '300000', '{http://schemas.microsoft.com/sqlserver/2004/07/adventure-works/StoreSurvey}BankName': 'Primary Bank & Reserve', '{http://schemas.microsoft.com/sqlserver/2004/07/adventure-works/StoreSurvey}BusinessType': 'OS', '{http://schemas.microsoft.com/sqlserver/2004/07/adventure-works/StoreSurvey}YearOpened': '1974', '{http://schemas.microsoft.com/sqlserver/2004/07/adventure-works/StoreSurvey}Specialty': 'Mountain', '{http://schemas.microsoft.com/sqlserver/2004/07/adventure-works/StoreSurvey}SquareFeet': '75000', '{http://schemas.microsoft.com/sqlserver/2004/07/adventure-works/StoreSurvey}Brands': '2', '{http://schemas.microsoft.com/sqlserver/2004/07/adventure-works/StoreSurvey}Internet': 'T1', '{http://schemas.microsoft.com/sqlserver/2004/07/adventure-works/StoreSurvey}NumberEmployees': '93'}
+    <details>
+    <summary markdown='span'>💡 Processed dictionary</summary>
 
-</details>
+    The built in python [pprint libary](https://docs.python.org/3/library/pprint.html) might help you visualize terminal outputs!
 
+    ```json
+    {
+        '{http://schemas.microsoft.com/sqlserver/2004/07/adventure-works/StoreSurvey}AnnualSales': '3000000',
+        '{http://schemas.microsoft.com/sqlserver/2004/07/adventure-works/StoreSurvey}AnnualRevenue': '300000',
+        '{http://schemas.microsoft.com/sqlserver/2004/07/adventure-works/StoreSurvey}BankName': 'Primary Bank & Reserve',
+        '{http://schemas.microsoft.com/sqlserver/2004/07/adventure-works/StoreSurvey}BusinessType': 'OS',
+        '{http://schemas.microsoft.com/sqlserver/2004/07/adventure-works/StoreSurvey}YearOpened': '1974',
+        '{http://schemas.microsoft.com/sqlserver/2004/07/adventure-works/StoreSurvey}Specialty': 'Mountain',
+        '{http://schemas.microsoft.com/sqlserver/2004/07/adventure-works/StoreSurvey}SquareFeet': '75000',
+        '{http://schemas.microsoft.com/sqlserver/2004/07/adventure-works/StoreSurvey}Brands': '2',
+        '{http://schemas.microsoft.com/sqlserver/2004/07/adventure-works/StoreSurvey}Internet': 'T1',
+        '{http://schemas.microsoft.com/sqlserver/2004/07/adventure-works/StoreSurvey}NumberEmployees': '93'
+    }
+    ```
 
-2. Update `main` to use the `parse_xml_to_dict` function. You should create a new store to CSV with the outfile, add each of the values from the dict as columns at the end of the CSV and remove the XML column!
+    </details>
 
-3. Update the `__main__` block to run the `main` function and check that the output CSV looks correct!
+2. Update the `main` function in `process_store.py` to use the `parse_xml_to_dict` function. You should create a new CSV with the outfile by adding each of the values from the dict as columns at the end of the CSV and then removing the XML column!
 
-The first row should look like this:
+3. Update the `__main__` block to run the `main` function and check that the output CSV in `./data/processed_xml/store.csv` looks correct! The first row should look like this:
 
-```csv
-292	Next-Door Bike Store	279	A22517E3-848D-4EBE-B9D9-7437F3432304	2014-09-12 11:15:07.497000000	800000	80000	United Security	BM	1996	Mountain	21000	2	ISDN	13
-```
+    ```csv
+    292	Next-Door Bike Store	279	A22517E3-848D-4EBE-B9D9-7437F3432304	2014-09-12 11:15:07.497000000	800000	80000	United Security	BM	1996	Mountain	21000	2	ISDN	13
+    ```
 
-### Create tables
+That's all the cleaning we're going to do for now. Let's move onto creating our data warehouse assets.
 
-Let's create a raw dataset to put our data in before moving to data processing and creating our Mart!
+<br>
 
-1. Create a dataset called `raw` in the EU region using `bq`
+# 2️⃣ Create Warehouse Dataset and Tables
 
-<details>
-<summary markdown='span'>💡 Solution</summary>
+Let's create a BigQuery dataset to put our tables in before moving onto uploading our data and creating our Mart!
 
-```bash
-bq --location=EU mk --dataset raw
-```
+1. Create a dataset named after your `BIGQUERY_DATASET` environment variable, set in your `.env`, in the EU region using the `bq` CLI command.
 
-</details>
+    <details>
+    <summary markdown='span'>🎁 Solution</summary>
 
-2. Checkout the `pipeline/schemas.py`. You should see the schema for all of the tables, describing the columns they contain. Now that the store is fixed, they are related to sales now. However we still need to make some editing to add the new columns from the XML edit!
+    ```bash
+    bq --location=EU mk --dataset $BIGQUERY_DATASET
+    ```
+    </details>
 
-<details>
-<summary markdown='span'>💡 Completed store schema</summary>
+2. Have a look at `pipeline/schemas.py`. You should see the schema for all of the tables we need to create, describing the columns, data type, and nullable metadata for each table. Now that `store.csv` is processed, they are related to sales and in a useable format. However we still need to make some editing to add the new columns from the XML edit!
 
-```
+    <details>
+    <summary markdown='span'>💡 Completed store schema</summary>
+
+    ```python
     "Store": [
         {"name": "BusinessEntityID", "type": "INT64", "mode": "REQUIRED"},
         {"name": "Name", "type": "STRING", "mode": "REQUIRED"},
@@ -95,35 +120,47 @@ bq --location=EU mk --dataset raw
         {"name": "Internet", "type": "STRING", "mode": "REQUIRED"},
         {"name": "NumberEmployees", "type": "INT64", "mode": "REQUIRED"},
     ],
-```
+    ```
+    </details>
 
-</details>
-
-3. We want to create the tables using the schemas
+3. We want to create the tables algorithmically using the data defined in `schemas.py`
 
 ❓ Complete the inside of the loop of `main` inside `pipeline/create_tables.py` to create the tables using the schemas!
 
-Once that is completed, you can run the script and checkout the created table in Big Query!
+Once you think you have it working, run the script and have a look at the tables that were created in BigQuery!
 
-### Upload the data
+🧪 to test you have created the BigQuery dataset and tables, run `make test`
 
-Now that we have all the data, we want to add it to the tables!
+<br>
 
-1. Checkout the `pipeline/upload_data.py`. You should see the `main` function has a loop that iterates over the tables and uploads the data to the table.
+# 3️⃣ Upload the data
 
-2. ❓ Complete the loop to upload the data to the tables!
+Now that we have all the data locally and the tables created in our warehouse, we want load all our local data into the tables!
 
-3. Run the script and check the data is in the tables!
+1. Checkout the `pipeline/upload_data.py`. You should see the `main` function has a loop that iterates over the schema.
 
+2. Complete the loop to upload the data in each CSV in `./data/processed_cml/` to the correct table!
 
-### Query the data
+3. When you think you have it working, run the script and check the data has been uploaded!
 
-Now that we have the data in the table, we can start to query it!
+<br>
 
+# 4️⃣ Query the data
+
+Now that we have the data in the table, we can start to query it! An easy way to do this is through the BigQuery interface. Just click on query at the top of the main panel and it will bring up a SQL editor.
+
+Alternatively you can query from the command line with the `bq` CLI tool:
+
+```bash
+bq query "SELECT * FROM adventure_works_raw.Store LIMIT 10;"
 ```
-bq query "SELECT * FROM raw.Store LIMIT 10;"
-```
 
-### 🏁 Finished
+<br>
 
-Now we have the data in Big Query, we are all ready to create our data marts in the next exercise!
+# 🏁 Finish
+
+Now we have the data in Big Query, ready to create our data marts in the next challenge!
+
+🧪 Run `make test`, commit, and push your code to github so Kitt can track your progress!
+
+<br>
