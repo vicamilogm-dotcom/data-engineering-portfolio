@@ -1,11 +1,20 @@
-# Kimball
+# 🎯 Goal
 
-We have our raw dataset, which means that it is time to follow the Kimball approach!
+The goal of this challenge is to create a data warehouse following the the Kimball approach!
 
-## Designing the mart
+As a data engineer, you may be asked for input on schema design. Being able to engage with less technical stakeholders and interpret their needs to create a mart that suits their needs is a valuable skill. Your technical skills are being leveraged in designing and creating the mart so that the technical requirement and query complexity for end users is lower.
 
+In this challenge we'll go through:
+- Interpretting our business stakeholders needs
+- Design the mart schema and create the queries to create the tables needed from the raw data
+- Create queries to answer some basic business questions
+- Create a coarser grained table for query optimisation
 
-### Initial Request: Comprehensive Sales Analysis
+<br>
+
+# 1️⃣ Designing the mart
+
+###  Initial Request: Comprehensive Sales Analysis
 
 **Business Stakeholder**: "We need a nuanced understanding of our sales metrics. Specifically, we want to know:
 - Sales performance by group and by quarter.
@@ -17,58 +26,63 @@ You now need to answer the following questions:
 ❓ Design Question: What is the grain of the data mart?
 ❓ Design Question: What is the best way to model the data mart?
 
-These types of questions are hard to answer alone, so take some time to discuss with your teammates and come up with a solution.
+These types of questions are hard to answer alone, so take some time to discuss with your buddy and come up with a solution.
 
 <details>
 <summary markdown='span'>💡 One solution (feel free to follow your own design)</summary>
 
 **Data Engineer's Action**: To tackle this request, you decide to create a sales-focused data mart. You identify the following dimension tables: `TerritoryDim`, `SpecialOfferDim`, and `DateDim`. Your central fact table is `Fact_Sales`, which holds the key metrics like `SalesAmount`, `Quantity`, and foreign keys to dimension tables for a first fact table. We normally want to go the finest grain possible, ie. item by item.
 
-
 </details>
 
+<br>
 
-**Build the tables**
+# 2️⃣ Building the mart
 
-❓ Build the fact and dimension tables in a new dataset called `sales_mart`
+It's time to create the tables in your data mart. Start by creating a new BigQuery dataset called `sales_mart`.
 
+You can create the tables through the SQL editor in the BigQuery console.
 
-**Build the queries**
+## 2.1. Build the tables
+
+Write the query to create the fact and dimension tables that you designed in Section 1. Break it down into as many queries as you need.
+
+## 2.2. Build the queries
+
+If we've designed our mart following the Kimball approach, it should be relatively easy to answer business questions based on the facts and dimensions.
 
 ❓ Write a query to get the highest performing special offer in terms of sales amount
+
 
 <details>
 <summary markdown='span'>Answer for the best special offer</summary>
 
-````
+```bash
 Volume Discount 11 to 14
 
 78343230.562850073
 
 0.02
-````
+```
 
 </details>
-
-
 
 ❓ Write a query to get to get the best performing groups ordered by sales
 
 <details>
-<summary markdown='span'>Answer </summary>
+<summary markdown='span'>Target Result</summary>
 
 | Row | SalesGroup    | TotalSales          |
-|-----|--------------|---------------------|
+|-----|---------------|---------------------|
 | 1   | North America | 1,269,653,778.60    |
 | 2   | Europe        | 317,402,948.45      |
 | 3   | Pacific       | 170,485,375.35      |
 
 </details>
 
+<br>
 
-
-
-### Follow up requests
+# 3️⃣ Follow up requests
 
 We find ourselves making lots of queries at a granularity of territory per month and we want to optimize our queries. We decide to create a new table that will be a snapshot of the sales per month and territory.
 
@@ -96,10 +110,22 @@ In the Kimball methodology for data warehousing, creating specialized fact table
 
 By creating a specialized table like `MonthlySalesSnapshotFact`, you align well with the Kimball methodology's focus on meeting specific business needs through tailored data structures.
 
-### Optional
+<br>
+
+# 4️⃣ (Optional) Snowflake Schema
 
 Instead of setting up a star schema, you could attempt to model the data using a snowflake schema. This is a more complex schema but it can be more flexible and easier option to maintain. If you want to go even further, you could try to add another business unit and build a galaxy schema. The best way to understand data warehousing is to take the time to build one yourself - don't be afraid to make mistakes!
 
 The Kimball group has a lot of resources on data warehousing and dimensional modeling. You can find them here:
 
 https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/dimensional-modeling-techniques/
+
+<br>
+
+# 🏁 Finish
+
+Congratulations 🎉 you've created a data mart based on adventure works sales data!
+
+You can save your queries that you used to create the tables and find the answers to the business questions, create `.sql` files in the challenge directory on your VM. There are no tests for this challenge, but don't forget to commit and push your code to github!
+
+<br>
