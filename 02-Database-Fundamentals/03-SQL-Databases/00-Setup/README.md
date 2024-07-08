@@ -55,18 +55,19 @@ psql postgres
 
 You should see an error similar to the below:
 
-![no user](https://wagon-public-assets.s3.eu-west-3.amazonaws.com/qs8d8a37l8xvwk33zmi9256nsefh)
+![user_does_not_exist](https://wagon-public-assets.s3.eu-west-3.amazonaws.com/239cegfj36yjvmtlm8vap98iwsq1)
 
-❓ Why? There is a few things happening that are worth noting:
-- On a clean install of postgres, it is initialised with only one user and one database - both are named **postgres**.
-- `psql` will try to connect to the database as a **postgres user** with the same name as your _current linux username_ - but it doesn't exist as a user!
-- We can create a **postgres user** that matches our linux username to make our workflow as easy as possible!
+❓ Why? There is a few things that are worth noting:
+- On a clean install of postgres, by default it only one user and one database - both are named **postgres**.
+- `psql` will try to connect to the database as a **postgres user** with the same name as your current *linux username* - but it doesn't exist as a user inside our postgres instance!
+
+To make our workflow as easy as possible, we need to create a **postgres user** that matches our *linux username*. But how do we get access to postgres?
 
 Luckily, there is a *linux user* on our virtual machine called "postgres". Let's login as the "postgres" *linux user* to create our new **postgres user**.
 
 ```bash
 sudo --login --user=postgres psql
-# to more info on this command, run: tldr sudo
+# for more info on this command, run: tldr sudo
 ```
 
 ☝️ we are logging in as the "postgres" *linux user*, allowing us to log directly in as the "postgres" user on the database. You should have entered the `psql` shell and be able to interact with postgres.
@@ -313,7 +314,7 @@ CSV HEADER;
 
 <br>
 
-# 🏁 Checking the resulting structure of the database
+# 🏁 Checking your database structure
 
 Now that our data has been copied into our tables, it is important to check the global structure of your database. Modern SQL clients enable a clean, high level view of the entirety of your database, with tree-like explorers and other features, but it can be good to confirm with a SQL query.
 
@@ -330,5 +331,12 @@ We now have a fully functional postgres database and a workflow when we want to
 create new databases and tables!
 
 🧪 Run `make test` to create a `test_output.txt`, then git add, commit, and push so your progress is tracked on Kitt!
+
+❓ How many times was the word "postgres" used in this challenge? 😛
+
+<details>
+<summary markdown='span'>🎁 Answer</summary>
+56 🫠
+</details>
 
 <br>
