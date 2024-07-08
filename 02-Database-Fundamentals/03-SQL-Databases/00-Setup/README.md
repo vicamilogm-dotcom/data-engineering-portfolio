@@ -1,61 +1,95 @@
-# Setting up Postgres
+# 🎯 Goal
 
-<img src="https://wagon-public-datasets.s3.amazonaws.com/data-engineering/W0D3/postgres-logo.png" alt="drawing" width="200"/>
+Lets start today by setting up our own postgres database on our Virtual Machine and connecting to it via DBeaver on our local machine!
+
+Compared to previous units, there are a few key differences in *where* we'll be running postgres in challenges for this unit. In previous units, we ran postgres in a docker container. In this unit we will be running postgres directly on our virtual machine! It's a small but important difference, but it means there are some additional steps because the base postgres docker image has an initialisation script that does some set up for us. When running postgres directly on our VM, we'll have some additional configuration to do!
+
+In production environments, it's not uncommon to have self managed databases running on a dedicated server (or VM) without docker, so it's important to understand how they are set up!
+
+In this challenge we will:
+- Craete a new user in postgres
+- Create a new database in postgres
+- Create tables in a postgres database
+- Load data into those tables from CSV's
+- Connect postgres running on our Virtual Machine to DBeaver on our local computer
+
+💡 This challenge was designed as a postgres reference, and still applies if you are running postgres in container. Think about bookmarking this challenge for future reference!
+
+Let's get to creating our database! 🐘🚀
 
 <br>
 
-Lets start today by setting up our own postgres db on our virtual machine and connecting to it via dbeaver on our local machine!
+# 0️⃣ Getting started
 
-<br>
+We installed postgres and saw that it was running as a service on setup day, but lets check that it is still running and active!
 
-### Getting started
-
-We installed postgres and saw that it was running as a service on setup day, but lets check that it is still the case!
 ```bash
 service postgresql status
 ```
+
 If it is not running:
 
 <details>
-<summary markdown='span'>Restart!</summary>
+<summary markdown='span'>💡 Restart!</summary>
 
+```bash
 sudo service postgresql restart
+```
+
 </details>
 
+<br>
 
-### Interacting from terminal
+# 1️⃣ Creating a new user
+
+## 1.1. Connecting
 
 The simplest way to interact with postgres is with its terminal based front-end: [psql](https://www.postgresql.org/docs/current/app-psql.html)
 
-Let's try connect with just:
+Try connect with:
+
 ```bash
-psql
+psql postgres
+# try to connect to the default postgres database inside your postgres instance
 ```
 
-You should see an error like this one:
+You should see an error similar to the below:
 
-![no db](https://wagon-public-datasets.s3.amazonaws.com/data-engineering/W0D3/psql-no-db.png)
+![no user](https://wagon-public-assets.s3.eu-west-3.amazonaws.com/qs8d8a37l8xvwk33zmi9256nsefh)
 
-Why? `psql` will try to connect to the database as a postgres user with the same name as your _current linux username_ (to check what what your linux username is, run `echo $USER` or `whoami` from the terminal). We can create a postgres user that matches our linux username to make our workflow as easy as possible!
+❓ Why? There is a few things happening that are worth noting:
+- On a clean install of postgres, it is initialised with only one user and one database - both are named **postgres**.
+- `psql` will try to connect to the database as a **postgres user** with the same name as your _current linux username_ - but it doesn't exist as a user!
+- We can create a **postgres user** that matches our linux username to make our workflow as easy as possible!
 
-Luckily, there is a linux user on our virtual machine called "postgres". Let's login as the "postgres" linux user to create our new postgres user. To understand the command below, run `tldr sudo`
+Luckily, there is a *linux user* on our virtual machine called "postgres". Let's login as the "postgres" *linux user* to create our new **postgres user**.
 
 ```bash
 sudo --login --user=postgres psql
+# to more info on this command, run: tldr sudo
 ```
-☝️ we are logging in as the "postgres" user on our linux machine, allowing us to log directly in as the "postgres" user on the database. You should have entered the psql shell from there and should be able to interact with postgres.
 
-👉 **Lets start by creating our own user and password**
+☝️ we are logging in as the "postgres" *linux user*, allowing us to log directly in as the "postgres" user on the database. You should have entered the `psql` shell and be able to interact with postgres.
 
-For ease, we can create a postgres user with the same username as our linux system username.
+## 1.2. Create a new user and password
+
+For ease, we can create a postgres user with the same username as our linux system username (type `whoami` or `echo $USER` in a regular terminal to get your linux username).
 
 ```bash
-CREATE USER <username> WITH SUPERUSER PASSWORD '<choose a password here>';
+CREATE USER <username> WITH SUPERUSER PASSWORD 'choose a password here';
 # 🚨 Don't forget the ; (semi-column) at the end
 # it's mandatory when executing statements in psql
 ```
 
-☝️ We have created this postgres user a _superuser_, but in general you should try to only assign the appropriate [role attributes](https://www.postgresql.org/docs/current/role-attributes.html) (for example creating a user with the appropriate connection limit to prevent your database being overwhelmed).
+☝️ We have created this **postgres user** as a _superuser_, but in general you should try to only assign the appropriate [role attributes](https://www.postgresql.org/docs/current/role-attributes.html). For example, creating a user with the appropriate connection limit to prevent your database being overwhelmed.
+
+To check you've created the user, run the following in a `psql` shell:
+
+```bash
+\du
+```
+
+💡 This `\du` is a special `psql` command to shortcut important actions known as [meta commands](https://www.postgresql.org/docs/current/app-psql.html)!
 
 👉 Write down your postgres user password in a `.env` file in this challenge folder. We'll need it later on.
 
@@ -64,51 +98,69 @@ CREATE USER <username> WITH SUPERUSER PASSWORD '<choose a password here>';
 POSTGRES_PASSWORD='the password you just chose'
 ```
 
-We now have our postgres user (postgres also provides `createuser` cli but you won't always have direct access to the terminal when using managed postgres solutions).
+We now have our **postgres user**! 🎉
 
-Now let's log out of postgres (as the _linux_ "postgres" user and postgres "postgres" user) and log back in to postgres as the new user we just created. First we need to exit the current `psql` session:
+Now let's log out of postgres (as the _linux_ "postgres" user and "postgres" **postgres user**) and log back in to postgres as the new user we just created. First we need to exit the current `psql` session, use the following meta command:
 
 ```bash
 \q
 ```
-This `\q` is a special postgres command to shortcut important actions known as [meta commands](https://www.postgresql.org/docs/current/app-psql.html)!
 
-Now we can log back in with our newly created user. Since we created one with our username, we can do:
-
+Now we can log back in with our newly created user. Since we created with the same name as our *linux* username, we can run:
 
 ```bash
-psql postgres # which is equivalent to `psql --username=$USER postgres`
+psql postgres
+# equivalent to `psql --username=$USER postgres`
 ```
 
+Let's check our current user with an SQL query:
 
-Let's check our current user with an SQL query
 ```sql
 SELECT current_user;
 ```
 
-If that query returns the username that we just created, our next step is to create a new database!
+If the above query returns your *linux username* then you are good to go!
+
+That can be a bit of a tricky process and it is hard to articulate in words. Here is an image that illustrates what we just did that might help!
+
+![create new user](https://wagon-public-assets.s3.eu-west-3.amazonaws.com/wt5h5n2r8y08f9brdywc3ht74ohj)
+
+<br>
+
+# 2️⃣ Creating a Database and Tables
+
+## 2.1. Creating a Database
+
+Logged in as our new user, our next step is to create a new database! In a `psql` shell:
+
 ```sql
 CREATE DATABASE school;
 ```
+
 If we list the databases, you should see your newly created `school` database. Use the following meta command to list all databases:
+
 ```bash
 \l
 ```
+
 Let's connect to the `school` database instead of the default postgres database:
+
 ```bash
 \c school
 ```
 
 We can see what tables exist in the `school` database with the following meta command:
+
 ```bash
 \d
 ```
+
 None should be returned. Let's create some tables and insert some records in postgres next.
 
-
-### Creating tables
+## 2.2. Creating tables
 
 One way would be with a sql script:
+
 ```sql
 CREATE TABLE students (
     id          INTEGER PRIMARY KEY,
@@ -128,34 +180,40 @@ VALUES
     , (2, 'Kelly', 'Slater', 101);
 ```
 
-If you run this query and then run `\d`, you should now see a `students` table appearing, which you can now query:
+If you run this query and then run `\d`, you should now see a `students` table, which you can now query:
+
 ```sql
 SELECT * FROM students;
 ```
 
-### Dbeaver
+<br>
 
-While `psql` is very powerful, it would be easier for us to work in a more user focused tool, especially as our queries get more complicated. We'll use [DBeaver](https://dbeaver.io/) as our SQL client - but to get the data from our `postgres` server hosted on virtual machine to DBeaver on our local computer, we need to forward some ports!
+# 3️⃣ Connecting to DBeaver
+
+While `psql` is very powerful, it would be easier for us to work in a more user focused tool, especially as our queries get more complicated. We'll use [DBeaver](https://dbeaver.io/) as our SQL client - but to get the data from our `postgres` server hosted on our Virtual Machine to DBeaver on our local computer, we need to forward some ports!
 
 First, let's check which port our postgres server is running on (default is 5432) with the following meta command in `psql`:
+
 ```bash
 \conninfo
 ```
 
-We need to make that port available on our local machine!
+We need to make that port available on our local machine so DBeaver can access the data in the database. A bit like the image below!
 
-__Step 1:__
+![postgres_vm_local_dbeaver](https://wagon-public-assets.s3.eu-west-3.amazonaws.com/r5i5yy7of1e3x95yc16eza1ljbfn)
 
-In VSCode, click on PORTS next to your TERMINAL section.
+#### Step 1:
+
+In VSCode, click on `PORTS` next to your `TERMINAL` section.
 
 ![ports tab](https://wagon-public-datasets.s3.amazonaws.com/data-engineering/W0D3/ports-tab.png)
 
 <br>
 
-__Step 2:__
+#### Step 2:
 
-Enter 5432, and press Enter. By default, it auto populates the Local Address section with the value localhost:5432
-(if you see a different value then 5432, port 5432 on your local machine is probably occupied by another service - that is totally fine. You can use the local port number of your choice).
+Enter 5432, and press Enter. By default, VSCode auto populates the Local Address section with the value `localhost:5432` - the corresponding port on your local computer.
+If you see a different value then 5432, port 5432 on your local machine is probably occupied by another service, that is totally fine. You can use any local port number.
 
 At this point, port 5432 on your virtual machine is being forwarded to port 5432 on your local machine.
 
@@ -163,36 +221,38 @@ At this point, port 5432 on your virtual machine is being forwarded to port 5432
 
 <br>
 
-__Step 3:__
+#### Step 3:
 
-Open dbeaver and click the new connection button in the top left, then select postgres.
+Open DBeaver and click the new connection button in the top left, then select postgres.
 
 ![new conn](https://wagon-public-datasets.s3.amazonaws.com/data-engineering/W0D3/dbeaver-new-conn.png)
 
 <br>
 
-__Step 4:__
+#### Step 4:
 
 Fill out the postgres connection page. Key inputs are in the red boxes:
 
-- database: school
-- port: the port you forwarded to
-- username: your created user
-- password: your created password (check your `.env`!)
+- Database: school
+- Port: the port you forwarded to
+- Username: your created user
+- Password: your created password (check your `.env`!)
 
 <br>
 
 ![postgres connection](https://wagon-public-datasets.s3.amazonaws.com/data-engineering/W0D3/postgres-connection.png)
 
-__Step 5:__
+#### Step 5:
 
 You should now see the database on the navigator at the side. Create a script and rerun our original query. You should see the same output as when you ran it in `psql`.
 
 ![connected](https://wagon-public-datasets.s3.amazonaws.com/data-engineering/W0D3/connected-dbeaver.png)
 
-### Bringing in data
+<br>
 
-We are up and running in dbeaver! Time to bring in data from external source. Let's load `teacher.csv` into a new table in our db!
+# 4️⃣ Bringing in data
+
+We are up and running in DBeaver! Time to bring in data from external source. Let's load `teacher.csv` into a new table in our db!
 
 We need to create a table that the teacher data will be inserted into. This table will have 2 columns: `id` - which will be an integer, and `name` - a variable length character type, that we will limit to 50 characters.
 
@@ -228,36 +288,37 @@ CREATE TABLE teachers (
 );
 ```
 
-This could be a way to change the table schema.
-
 Let's load the data from the CSV file into the table by running the follow command in `psql`:
 ```bash
 # fist connect to psql
-> psql --user=your_db_superuser_name -d school
+psql --user=your_db_superuser_name -d school
 ```
 Then run:
 
 <details>
-<summary markdown='span'>Quick way to get a full file path!</summary>
+<summary markdown='span'>💡 Quick way to get the absolute path for a file!</summary>
 
 ```bash
-readlink -f <file>
+readlink -f
 ```
 </details>
 
 ```sql
 school=#
 \copy teachers
-FROM '</home/.../absolute/path/to/teachers.csv>'
+FROM '/home/.../absolute/path/to/teacher.csv'
 DELIMITER ','
 CSV HEADER;
 ```
 
-### Checking the resulting structure of the database
+<br>
 
-Now that our data has been copied into our tables, it's important to check the global structure of your database. Modern SQL clients enable a clean, high level view of the entirety of your database, with tree-like explorers and other features, but it can be good to confirm with a sql query.
+# 🏁 Checking the resulting structure of the database
+
+Now that our data has been copied into our tables, it is important to check the global structure of your database. Modern SQL clients enable a clean, high level view of the entirety of your database, with tree-like explorers and other features, but it can be good to confirm with a SQL query.
 
 Execute the following in DBeaver to see a list of all columns in every table:
+
 ```sql
 SELECT *
 FROM INFORMATION_SCHEMA.COLUMNS
@@ -268,4 +329,6 @@ ORDER BY table_name, ordinal_position
 We now have a fully functional postgres database and a workflow when we want to
 create new databases and tables!
 
-🏁 🧪 Run `make test` to create test_output.txt. Then git add, commit, and push so your progress is tracked on Kitt!
+🧪 Run `make test` to create a `test_output.txt`, then git add, commit, and push so your progress is tracked on Kitt!
+
+<br>
