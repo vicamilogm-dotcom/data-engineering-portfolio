@@ -1,6 +1,6 @@
 # 🎯 Goal
 
-The goal of this challenge is to create a data warehouse following the the Kimball approach!
+Now that we have done some preprocessing on our raw Adventure Works bicycle sales data, the goal of this challenge is to create a data warehouse following the the Kimball approach from those processed tables!
 
 As a data engineer, you may be asked for input on schema design. Being able to engage with less technical stakeholders and interpret their needs to create a mart that suits their needs is a valuable skill. Your technical skills are being leveraged in designing and creating the mart so that the technical requirement and query complexity for end users is lower.
 
