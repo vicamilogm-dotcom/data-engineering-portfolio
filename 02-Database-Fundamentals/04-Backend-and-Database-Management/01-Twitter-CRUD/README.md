@@ -6,7 +6,7 @@ The goal of this exercise is to create:
 
 <br>
 
-# 0️⃣ Setup: Creating the database with *psql*
+# 0️⃣ Setup: Creating the database with psql
 <details>
 <summary markdown='span'>❓ Instruction (expand me)</summary>
 
@@ -42,7 +42,7 @@ Now we are ready to start creating our python files! 🚀
 
 <br>
 
-# 1️⃣ Python connection with *sqlalchemy*
+# 1️⃣ Python connection with sqlalchemy
 
 <details>
 <summary markdown='span'>❓ Instruction (expand me)</summary>
@@ -84,7 +84,7 @@ We have set up a file for you at `twitter_api/database.py`. It has everything re
 
 <br>
 
-# 2️⃣ Creating the **users** table with *alembic*
+# 2️⃣ Creating the users table with alembic
 
 <details>
 <summary markdown='span'>❓ Instructions (expand me)</summary>
@@ -167,7 +167,7 @@ The initial setup of alembic is a little tricky, so we have included the steps h
 
 <br>
 
-# 3️⃣ Creating an API with *FastAPI* + *Pydantic*
+# 3️⃣ Creating an API with FastAPI + Pydantic
 
 <details>
 <summary markdown='span'>❓ Instructions (expand me)</summary>
@@ -283,9 +283,10 @@ This one is slightly more complex because you cannot create two users that have 
 - If not, call `crud.create_user` to create a python instance of User within the current alchemy [DB Session](https://docs.sqlalchemy.org/en/14/orm/session_basics.html), then add and commit it to the DB.
 
 🧪 Test your code and actually create a user using the API docs endpoint!
+
 <img src="https://wagon-public-datasets.s3.amazonaws.com/data-engineering/W0D4/try.png" width=400>
 
-You can now run the `users` tests (feel free to check them out for code to test APIs!):
+🧪 You can now run the `users` tests (feel free to look at the tests for a reference to test APIs!):
 
 ```bash
 make test_users
@@ -406,7 +407,7 @@ Notice the last route `GET/users/{user_id}/liked_tweets/` in particular!
     - A **user** has many *liked_tweets*
     - A **tweet** has many *likers*
 
-🧪 Once you have everything working, run the all the tests:
+🧪 Once you think you have everything working, run the all the tests:
 ```bash
 make test
 ```
@@ -422,20 +423,17 @@ make test
 
 Congratulations! You're now able to build your own REST API with `fastapi`, `pydantic`, `sqlalchemy` and `alembic`! 🚀
 
-🧪 Check your progress for the entire challenge by running:
-
-```bash
-make test
-```
-And don't forget to add, commit, and push your code to github so Kitt can track your progress!
+🧪 Don't forget to add, commit, and push your code to github so Kitt can track your progress!
 
 ### Further Reading
 
-#### Optional 1
-If you've completed all the challenges for this unit, have a look at the way we build our tests: using a FastAPI [TestClient](https://fastapi.tiangolo.com/tutorial/testing/) to spawn a new server at each test, as well as a temporary local `sqlite` database to mimic your postgres!
+#### Inspect tests
 
-#### Optional 2
-📚 Bookmark and save for later this well-thought **[FastAPI-Backend-Template](https://github.com/Aeternalis-Ingenium/FastAPI-Backend-Template)** made by one of our Alumni [Nino Lindenberg](https://kitt.lewagon.com/alumni/Artificial-Ninoligence)
+If you've completed all the challenges for this unit, have a look at the way we build our tests: using a FastAPI [TestClient](https://fastapi.tiangolo.com/tutorial/testing/) to spawn a new server at each test, as well as a temporary local `sqlite` database to mimic your postgres instance!
+
+#### FastAPI Backend Template
+
+📚 Bookmark, save, and have a read through this well-thought [FastAPI-Backend-Template](https://github.com/Aeternalis-Ingenium/FastAPI-Backend-Template) made by one of our Alumni: [Nino Lindenberg](https://kitt.lewagon.com/alumni/Artificial-Ninoligence)
 
 It contains:
 - FastAPI
