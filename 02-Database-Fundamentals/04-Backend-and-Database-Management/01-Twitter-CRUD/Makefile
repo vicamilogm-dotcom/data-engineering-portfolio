@@ -8,7 +8,7 @@ test_users:
 
 test_tweets:
 	@PYTHONDONTWRITEBYTECODE=1 pytest tests -v --disable-warnings 2>&1 > test_output.txt || echo "let's look at the output"
-	PYTHONDONTWRITEBYTECODE=1 pytest tests -m tweets -v --disable-warnings --color=yes
+	PYTHONDONTWRITEBYTECODE=1 pytest tests -m "users or tweets" -v --disable-warnings --color=yes
 
 test_likes:
 	@PYTHONDONTWRITEBYTECODE=1 pytest tests -v --disable-warnings 2>&1 > test_output.txt || echo "let's look at the output"
