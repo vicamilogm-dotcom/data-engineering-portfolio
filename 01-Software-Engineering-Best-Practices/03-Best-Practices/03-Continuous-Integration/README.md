@@ -38,11 +38,13 @@ We'll want to create a `.gitignore` file and fill it with some relevant file typ
 touch .gitignore
 ```
 
-There are a number of files that we don't want tracked with git, but were do we start? Luckily GitHub has a fantastic [boilerplate](https://github.com/github/gitignore/blob/main/Python.gitignore) `.gitignore` for python projects (and multiple other languages) based on commonly used python tooling and frameworks.
+There are a number of files that we don't want tracked with git, but where do we start?
 
-Copy the contents of GitHubs `Python.gitignore` boilerplate into your own `.gitignore` - you can access just the text by clicking on `Raw` and using your keyboard shortcut for `select all`. Make sure to save the file.
+💡 Luckily GitHub has a fantastic [boilerplate `.gitignore`](https://github.com/github/gitignore/blob/main/Python.gitignore) for python projects (and multiple other languages!) based on commonly used python frameworks and tooling.
 
-Now we're ready to initialise and commit our changes, but we'll do it in a few steps so that our `.gitignore` comes into effect. Make sure to copy the lines one by one and understand how what each command is doing.
+Copy the contents of GitHub's [`Python.gitignore` boilerplate](https://github.com/github/gitignore/blob/main/Python.gitignore) into your own `.gitignore` - you can access just the raw text of the `.gitignore` by clicking on `Raw` on GitHub and using your keyboard shortcut for `select all`. Make sure to save your `.gitignore`.
+
+Now we're ready to initialise and commit our changes, but we'll do it in a few steps so that our `.gitignore` comes into effect. Make sure to copy the lines one by one and understand what each command is doing.
 
 ```bash
 # Initialize project with git tracking
@@ -53,7 +55,7 @@ git add .gitignore
 git commit -m "initial commit"
 ```
 
-Now that our `.gitignore` is committed, it should be ignoring relevant files for us.
+Now that our `.gitignore` is committed, git should be the ignoring relevant files for us.
 
 ```bash
 # .gitignore should now ignore relevant files
