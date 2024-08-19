@@ -114,7 +114,7 @@ The initial setup of alembic is a little tricky, so we have included the steps h
     This will create an `alembic` folder in the challenge root.
 
 2. Edit the `alembic/env.py` file in alembic folder, so as to:
-    - Update `target_metadata` from `None` to `twitter_api.models.Base.metadata`. This tells alembic to monitor any changes in tables defined by the `twitter_api.models` module.
+    - Update `target_metadata` from None to a value that tells alembic to monitor any changes in tables defined by the `twitter_api.models module`. This value tells alembic where to look when auto generating migrations. Have a look at [alembic docs](https://alembic.sqlalchemy.org/en/latest/autogenerate.html) for an appropriate object.
     - Tell alembic how to connect to your postgres database. You could update `alembic.ini` line 58, but that would expose your `POSTGRES_PASSWORD` and you want to keep it private. Instead we can load environment variables directly from your `.env` inside `alembic/env.py` to define your postgres url:
     ```python
     import os
