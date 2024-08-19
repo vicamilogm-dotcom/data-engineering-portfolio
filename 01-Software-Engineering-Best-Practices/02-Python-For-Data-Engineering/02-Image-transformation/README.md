@@ -113,12 +113,8 @@ pytest tests/test_process.py::TestImageProcessing::test_write_image
 make test
 ```
 
-If all tests pass, congratulations! 🚀 You have successfully completed this exercise. Commit your changes and push your code to github:
+If all tests pass, congratulations! 🚀 You have successfully completed this exercise.
 
-```bash
-git add --all
-git commit -m "finished image processing exercise"
-git push origin main
-```
+Make sure to commit, add, and push your code so you can track your progress on Kitt before moving to the next exercise!
 
 <br>

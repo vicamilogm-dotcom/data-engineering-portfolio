@@ -114,17 +114,10 @@ pytest tests/test_lookup.py::test_get_evolutions
 
 # 🏁 Test and push your code
 
-🚀 Finally, to run all of the tests together:
+🚀 Finally, run all of the tests together:
 
 ```bash
 make test
 ```
 
-If they all pass, push your code and move onto the next exercise!
-
-```bash
-git add --all
-git commit -m "finished pokemon api exercise"
-git push origin main
-```
-<br>
+If all the tests pass, make sure to commit, add, and push your code so you can track your progress on Kitt before moving to the next exercise!

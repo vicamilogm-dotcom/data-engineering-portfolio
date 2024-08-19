@@ -15,24 +15,57 @@ As for version control software, there are many tools available to achieve Conti
 
 To keep this exercise simple, we will use Github Actions, as it integrates perfectly with GitHub (and you'll see that's important) without any configuration effort on the developer's side. Plus, it's **free** for public GitHub repositories!
 
-## Service installation
+## Repository Initialisation and .gitignore
 
-We will deploy the repository you created in the previous exercise:
+We will deploy the repository you created in the previous exercise, but this time we'll make sure we'll first commit an essential file for any git repository: `.gitignore`.
+
+A `.gitignore` is a file where we can specify any files to ignored for tracking by git! There are a multiple reasons why you wouldn't want a file to be tracked by git:
+- A file may contain secrets that you don't want to be public facing - like a `.env` file
+- Bytecode or cache files that compiles scripts into bytecode - these files are machine generated and platform specific
+- Virtual environment files that are unnecessary or inefficient to track
+- Data, or very large files - the purpose of git and version control is to track changes in files, not changes in raw data.
+
+First navigate to your `longest-word` directory and open VSCode:
 
 ```bash
 cd ~/code/<user.github_nickname>/longest-word
+code .
+```
 
+We'll want to create a `.gitignore` file and fill it with some relevant file types that we don't want to track. In a terminal inside your `/longest-word` project:
+
+```bash
+touch .gitignore
+```
+
+There are a number of files that we don't want tracked with git, but were do we start? Luckily GitHub has a fantastic [boilerplate](https://github.com/github/gitignore/blob/main/Python.gitignore) `.gitignore` for python projects (and multiple other languages) based on commonly used python tooling and frameworks.
+
+Copy the contents of GitHubs `Python.gitignore` boilerplate into your own `.gitignore` - you can access just the text by clicking on `Raw` and using your keyboard shortcut for `select all`. Make sure to save the file.
+
+Now we're ready to initialise and commit our changes, but we'll do it in a few steps so that our `.gitignore` comes into effect. Make sure to copy the lines one by one and understand how what each command is doing.
+
+```bash
+# Initialize project with git tracking
 git init
+
+# Commit your .gitignore
+git add .gitignore
+git commit -m "initial commit"
+```
+
+Now that our `.gitignore` is committed, it should be ignoring relevant files for us.
+
+```bash
+# .gitignore should now ignore relevant files
 git add .
 git commit -m "Game development with TDD"
 
+# Create GitHub repository
 gh repo create --public --source=.
 
+# Push local changes to GitHub
 git push origin master
-
-code . # Let's work directly on your package for this challenge
 ```
-
 
 ## Worfklow CI
 
