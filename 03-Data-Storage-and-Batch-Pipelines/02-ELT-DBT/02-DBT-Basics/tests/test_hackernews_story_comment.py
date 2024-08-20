@@ -46,12 +46,12 @@ def test_hackernews_story_structure():
             "row_created_at_local",
         ]
     )
-    assert len(df) >= 1, "stg_hackernews_story model : has not been created yet"
+    assert len(df) >= 1, "stg_hackernews_story model has not been created"
     if len(df) >= 1:
         actual_columns = set(df["column_name"].tolist())
         assert (
             expected_columns == actual_columns
-        ), "stg_hackernews_story model : list of columns is incorrect"
+        ), "stg_hackernews_story model columns are incorrect"
 
 
 def test_hackernews_comment_structure():
@@ -73,9 +73,9 @@ def test_hackernews_comment_structure():
             "row_created_at_local",
         ]
     )
-    assert len(df) >= 1, "stg_hackernews_comment model : has not been created yet"
+    assert len(df) >= 1, "stg_hackernews_comment model has not been created"
     if len(df) >= 1:
         actual_columns = set(df["column_name"].tolist())
         assert (
             expected_columns == actual_columns
-        ), "stg_hackernews_comment model : list of columns is incorrect"
+        ), "stg_hackernews_comment model columns are incorrect"

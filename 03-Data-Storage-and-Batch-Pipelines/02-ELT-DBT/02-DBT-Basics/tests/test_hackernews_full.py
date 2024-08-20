@@ -51,12 +51,12 @@ def test_hackernews_full_structure():
             "type",
         ]
     )
-    assert len(df) >= 1, "stg_hackernews_full model : has not been created yet"
+    assert len(df) >= 1, "stg_hackernews_full model has not been created"
     if len(df) >= 1:
         actual_columns = set(df["column_name"].tolist())
         assert (
             expected_columns == actual_columns
-        ), "stg_hackernews_full model : list of columns is incorrect"
+        ), "stg_hackernews_full model columns are incorrect"
 
 
 def test_hackernews_full_content():
