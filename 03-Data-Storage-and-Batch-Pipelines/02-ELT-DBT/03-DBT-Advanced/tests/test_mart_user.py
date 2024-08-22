@@ -43,12 +43,12 @@ def test_mart_user_structure_first_exercice():
             "last_story_at",
         ]
     )
-    assert len(df) >= 1, "mart_user model : has not been created yet"
+    assert len(df) >= 1, "mart_user model has not been created"
     if len(df) >= 1:
         actual_columns = set(df["column_name"].tolist())
         assert expected_columns.issubset(
             actual_columns
-        ), "mart_user model : there are some missing columns"
+        ), "mart_user model has missing columns"
 
 
 def test_mart_user_structure_second_exercice():
@@ -62,4 +62,4 @@ def test_mart_user_structure_second_exercice():
         actual_columns = set(df["column_name"].tolist())
         assert (
             "user_url" in actual_columns
-        ), "mart_user model : the user_url field has not been added"
+        ), "mart_user model user_url field has not been added"

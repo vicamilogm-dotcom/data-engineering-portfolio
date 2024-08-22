@@ -6,7 +6,7 @@ challenge_level_dir = pathlib.Path(os.path.realpath(__file__)).parent.parent
 dbt_lewagon_dir = os.path.join(challenge_level_dir, "dbt_lewagon/")
 
 # Simplifying the structure of the root directories which are extremely long
-# Essentially, transforming :
+# Transforming:
 #  /home/selim/nico/data-engineering-solutions-week2/02-Data-at-Scales/01-ELT-DBT/dbt_lewagon/models'
 # into
 # dbt_lewagon/models
