@@ -1,8 +1,8 @@
 {% macro generate_database_name(custom_database_name=none, node=none) -%}
 
     {{- log("Start generate_database_name macro") -}}
-    {{- log("Initial default_database : " ~ target.database) -}}
-    {{- log("node.fqn : " ~ node.fqn) -}}
+    {{- log("Initial default_database: " ~ target.database) -}}
+    {{- log("node.fqn: " ~ node.fqn) -}}
 
     {%- set default_database = target.database -%}
 
@@ -12,7 +12,7 @@
 
         {{- log("Length of the node greater than 3") -}}
         {%- set database = modules.re.sub("-stg", "-mart", default_database) -%}
-        {{- log("New default_database : " ~ database) -}}
+        {{- log("New default_database: " ~ database) -}}
 
         {{ database }}
 
@@ -20,12 +20,12 @@
 
         {{- log("Length of the node lower than 3") -}}
         {{ default_database }}
-         {{- log("New default_database : " ~ default_database) -}}
+         {{- log("New default_database: " ~ default_database) -}}
 
       {%- endif -%}
 
     {%- else -%}
-        
+
         {{- log("Custom Database is specified in the model") -}}
         {{ custom_database_name | trim }}
 
