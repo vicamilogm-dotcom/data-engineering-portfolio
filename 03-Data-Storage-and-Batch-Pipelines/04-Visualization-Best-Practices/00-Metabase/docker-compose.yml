@@ -7,7 +7,7 @@ services:
     environment:
       POSTGRES_DB: metabase
       POSTGRES_USER: metabase
-      POSTGRES_PASSWORD: db_password
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
     volumes:
       - db_data:/var/lib/postgresql/data
       - ./database/init/:/docker-entrypoint-initdb.d/
@@ -23,7 +23,7 @@ services:
       MB_DB_DBNAME: metabase
       MB_DB_PORT: 5432
       MB_DB_USER: metabase
-      MB_DB_PASS: db_password
+      MB_DB_PASS: $POSTGRES_PASSWORD
       MB_DB_HOST: db
       MB_DB_FILE: /metabase-data/metabase.db
     depends_on:
