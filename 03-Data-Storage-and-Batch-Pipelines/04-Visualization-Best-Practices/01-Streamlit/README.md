@@ -1,4 +1,4 @@
-# 🎯 Goal and context
+# 🎯 Goal
 
 Streamlit is a popular open source framework that makes it quick and easy to get a web app up in a short amount of time. It only requires python to use, is incredibly quick to prototype, and is great for stateless web apps, either internally or externally facing.
 
@@ -7,10 +7,6 @@ In this challenge we'll go through:
 - Creating a simple page app in Streamlit.
 - Creating a more complex, multi-page Streamlit app using OOP.
 - Work with your buddy to expand the dashboard and present to your peers!
-
-<div style="text-align: center;">
-    <img src="https://wagon-public-datasets.s3.amazonaws.com/data-engineering/W1D5/streamlit-logo.png" alt="drawing" width="300"/>
-</div>
 
 <br>
 
