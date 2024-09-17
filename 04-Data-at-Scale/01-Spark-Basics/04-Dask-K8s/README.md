@@ -1,27 +1,32 @@
-# Dask on K8s
+# 🎯 Dask on K8s
 
-🎯 Now the goal is to distribute computation across multiple machines by leveraging **Dask** with **k8s**.
+The goal is to distribute computation across multiple machines by leveraging **Dask** with **k8s**.
 
-Dask is a parallel computing library in Python that enables distributed computing and is designed to integrate seamlessly with NumPy, Pandas, and scikit-learn. It allows you to scale from a single machine to a cluster.
+**Dask** is a parallel computing library in Python that enables distributed computing and is designed to integrate seamlessly with **NumPy**, **Pandas**, and **scikit-learn**. It allows you to scale from a single machine to a cluster.
 
 We will be able to process over **1,000,000,000** cells of New York taxi data in around **10 seconds** 💪
 
 - That would never fit in your personal machine RAM memory 🤯
 - That would take ages on your personal machine CPU 🤯
 
-## 1️⃣ Cluster setup!
+❗ If you start this challenge but do not finish - there are tear down instructions at the end. Make sure you tear down your cluster to avoid an unwanted bill 💸
+
+<br>
+
+# 0️⃣ Cluster setup
 
 Let's start by creating a cluster with a lot of **CPUs**: ideal for distributing our task across!
 
 🚨 **Cost alert** 🚨
-> This will create **4 machines** (of `e2-standard-2`): 2 nodes in each of the 2 node-locations
+This will create **4 machines** (of `e2-standard-2`): 2 nodes in each of the 2 node-locations
 
+Approximate cost (may vary depending on region and other factors):
 - VM cost: 4 * $0.134/hour
 - GKE overhead: $0.1/hour
 - Total = $0.904/hour
 - est. total for challenge ~ $1
 
-👇 Run to create our **cluster**
+👇 Run the following to create our **cluster**:
 
 ```bash
 gcloud container clusters create mydaskcluster \
@@ -37,11 +42,14 @@ gcloud container clusters create mydaskcluster \
 gcloud container clusters delete mydaskcluster --zone=europe-west1-b
 ```
 
-⏰ Keep reading while its provisioning (it can take 10min)
+⏰ Keep reading while its provisioning - the cluster can take ~10 minutes to spin up.
 
-## 2️⃣ Adding our helm chart
+<br>
+
+# 1️⃣ Adding our helm chart
 
 First, install **helm**** on your VM:
+
 ```bash
 curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 ```
@@ -74,13 +82,13 @@ kubectl get nodes
 ```
 
 
-Then apply the **helm** chart 👇
+Then apply the **helm** chart:
 
 ```bash
 helm install mydask dask/dask -f config.yaml --version=2022.11.0
 ```
 
-❓ Checkout the pods created!
+❓ Have a look at the the pods that were created!
 
 ```bash
 kubectl get deployments
@@ -89,7 +97,7 @@ kubectl get pods
 kubectl top nodes # how cool is that 😎
 ```
 
-☝️ You can see we have 4 pods running for Dask, with 1 CPU each. That's 4 CPUs for you to distribute your work on! One scheduler-pod is also using a CPU.
+You can see we have 4 pods running for **Dask**, with 1 CPU each. That is 4 CPUs for you to distribute your work on! One scheduler-pod is also using a CPU.
 
 We've got 3 spare CPUs that we're not using 🥲. Finetuning the cluster is too much work for today, let's move on!
 
@@ -108,17 +116,25 @@ This lets us access the dashboard which will allow us to track the computations 
 
 <img src="https://wagon-public-datasets.s3.amazonaws.com/data-engineering/W3D3-processing/dask/dask-dashboard.png" width=700>
 
-## 3️⃣ Notebook time 📚
+<br>
+
+# 2️⃣ Notebook time 📚
 
 ❓ **Open up `dask.ipynb` with `jupyter` (not vscode) and follow the notebook!**
 
-Some jupyter dask extensions don't run in VS Code
+Some jupyter dask extensions don't run in VSCode
 
-## 4️⃣ Taking it further 🕵️
+<br>
+
+# 3️⃣ Taking it further 🕵️
 
 ❓ If you have **time** you can change `config.yaml` and delete the part disabling jupyter! Then `helm upgrade` and connect to jupyter on the cluster and dask provides some great notebooks to further your knowledge!
 
-## 🏁 Delete your cluster 🚨
+<br>
+
+# 🏁 Delete your cluster 🚨
+
+Make sure to teardown your cluster to avoid an unwanted bill!
 
 ```bash
 gcloud container clusters delete mydaskcluster --zone=europe-west1-b

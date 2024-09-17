@@ -8,7 +8,7 @@ It works as follows:
 - An intermediate algorithm is applied to each smaller dataset ⛏️.
 - The results on each intermediate, smaller dataset are aggregated to make the final result 🔗.
 
-The equivalent of the ["Hello, World!"](https://en.wikipedia.org/wiki/%22Hello,_World!%22_program) program for big data processing is the **word count problem**.
+The equivalent of the ["Hello, World!"](https://en.wikipedia.org/wiki/%22Hello,_World!%22_program) program for big data processing is the **word count problem**:
 
 **Problem: we have a large book, and would like to compute the number of occurrences of each word**
 
@@ -17,17 +17,23 @@ Big data technology has evolved over the years. The APIs have gotten more develo
 For the book, we'll use [The Data Engineering Cookbook](https://www.darwinpricing.com/training/Data_Engineering_Cookbook.pdf) by [Andreas Kretz](https://www.linkedin.com/in/andreas-kretz/?originalSubdomain=de), CEO of [LearnDataEngineering.com](https://learndataengineering.com/).
 
 We've extracted the text into a [text file you can download](https://wagon-public-datasets.s3.amazonaws.com/data-engineering/W3D3-processing/The_Data_Engineering_Cookbook.txt)
-and duplicated the text many times (just to make the computation heavy 😅). You can store it under a `data/The_Data_Engineering_Cookbook.txt` directory.
+and duplicated the text many times (just to make the computation heavy 😅). You can store it under `data/The_Data_Engineering_Cookbook.txt`
 
 <br>
 
 # 1️⃣ Basic Python Word Counter
 
-❓ Setup: Run `poetry install` to be sure to get latest versions as per lockfile.
+❓ Setup: Run `poetry install` to be sure your packages are up to date.
 
-❓ Let's implement a very basic counter in Python in `impl_python.py`, and use it as a baseline against the other methods you will implement. Store your peformance in `perf.yml`
+❓ Let's implement a very basic counter in Python in `impl_python.py`. We will use it as a baseline against the other methods we'll implement later.
 
-Run `make test` once done, the first two tests should pass.
+🧪 Once you think you're done with the basic counter, test with:
+
+```bash
+make test
+```
+
+The first two tests should pass.
 
 <br>
 
@@ -37,9 +43,9 @@ Run `make test` once done, the first two tests should pass.
 
 As its name indicates, the Map-Reduce paradigm follows steps of mapping then (optionally, but usually) reducing.
 
-We'll implement in Python the following steps, described on [this diagram](https://cdn.educba.com/academy/wp-content/uploads/2020/04/map-flowchart.png.webp).
+We'll implement the algorithim in Python with the following steps, described on the following flowchart:
 
-<img src="https://cdn.educba.com/academy/wp-content/uploads/2020/04/map-flowchart.png.webp" width=600>
+<img src="https://wagon-public-datasets.s3.amazonaws.com/data-engineering/map-flowchart.png" width=600>
 
 👉 In the `lwmr/impl_mapreduce.py` file, you will see one function for each of the steps. The function signatures and description indicate what the input looks like and what the output should be.
 
@@ -68,9 +74,9 @@ reduced = final_reduce(shuffled_words)
 ## --> 1 big dict of words: e.g. {'Car': 2, 'River': 1}
 ```
 
-> While word count is the most typical example to showcase Map/Reduce, its breakdown feels a bit convoluted. If it feels a bit alien, that's normal! 🐡
+While word count is the most typical example to showcase Map/Reduce, its breakdown can feel a bit convoluted. If it doesn't feel intuitive, that's normal!
 
-The key concept to understand in Map/Reduce is: we are looking for opportunities to parallelize our work. This means whenever possible, we will apply transformations that allow us to have multiple servers run computation in parallel (`map` steps). Once all servers are done, the results of the mapping step are coordinated and aggregated in a `reduce` phase.
+The key concept to understand in Map/Reduce is: we are looking for opportunities to parallelize our work. This means whenever possible, we will apply transformations that allow us to have multiple servers run computation in parallel (`map` steps). Once the computation on all servers are done, the results of the mapping step are coordinated and aggregated in a `reduce` phase.
 
 ## 2.2. Implementation
 
@@ -96,6 +102,8 @@ The reduce function is a simple sum of all "ones" for each word that is going to
 
 # 3️⃣ Putting everything together
 
+The goal is to first put your map reduce together as a single process, then implement a multi-process version!
+
 ## 3.1. Single processing
 
 **Implement the `count_words_mapreduce` function**
@@ -111,6 +119,7 @@ The ouput is ultimately the count of words going through the 3 steps: Map/Shuffl
 
 **Implement the `count_words_mapreduce_multiproc` function**
 
+There is a few things to consider:
 - You'll have to instantiate a pool of workers and map each single function
 - You'll have to think about how to parallelize the work.
 - Not all steps are possible to parallelize
@@ -118,7 +127,7 @@ The ouput is ultimately the count of words going through the 3 steps: Map/Shuffl
 
 
 <details>
-  <summary markdown='span'>💡 Hints</summary>
+  <summary markdown='span'>💡 Hint</summary>
 
   The `shuffle` function part needs to gather all the words together and it cannot easily run in parallel processes.
 
@@ -140,6 +149,6 @@ We've demonstrated the power of parallized operations and Map-Reduce.
 make test
 ```
 
-And don't forget to commit and push all your code to github 🚀
+And don't forget to git add, commit and push your code to github so Kitt can track your progress 🚀
 
 <br>
