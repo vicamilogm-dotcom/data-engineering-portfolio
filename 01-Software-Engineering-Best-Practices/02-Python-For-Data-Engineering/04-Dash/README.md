@@ -1,6 +1,6 @@
 # 🎯 Goal
 
-🎯 We now want to leverage those csvs we created in the last exercise to create a simple dashboard using plotly and dash. It should end up looking something like this:
+🎯 We now want to leverage the CSVs of book data we created in the **pandas** challenge to create a simple dashboard using plotly and dash. It should end up looking something like this:
 
 <img src="https://wagon-public-datasets.s3.amazonaws.com/data-engineering/W0D2/example-dash.png">
 
