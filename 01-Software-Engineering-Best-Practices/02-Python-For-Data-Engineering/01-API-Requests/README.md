@@ -1,11 +1,10 @@
-
 # ❗ Before you get started
 
-If you did not complete the challenge `010103-Linux-and-Bash` on Setup Day, we strongly recommend that you return to finish it at some point throughout this unit to minimise VM costs!
+If you did not complete the challenge **Linux and Bash** on Setup Day, we strongly recommend that you return to finish it at some point throughout this unit to minimise VM costs!
 
 <br>
 
-# 🎯 Goals
+# 🎯 Goal
 
 The goal of this exercise is to make some `GET` API calls via the python `requests` library
 

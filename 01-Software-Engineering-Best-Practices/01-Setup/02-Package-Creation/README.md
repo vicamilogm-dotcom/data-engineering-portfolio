@@ -1,6 +1,6 @@
-# 🎯 Goals
+# 🎯 Goal
 
-The goal of this exercise is to:
+The goal of this challenge is to:
 - Create a command line tool to start and stop your VM using python and shell scripts.
 - Use `poetry` to create the python package and manage dependencies.
 - Publish the package so that your package is available to install anywhere.
@@ -276,5 +276,13 @@ If install was successful, try to run the following commands on your local compu
 👉 Try to `deng connect` !
 👉 `deng start` at the start of every session
 👉 `deng stop` at the end of every session
+
+<br>
+
+# 🏁 Finishing up
+
+Being able to create command line tools is a very useful skill to have! In this challenge we created a tool to start, stop, and connect to your VM. The idea is easily extensible to fleets of Virtual Machines and other GCP Services!
+
+Another great use case is bulk editing of files. If you have ever had to manually edit multiple files by opening each one, making an change, saving, and then repeating - creating a tool that can do that for you will be a boost to your productivity! And a fun algorithm challenge as well 🚀
 
 <br>

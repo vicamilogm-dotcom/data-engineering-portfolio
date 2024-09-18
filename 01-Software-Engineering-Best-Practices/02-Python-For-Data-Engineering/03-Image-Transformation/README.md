@@ -1,4 +1,4 @@
-# 🎯 Goals and Introduction
+# 🎯 Goal
 
 The goal of this exercise is to process and write image data to a TFRecord file using TensorFlow and PIL libraries. This is an example of preparing data for a data science team rather than analytics as the format is optimal for training machine learning models!
 

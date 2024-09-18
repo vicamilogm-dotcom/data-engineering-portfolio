@@ -1,4 +1,4 @@
-# 🎯 Goals
+# 🎯 Goal
 
 This first challenge will test if your setup is correct, and help you understand how the bootcamp works.
 
@@ -7,7 +7,7 @@ This first challenge will test if your setup is correct, and help you understand
 - Understand how VSCode chooses the correct poetry virtual environment for each challenge
 - We'll complete a dummy challenge to see how your repository integrates with Kitt!
 
-Open two separate vscode windows (you can use `code path/to/challenge_directory` in your VM terminal to open a new VSCode window):
+Open two separate VSCode windows (you can use `code path/to/challenge_directory` in your VM terminal to open a new VSCode window):
 - One at this challenge-level folder (you should already be here)
 - Another one at `data-engineering-challenges` root level
 
@@ -54,7 +54,9 @@ Open two separate vscode windows (you can use `code path/to/challenge_directory`
 
 👉 Read the `CHEATSHEET.md`  we created for you to help you throughout the camp! At least, focus on section 1️⃣ to 3️⃣ now
 
-> 💡 You can use VScode to render HTML properly by clicking on the top-right icon, or "Command Palette (Cmd-Shift-P)" --> "Open Preview to the side".
+> 💡 You can use VSCode to render HTML by clicking on the top-right icon, or "Command Palette (Cmd-Shift-P)" --> "Open Preview to the side".
+
+Although you can view it in VSCode, we recommend looking at it on GitHub at [this link](https://github.com/lewagon/data-engineering-challenges/blob/main/CHEATSHEET.md) - bookmark it for easy access!
 
 <br>
 
@@ -62,19 +64,21 @@ Open two separate vscode windows (you can use `code path/to/challenge_directory`
 
 We are using poetry to manage the python virtual environments and package dependencies for each individual challenge in the bootcamp. If you want to have a look yourself, they are contained in the `.venv/` directory in the root of each challenge folder!
 
-For VSCode to recognise the virtual environment for a challenge, you **must** open VSCode at the root for a challenge directory. For this **Test Setup** challenge it would be:
+For VSCode to recognise the virtual environment for a challenge, you **must** open VSCode at the **root of a challenge directory**. For this **Test Setup** challenge it would be:
 
 ```bash
 code ~/code/<user.github_nickname>/data-engineering-solutions/01-Software-Engineering-Best-Practices/01-Setup/00-Test-Setup
 ```
 
-With each challenge having a separate virtual environment we don't have to worry about managing python package dependencies so that they work with ALL challenges 😉
+Because each challenge has a separate virtual environment we don't have to worry about managing python package dependencies so that they work with ALL challenges 😉
 
-This VSCode *hook* was set during your VM setup by modifying the following line in your **VSCode: Remote Settings (JSON)** to the following:
+This **VSCode hook** was set during your VM setup by modifying the following line in your **VSCode: Remote Settings (JSON)** to the following:
 
 ```bash
 "python.defaultInterpreterPath": ".venv/bin/python",
 ```
+
+This setting means that VSCode will look for a python binary (and associated virtual environment) at the location of `.venv/bin/python` **from the location you opened VSCode**.
 
 💡 If you run into any issues with `python interpreter not found` when working on python files, make sure VSCode has been opened to the challenge root.
 
@@ -82,7 +86,7 @@ This VSCode *hook* was set during your VM setup by modifying the following line 
 
 # 4️⃣ Try to pass the tests of this dummy challenge
 
-❓ Open your VScode at 00-Test-Setup level, then try to fill your code in `app.main`
+❓ Open VSCode at `00-Test-Setup` level, then try to fill your code in `app.main`
 
 For most challenges there will be an included `Makefile` that has an associated function to test your code: `make test`
 
@@ -95,16 +99,24 @@ To test your code run:
 make test
 ```
 
-It should PASS (hopefully 😅) and you should see a new `test_output.txt` file created. This `test_output.txt` file is used by Kitt to track your progress during the day. But for that to happen, you need to push your code to github first!
+It should PASS (hopefully 😅) and you should see a new `test_output.txt` file created. This `test_output.txt` file is used by Kitt to track your progress during the unit. But for that to happen, you need to push your code to github first!
+
+💡 A reminder of some useful git functions:
 
 ```bash
-git add --all
-git commit -m "010100 done"
+# Add files or all the files in a directory to staging
+git add <my_first_file.py> <my_second_file.txt>
+git add <my_directory/>
+
+# Commit the staged changes
+git commit -m "my meaningful commit message"
+
+# Push the changes to the remote repository - github in our case
 git push origin main
 ```
 
-👉 Go check on your progress status on Kitt's challenge page top right corner! It should be green.
+Check your progress status on Kitt's challenge page at the top right corner! It should be green.
 
-Don't forget to follow the progress of your buddy of the day and help him out if needs be!
+Don't forget to follow the progress of your buddy of the day and help them out if needs be!
 
 <br>
