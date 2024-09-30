@@ -8,7 +8,7 @@
 
 ## Some reading
 
-In 2011, Scott Chacon, one of the original founder of GitHub wrote a [blog article](http://scottchacon.com/2011/08/31/github-flow.html) where he first introduced the concept of Github flow, that he summarizes as follows:
+In 2011, Scott Chacon, one of the original founder of GitHub wrote a [blog article](https://scottchacon.com/2011/08/31/github-flow) where he first introduced the concept of Github flow, that he summarizes as follows:
 ```markdown
 - Anything in the master branch is deployable
 - To work on something new, create a descriptively named branch from the master (ie: new-oauth2-scopes)
