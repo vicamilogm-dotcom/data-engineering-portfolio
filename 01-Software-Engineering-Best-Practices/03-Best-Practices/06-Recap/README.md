@@ -88,7 +88,7 @@ jobs:
     - name: Install Ruff
       run: pip install ruff
     - name: Run Ruff linting
-      run: ruff .
+      run: ruff check .
 
   typecheck:
     needs: format
@@ -195,7 +195,7 @@ This is the one used at Le Wagon - with the exception of the `mypy` hook.
 To use it install pre-commit globally with:
 
 ```bash
-pipx install precommit
+pipx install pre-commit
 ```
 
 and then we can install all the hooks and run it against all of our files.
