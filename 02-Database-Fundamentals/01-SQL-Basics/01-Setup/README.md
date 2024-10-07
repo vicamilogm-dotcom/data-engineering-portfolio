@@ -183,6 +183,31 @@ Once you have an active connection, create a SQL script and run a test query aga
 
 You should now be ready for a few warm up queries!
 
+## 3.3. Change time zone in DBeaver
+
+Your Virtual Machine should be running on UTC (Coordinated Universal Time) time. UTC is not a timezone, it is a standard time used to globally synchronize time across the world, including synchronizing computers.
+
+The time on your *local* computer, where your are running DBeaver, may be different from UTC. To make sure the queries you execute on DBeaver and on your VM match up and return the same result, we need to change the time in DBeaver to match your VM.
+
+To check your time on your VM, in your terminal you can type:
+
+```bash
+date
+
+# Output should look similar to:
+# Mon Oct 7 09:52:10 AM UTC 2024
+```
+
+To change the Timezone in DBeaver:
+- From your DBeaver client, click **Window** from the top ribbon menu, then **Preferences** from the drop down menu.
+- In the **Preferences** pop up, make sure that **User Interface** is selected in the left side menu.
+- Under **Regional settings** change the timezone to: `UTC (UTCZ)`
+- Make sure to close DBeaver, and open it again.
+
+Now queries you execute on DBeaver should match queries on your VM! 🎉
+
+This is important for the tests we will run in this unit. You will write queries that deal with time, and the tests will run on your VM 😉
+
 <br>
 
 # 4️⃣ Warm up queries

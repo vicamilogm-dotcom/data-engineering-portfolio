@@ -235,7 +235,8 @@ According to the [Google App Engine docs](https://cloud.google.com/appengine/doc
 ```bash
 ├── app.yaml # Config file for GCE
 ├── main.py # Entry point for GCE
-├── requirements.txt # to tell server to `pip install -r requirements.txt`
+├── requirements.txt # to tell the server to `pip install -r requirements.txt`
+├── .gcloudignore # to tell the server to ignore deploying files that aren't needed
 ├── longest_word # Your package
 │   ├── ...
 │   ├── ...
@@ -264,19 +265,44 @@ Google AE is not taking into account the modern poetry syntax but is going to tr
 poetry export --without-hashes --output requirements.txt
 ```
 #### `app.yaml`
+
+The `app.yaml` contains configuration for the deployment of your app to Google AE.
+
+To create an `app.yaml`:
+
 ```bash
 touch app.yaml
 ```
 
+Add the following contents:
+
 ```yaml
-runtime: python38 # Define the python version pre-installed on the machine
+runtime: python39 # Define the python version pre-installed on the machine
 service: default # Give a name to your app. ❗️ First deployment must be called "default"
 handlers: # Define how to handle incoming requests. Here, any request will be handled by main.py
-- url: /.*
-  script: main.py
+  - url: /.*
+    script: main.py
 ```
 
+❗ We have bumped the python version to 3.9 for deployment on Google App Engine. While this isn't advisable to do when you're developing an app, we have done so for compatability.
+
 💡 [Stack Overflow post](https://stackoverflow.com/questions/42360790/why-do-i-need-to-deploy-a-default-app-before-i-can-deploy-multiple-services-in) explaining why the first service deployed should be named "default"
+
+#### `.gcloudignore`
+
+Because we are going to use the older `pip install -r requirements.txt` method of package management, there is no reason to upload the files related to our poetry virtual environment, located in `.venv`. We can add a file to tell Google AE to ignore files and directories.
+
+To create a `.gcloudignore`:
+
+```bash
+touch .gcloudignore
+```
+
+Add the following line to your `.gcloudignore`:
+
+```bash
+.venv/
+```
 
 🎉 And that's it! There are tons of other potential configuration parameters to play with for a real app, (how to scale, how to handle secrets etc...) but we don't need them today!
 
@@ -403,7 +429,6 @@ This kind of development with small feature branches which are automatically dep
 
 
 # (Optional) Score & Session
-
 
 If this is done as well, you can try to implement a feature in the Longest Word Game: a global **score**! The idea is that every time a user finds a valid word, you increment points (1 point per letter). As HTTP is stateless, you need to use the Flask extension [Flask-Session](https://flask-session.readthedocs.io/en/latest/) to handle the concept of **session** (with `SESSION_TYPE='filesystem'`).
 

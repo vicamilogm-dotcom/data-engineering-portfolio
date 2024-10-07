@@ -1,6 +1,6 @@
 # 🎯 Goal
 
-You'll reproduce the steps done in `00-Setup` but with some more complex files. Make sure to reference the previous challenge if you get stuck. By the end of this challenge you'll be a pro at setting up postgres databases and tables! The goal is to have a database structure ready to execute SQL queries for the challenges `02-SQL-Basics` and `03-SQL-Advanced` in this unit.
+You'll reproduce the steps done in the **Setup** challenge, but with some more complex files. Make sure to reference the previous challenge if you get stuck. By the end of this challenge you'll be a pro at setting up postgres databases and tables! The goal is to have a database structure ready to execute SQL queries for the challenges **SQL-Basics** and **SQL-Advanced** in this unit.
 
 We'll also look at some utilities for making the loading of data into databases a bit smoother!
 

@@ -58,7 +58,7 @@ def receive_messages(
     channel = connection.channel()
     channel.exchange_declare(exchange=rabbitmq.EXCHANGE_NAME, exchange_type="fanout")
 
-    result = channel.queue_declare(queue="", exclusive=True)
+    result = channel.queue_declare(queue="chat", exclusive=True)
     queue_name = result.method.queue
 
     channel.queue_bind(exchange=rabbitmq.EXCHANGE_NAME, queue=queue_name)

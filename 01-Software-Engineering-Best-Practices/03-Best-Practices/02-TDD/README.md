@@ -63,7 +63,7 @@ Now that we have a better idea of the object we want to build, we can start writ
 ```bash
 cd ~/code/<user.github_nickname>
 poetry new longest-word && cd $_
-poetry add pytest pylint
+poetry add pytest "pylint@*"
 
 touch longest_word/game.py
 touch tests/test_game.py
@@ -73,6 +73,19 @@ code .
 
 - copy your `game.py` skeleton inside
 - setup VScode Python interpreter path to that created by poetry (`poetry env info --path` to see where it is)
+
+<details>
+<summary markdown='span'>💡 That poetry add "pylint@* looks odd?</summary>
+
+By using:
+
+```bash
+poetry add "pylint@*"
+```
+
+We are forcing poetry to look at all the versions of `pylint` and not just the latest release to find one that will be compatable with the rest of our packages and python version. This is a handy thing to know if you are running into dependency issues that you can't resolve.
+
+</details>
 
 ### Testing Game().__init__
 

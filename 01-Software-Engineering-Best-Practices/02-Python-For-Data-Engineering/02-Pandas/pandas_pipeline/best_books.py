@@ -4,7 +4,7 @@ from pathlib import Path
 
 def write_best_performing_books(combined_df: pd.DataFrame, data_path: Path) -> None:
     """
-    Generates a CSV file of the top 10 best performing books based on their average review score.
+    Generates a CSV file of the top 10 best performing books based on their average review score and then number of reviews.
 
     Criteria:
     - Books should have at least 25 reviews.

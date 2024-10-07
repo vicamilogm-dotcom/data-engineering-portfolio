@@ -216,4 +216,18 @@ Congratulations! You now have an orchestrated pipeline running in Airflow 🎉
 
 🧪 Run `make test` to create a `test_output.txt`, then git add, commit, and push your code so Kitt can track your progress!
 
+Once you're done with the challenge, don't forget to teardown your compose stack so it's not continuously running in the background and using system resources! To bring your stack down use:
+
+```bash
+docker compose down
+```
+
+Alternatively a great way to get an overview of all docker containers running, use the docker app in VS Code located on the left hand side.
+
+<img src="https://wagon-public-datasets.s3.amazonaws.com/data-engineering/030102-vscode-docker-app.png">
+
+From the list of running containers and compose stacks, you can:
+- Right click on any individual container to attach a shell, start, or stop to the container.
+- Right click a container group, like **02-local-etl** and `compose down`, `compose stop`, and more.
+
 <br>

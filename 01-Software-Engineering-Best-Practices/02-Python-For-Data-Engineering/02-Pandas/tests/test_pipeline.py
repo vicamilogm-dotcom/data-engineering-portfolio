@@ -27,8 +27,7 @@ def test_best_performing_books_csv():
         best_books_df["number_of_reviews"].min() >= 25
     ), "Minimum reviews is less than 25"
     assert (
-        best_books_df.loc[0, "title"]
-        == "A Reason To Live : The True Story of One Woman's Love, Courage and Determination to Survive"
+        best_books_df.loc[0, "title"] == "Lilla Belle: The First Stages"
     ), "Title at index 0 is incorrect"
 
 
@@ -45,7 +44,9 @@ def test_author_impact_analysis_csv():
     assert (
         not author_df["author"].str.contains(r"[\[\]]").any()
     ), "Brackets found in author names"
-    assert author_df.loc[0, "author"] == "Jane Austen", "Author at index 0 is incorrect"
+    assert (
+        author_df.loc[0, "author"] == "J. R. R. Tolkien"
+    ), "Author at index 0 is incorrect"
 
 
 def test_review_years_csv():
