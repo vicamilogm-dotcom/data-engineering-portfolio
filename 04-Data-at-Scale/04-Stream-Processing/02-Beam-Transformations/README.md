@@ -5,6 +5,7 @@
 
 ✅ We'll start with `batch processing` data with Apache Beam. We have provided you an old log file which contains values from different sensors with the timestamp. `Streaming` will be covered in the next challenge 🙌
 
+<br>
 
 # 1️⃣ Download the data
 
@@ -25,6 +26,8 @@ head data/sensors_latency.csv
 
 💪 Let's build our ETL pipeline with Apache Beam to transform and load this data in BigQuery.
 
+<br>
+
 # 2️⃣ Overview of the Pipeline
 
 In this challenge, we use the paradigm of Map/Reduce with Apache Beam and we'll build our pipeline step-by-step.
@@ -33,7 +36,6 @@ In this challenge, we use the paradigm of Map/Reduce with Apache Beam and we'll 
 
 <img src="https://wagon-public-datasets.s3.amazonaws.com/data-engineering/W3D4/03-04-02_beam_pipeline.png" witdh=400>
 
-
 👉 Head to `app/beam_sample.py` and have a look at the different parts of the pipeline inside the `run` function.
 
 - First a beam Pipeline is instantiated as `pipeline`
@@ -41,6 +43,8 @@ In this challenge, we use the paradigm of Map/Reduce with Apache Beam and we'll 
 - `windowing`: takes as input `data` and prepares the data to be grouped
 - `grouping`: takes as input `windowing`, groups the data by key and transforms the result
 - `out`: writes the output of the pipeline
+
+<br>
 
 # 3️⃣ Read the data with Beam 🔦
 
@@ -68,6 +72,8 @@ python app/beam_sample.py
 
 You should see your data being printed!
 
+<br>
+
 # 4️⃣ Save Data to an outputFile 💾
 
 Next step is to save the transformed data in an output file.
@@ -93,6 +99,8 @@ python app/beam_sample.py \
 ```bash
 make test_first_read
 ```
+
+<br>
 
 # 5️⃣ Let's Create a key for each element
 
@@ -142,6 +150,8 @@ make test_windowing
 ```
 With these tuples we are now ready to group!
 
+<br>
+
 # 6️⃣ Let's Group/Combine the data
 
 In the previous step, we already created a key for each element. Now, we just need to group & reduce these elements together by taking their mean within each 15-min time interval.
@@ -172,7 +182,7 @@ In the previous step, we already created a key for each element. Now, we just ne
 <details>
   <summary markdown='span'>💡 Hints</summary>
 
-You've already done something very similar in the challenge 01 notebook!
+You've already done something very similar in the first challenge of this unit!
 
 </details>
 
@@ -190,20 +200,21 @@ make test_beam_output
 
 - 🧙‍♂️ (optional): Feel free to use a `beam.ParDo` instead of `MapTuple` to fine-tune your Beam skills
 
-# 6️⃣ Let's Load the data into BigQuery
+<br>
 
-❓ 💻  Create a _dataset_ in BigQuery and add 1 new _tables_, `stream-test` to the dataset.
+# 7️⃣ Let's Load the data into BigQuery
 
-Under schema click on "Edit as text" and paste the following schema:
+❓ 💻  Create a _dataset_ in BigQuery, make sure it's located in the EU. Add 1 new _table_ named: `stream-test` to your newly created dataset.
+
+When creating your table, under schema click on **Edit as text** and paste the following schema:
 
 ```python
 Timestamp:TIMESTAMP, Airtight:FLOAT, AtmP:FLOAT, H2OC:FLOAT, Temp:FLOAT
 ```
 
-📝 Fill in the `BQ_TABLE` variable in the `.env` project configuration
-with the right format:
+📝 Fill in the `BQ_TABLE` variable in the `.env` project configuration with the right format:
 ```bash
-BQ_TABLE=<your-project-id>:<your-bq-dataset-name>.<your-table-name>
+BQ_TABLE=<your-project-id>.<your-bq-dataset-name>.<your-table-name>
 ```
 
 ❓ Let's head to the `out_bq` part of the pipeline and add a `Write to Big Query` transformation using
@@ -220,7 +231,13 @@ BQ_TABLE=<your-project-id>:<your-bq-dataset-name>.<your-table-name>
 
 ☝️ Here, we are still in **batch-processing** mode. Hence, we suggest you to use the argument `write_disposition=beam.io.BigQueryDisposition.WRITE_TRUNCATE` so that running the pipe is **idempotent**.
 
-A small annoying thing is that `WRITE_TRUNCATE` requires a mandatory "temp" location folder in Google Cloud Storage to load data **before** it is sent to **BigQuery**. You can create a bucket with `gsutil mb -l eu gs://$USER-deng-tmp` and then add the argument `custom_gcs_temp_location=gs://...`
+A small, annoying thing is that `WRITE_TRUNCATE` requires a mandatory "temp" location in Google Cloud Storage to load data **before** it is sent to **BigQuery**. You can create a bucket with:
+
+```bash
+gsutil mb -l eu gs://$USER-deng-tmp
+```
+
+And then add the argument `GCS_TEMP=gs://...` to your `.env` file. Don't forget to run `direnv reload` before executing your pipeline!
 
 <details>
   <summary markdown='span'> Google Application Credentials problems? </summary>
@@ -248,11 +265,14 @@ python app/beam_sample.py \
 
 👉 Go to **BigQuery** inside your GCP console and check that the data has been loaded in the format you expect!
 
+<br>
 
-# 🏁 Conclusion
+# 🏁 Finishing up
 
 Congratulations 🎉 Tou have built a complete pipeline to transform and load your data. Here is an overview of what you have built during this challenge:
 
-<img src="https://wagon-public-datasets.s3.amazonaws.com/data-engineering/W3D4/0304-02-graphviz-pipeline.svg" height=500>
+<img src="https://wagon-public-datasets.s3.amazonaws.com/data-engineering/040402-beam-transformation-pipeline.png">
 
 Don't forget to commit and push your code to github to track your progress on Kitt!
+
+<br>

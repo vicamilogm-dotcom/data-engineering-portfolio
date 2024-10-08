@@ -21,4 +21,30 @@ def strtime_window_rounded(str_datetime, window=15, fmt="%Y-%m-%d %H:%M:%S.%f"):
 
 
 def aggregate_sensors(timestamp: str, sensor_values: List[List[Tuple]]):
+    """
+    Transform:
+    Tuple(timestample, List(sensor values))
+
+    into
+
+    Dict('Timestamp': str, 'AtmP': float32, 'Temp': float32, 'Airtight': float32, 'H20C': float32)
+
+    Refer to the notebook in the previous challenge for how you could achieve this.
+
+    e.g. in:
+    ('2022-11-25 09:00:15.000000', [
+        ['AtmP', 996.0840610169381],
+        ['AtmP', 1032.610169381134],
+        ['Airtight', 1248.5965933454158],
+        ...)
+
+    e.g out:
+    {
+        'Timestamp': '2022-11-25 09:00:15.000000',
+        'AtmP': 991.1477661132812,
+        'Temp': 9.778665542602539,
+        'Airtight': 1248.5965933454158,
+        'H20C': 12.37144075123452
+    }
+    """
     pass  # YOUR CODE HERE

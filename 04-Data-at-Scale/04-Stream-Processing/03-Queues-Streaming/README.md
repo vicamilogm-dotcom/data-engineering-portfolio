@@ -1,4 +1,4 @@
-# Streaming with queues!
+# 🎯 Streaming with queues!
 
 When there is too much data to handle for our workers, when data flow needs to be managed, or processing scheduled, **queues** come to the rescue.
 
@@ -6,7 +6,7 @@ When there is too much data to handle for our workers, when data flow needs to b
 
 🎯 In this Challenge, we will create a **Pub/Sub Topic** and publish real-time data. Then, we will stream this data via a **subscriber** to transform the data and load it to **BigQuery**.
 
-
+<br>
 
 # 1️⃣ Topic Creation 📕
 
@@ -55,6 +55,8 @@ Once the message is published, we can go back to our subscription page to pull a
 
 Now that we have seen how to subscribe to a message in the UI, let's code it in python 🐍.
 It will help receive high quantities of messages and apply transformations to them as they come in!
+
+<br>
 
 # 2️⃣ Creating a subscriber 🤓
 
@@ -115,6 +117,8 @@ You can lauch the publisher and the subscriber simultanously in two different te
 
 Now let's subscribe to the data with Apache Beam and make some transformations before loading the data into BigQuery.
 
+<br>
+
 # 4️⃣ Subscriber with Apache beam
 
 First head to subscriber `app/subscriber-beam.py` and go to the `run` function!
@@ -137,7 +141,7 @@ Directly from Pub/Sub with Apache Beam!
 
 </details>
 
-## 4.1 Data
+## 4.1. Data
 
 ❓ Implement the data section to read the data from Pub/Sub and decode it!
 
@@ -169,7 +173,7 @@ gcloud pubsub subscriptions seek $SUBSCRIPTION_NAME --time "2025-01-01T00:00:00Z
 </details>
 
 
-## 4.2 Windowing and grouping!
+## 4.2. Windowing and grouping!
 
 For that we need a windowing and grouping pipeline.
 
@@ -194,12 +198,12 @@ Before, we had access to **all the data** before executing the transformation.
 <details>
   <summary markdown='span'>💡 Explanations</summary>
 
-With an unbounded data set, it is impossible to collect all of the elements, since new elements are constantly being added and it may be an infinite stream.<br>
+With an unbounded data set, it is impossible to collect all of the elements, since new elements are constantly being added and it may be an infinite stream.
+
 Beam’s default windowing behavior is to assign all elements of a PCollection to a single, global window.
-Before you use a grouping transform such as GroupByKey on an unbounded PCollection, you must at least set a non-global windowing function such as Fixed-time windows to gather data within a time window and trigger the grouping.
+Before you use a grouping transform such as `GroupByKey` on an unbounded PCollection, you must at least set a non-global windowing function such as Fixed-time windows to gather data within a time window and trigger the grouping.
 
 </details>
-
 
 ❓ **Implement a windowing pipeline**. You can have a look at this example in the [programming guide](https://beam.apache.org/documentation/programming-guide/#using-fixed-time-windows). Also refer to the **example** from the lecture.
 
@@ -218,7 +222,7 @@ In the terminal which is running the subscriber, make sure that every 15 seconds
 
 Now We are ready to load the data to BigQuery!
 
-## 4.3 Load to BigQuery
+## 4.3. Load to BigQuery
 
 ❓ First let's create a new table `stream` in your BigQuery dataset with the right schema:
 
@@ -250,18 +254,20 @@ python app/subscriber-beam.py \
 
 Let's head to your gcp console into BigQuery and check that the live streaming is working well
 
-# 🏁Conclusion
-Congratulations! 🎉 Tou have build a complete real-time Data Streaming ETL pipeline.
+<br>
 
-Don't forget to commit and push your code to GitHub!
+# 🏁 Conclusion
+Congratulations! 🎉 You have build a complete real-time Data Streaming ETL pipeline.
 
+Don't forget to git add, commit, and push your code to GitHub so you can track your progress on Kitt!
 
-# (Bonus) Deploy the pipeline to Dataflow
+<br>
+
+# (Optional) Deploy the pipeline to Dataflow
 
 The Google Cloud Dataflow Runner uses the Cloud Dataflow managed service. When you run your pipeline with the Cloud Dataflow service, the runner uploads your executable code and dependencies to a Google Cloud Storage bucket and creates a Cloud Dataflow job, which executes your pipeline on managed resources in Google Cloud Platform.
 
-Deployment into Dataflow is easy with Apache Beam, we just have to change the runner option of the pipeline and give the right GCP parameters.
-Here is the [documentation](https://beam.apache.org/documentation/runners/dataflow/) of the needed parameters
+Deployment into Dataflow is easy with Apache Beam, we just have to change the runner option of the pipeline and give the right GCP parameters. Here is the [documentation](https://beam.apache.org/documentation/runners/dataflow/) of the required parameters.
 
 To add extra parameters to the pipeline you can use command-line arguments when you execute the subscriber-beam.py script as follows:
 
@@ -302,14 +308,18 @@ Once it is ready you can launch your publisher:
 python app/publisher.py
 ```
 
+<br>
 
-# (Bonus) TimeWindow Session for robustness 😅
+# (Super Bonus) TimeWindow Session for robustness 😅
 
-🎯 modify pipeline windowing
+🎯 Modify pipeline windowing:
 
 - Create `beam.window.TimestampedValue`
 - Apply `beam.WindowInto`
 - Apply a `MapSessionWindow` by getting the window end time within the function process of the class
 
-Why do we need a trigger?
-In real time there is no way to group data because we don't have it yet. We have then to trigger the grouping repeatedly.
+❓ Why do we need a trigger?
+
+In real time there is no way to group data because we don't have it yet. We have to trigger the grouping repeatedly.
+
+<br>
