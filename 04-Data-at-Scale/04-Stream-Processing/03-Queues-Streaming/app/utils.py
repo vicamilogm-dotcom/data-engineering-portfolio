@@ -21,4 +21,43 @@ def strtime_window_rounded(str_datetime, window=15, fmt="%Y-%m-%d %H:%M:%S.%f"):
 
 
 def aggregate_sensors(timestamp: str, sensor_values: List[List[Tuple]]):
-    pass  # YOUR CODE HERE
+    """
+    Transform:
+    Tuple(timestample, List(sensor values))
+
+    into
+
+    Dict('Timestamp': str, 'AtmP': float32, 'Temp': float32, 'Airtight': float32, 'H20C': float32)
+
+    Refer to the notebook in the previous challenge for how you could achieve this.
+
+    e.g. in:
+    ('2022-11-25 09:00:15.000000', [
+        ['AtmP', 996.0840610169381],
+        ['AtmP', 1032.610169381134],
+        ['Airtight', 1248.5965933454158],
+        ...)
+
+    e.g out:
+    {
+        'Timestamp': '2022-11-25 09:00:15.000000',
+        'AtmP': 991.1477661132812,
+        'Temp': 9.778665542602539,
+        'Airtight': 1248.5965933454158,
+        'H20C': 12.37144075123452
+    }
+    """
+
+    df = pd.DataFrame(sensor_values)
+    df.columns = ["Sensor", "Value"]
+    df["Timestamp"] = timestamp
+    df["Value"] = df["Value"].astype("float32")
+
+    df_agg = df.pivot_table(
+        index="Timestamp", columns="Sensor", values="Value", aggfunc="mean"
+    )
+    df_agg.reset_index(inplace=True)  # reset_index to include Timestamp as a columns
+
+    dict_agg_data = df_agg.iloc[0].to_dict()  # only one row is left after aggregation
+
+    return dict_agg_data

@@ -12,6 +12,16 @@ def callback(message: pubsub_v1.types.message):
 
 
 def run(subscription_name: str, project_id: str):
+    """
+    Starts a Pub/Sub subscriber client to listen for messages on a specified subscription.
+    When a message is received, the provided `callback` function is triggered.
+
+    Args:
+        subscription_name (str): The name of the Pub/Sub subscription to listen to.
+        project_id (str): The GCP project ID where the Pub/Sub subscription resides.
+
+    The function runs indefinitely, waiting for messages until interrupted.
+    """
     # 1. Instantiate a pubsub SubscriberClient Class named `subscriber`
     subscriber = None
     pass  # YOUR CODE HERE
@@ -42,6 +52,7 @@ if __name__ == "__main__":
     try:
         run(subscription_name, project_id)
     except KeyboardInterrupt:
+        # Stop gracefully on KeyboardInturrupt
         print("Interrupted : Stopped Subscribing messages")
         try:
             sys.exit(0)

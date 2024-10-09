@@ -48,6 +48,8 @@ We can see the Pub/Sub in action by clicking on your topic Id and clicking on Pu
 
 Once the message is published, we can go back to our subscription page to pull and receive the message. **Follow the instructions  in the image below** 👇
 
+❗ If you created the Pub/Sub topic with the CLI, you might not have a default subscriber. Create one from the Subscribions tab.
+
 <img src="https://wagon-public-datasets.s3.amazonaws.com/data-engineering/W3D4/0403-03-pull_message2.png" width=700>
 
 
@@ -62,27 +64,25 @@ It will help receive high quantities of messages and apply transformations to th
 
 ❓ **Fill in the .env** with the variables: **PROJECT_ID** and **SUBSCRIPTION_NAME**
 
-❓ Now head to the file `subscriber-basics.py` and implement the run function by following the comments inside the function.
+❓ Now head to the file `subscriber_basics.py` and implement the **run** function by following the comments inside the function.
 
-👉 Now let's code the callback function. This callback function is meant to be called at each published message
-during the subscription. For a simple subscriber, let's just print the message and _ack_ it.
-<br>
+❓ Now let's code the **callback** function. This callback function is meant to be called at each published message during the subscription. For our simple subscriber, let's just print the message and _ack_ it.
 
 ❗️ Don't forget to **ack** every message, otherwise Pub/Sub will continue sending it.
 
-Launch the subscriber with this command
+Launch the subscriber with:
 
-```python
-python app/subscriber-basics.py
+```bash
+python app/subscriber_basics.py
 ```
 
 Notice that the **subscriber** is now waiting for new messages.
 
-Create some messages in the GCP console as we have done on the first part of the challenge. You should see them appearing in the terminal like below 👇
+Create some messages in the GCP console like we did in the first part of the challenge. You should see them appearing in the terminal like below 👇
 
 <img src="https://wagon-public-datasets.s3.amazonaws.com/data-engineering/W3D4/terminal-sub-basic.png">
 
-Now we can implement a **publisher** to send the **real-time** data from challenge one.
+Now we can implement a **publisher** to send the **real-time** data from the previous challenge.
 
 # 3️⃣ Publish data ✍️
 
@@ -107,7 +107,7 @@ python app/publisher.py
 Now launch the subscriber with this command:
 
 ```python
-python app/subscriber-basics.py
+python app/subscriber_basics.py
 ```
 
 Even if the publisher is stopped, the subscriber unstacked the queue and acked the messages. The messages stays in the Pub/Sub queue until they are acked.
@@ -121,7 +121,7 @@ Now let's subscribe to the data with Apache Beam and make some transformations b
 
 # 4️⃣ Subscriber with Apache beam
 
-First head to subscriber `app/subscriber-beam.py` and go to the `run` function!
+First head to subscriber `app/subscriber_beam.py` and go to the `run` function!
 
 The structure of the pipeline:
 
@@ -147,7 +147,7 @@ Directly from Pub/Sub with Apache Beam!
 
 To check that it works run the following command:
 ```python
-python app/subscriber-beam.py --id $PROJECT_ID --subscription-name $SUBSCRIPTION_NAME
+python app/subscriber_beam.py --id $PROJECT_ID --subscription-name $SUBSCRIPTION_NAME
 ```
 In another terminal **start the publisher**. It should look something like this 👇
 
@@ -182,7 +182,7 @@ In the previous challenge, we already implemented those two parts.
 ❓ Add the code from the previous exercise into the **window** and **group sections**. Let's keep the same implementation and try to execute the pipeline with the following command:
 
 ```python
-python app/subscriber-beam.py --id $PROJECT_ID --subscription-name $SUBSCRIPTION_NAME
+python app/subscriber_beam.py --id $PROJECT_ID --subscription-name $SUBSCRIPTION_NAME
 ```
 
 😅 You should get the following error:
@@ -224,7 +224,7 @@ Now We are ready to load the data to BigQuery!
 
 ## 4.3. Load to BigQuery
 
-❓ First let's create a new table `stream` in your BigQuery dataset with the right schema:
+❓ First let's create a new table `iot_beam_stream` in your BigQuery dataset with the right schema:
 
 Under schema click on Edit as text and paste the following schema:
 
@@ -234,42 +234,74 @@ Timestamp:TIMESTAMP, Airtight:FLOAT, AtmP:FLOAT, H2OC:FLOAT, Temp:FLOAT
 
 **📝 Now fill in the `BQ_TABLE` variable in your `.env`**
 with the right format:
+
 ```bash
-BQ_TABLE=<your-project-id>:<your-bq-dataset-name>.<your-table-name>
+BQ_TABLE=<your-project-id>.<your-bq-dataset-name>.<your-table-name>
 ```
 
 👉 Let's head to the `out_bq` part of the pipeline and add `Write to Big Query` transformation using
 [beam.io.gcp.WriteToBigQuery](https://beam.apache.org/releases/pydoc/2.8.0/apache_beam.io.gcp.bigquery.html)
 
-
-Since we are streaming data, choose the corresponding `write_disposition` parameter for our task.
+Since we are streaming data, choose the corresponding `write_disposition` parameter for our task. We also do not need to include a temp staging area with the correct `write_disposition`. 😉
 
 Let's make sure that it works by running the following command along with a publisher!:
-```python
-python app/subscriber-beam.py \
+```bash
+python app/subscriber_beam.py \
 --id $PROJECT_ID \
 --subscription-name $SUBSCRIPTION_NAME \
 --output-table $BQ_TABLE
 ```
 
-Let's head to your gcp console into BigQuery and check that the live streaming is working well
+Let's head to your GCP console into BigQuery and check that the live streaming is working well
 
 <br>
 
-# 🏁 Conclusion
-Congratulations! 🎉 You have build a complete real-time Data Streaming ETL pipeline.
 
-Don't forget to git add, commit, and push your code to GitHub so you can track your progress on Kitt!
+# 5️⃣ (Optional) Deploy the pipeline to Dataflow
 
-<br>
+The Google Cloud Dataflow Runner uses the Cloud Dataflow managed service. When you run your beam pipeline with the Cloud Dataflow service, the runner uploads your executable code and dependencies to a Google Cloud Storage bucket and creates a Cloud Dataflow job, which executes your pipeline on managed resources in Google Cloud Platform.
 
-# (Optional) Deploy the pipeline to Dataflow
+Deployment into Dataflow is relatively easy with Apache Beam, we just need a few extra things:
+1. Create a `setup.py`
+1. We need to change the runner option of the pipeline and provide some additional GCP parameters. Here is the [documentation](https://beam.apache.org/documentation/runners/dataflow/) of the required parameters.
 
-The Google Cloud Dataflow Runner uses the Cloud Dataflow managed service. When you run your pipeline with the Cloud Dataflow service, the runner uploads your executable code and dependencies to a Google Cloud Storage bucket and creates a Cloud Dataflow job, which executes your pipeline on managed resources in Google Cloud Platform.
+## 5.1. Create a setup.py
 
-Deployment into Dataflow is easy with Apache Beam, we just have to change the runner option of the pipeline and give the right GCP parameters. Here is the [documentation](https://beam.apache.org/documentation/runners/dataflow/) of the required parameters.
+❗ By default, the GCP Dataflow runner will only upload the target file to be executed. Because we have used a helper function, `aggregate_sensors`, in a separate file, `app/utils.py`, we need to use a `setup.py` that will tell the Dataflow runner to install additional dependencies, including our own package.
 
-To add extra parameters to the pipeline you can use command-line arguments when you execute the subscriber-beam.py script as follows:
+Create a `setup.py` file in your project root:
+
+```bash
+touch setup.py
+```
+
+And paste the following contents into it:
+
+```python
+import setuptools
+
+setuptools.setup(
+    name="beam_pipeline",
+    version="0.0.1",
+    install_requires=[
+        "apache-beam[gcp]==2.56.0",
+        "pandas==1.5.3"
+    ],
+    packages=setuptools.find_packages(),
+)
+```
+
+When using a `setup.py` file, the additional required flag is:
+
+```bash
+--setup_file ./setup.py
+```
+
+Alternatively, you could move the `aggregate_sensors` function into `app/subscriber_beam.py` and bypass the `setup.py` completely, but for completeness and continuity we have opted to include it.
+
+## 5.2. Additional parameters
+
+To add extra parameters to the pipeline you can use command-line arguments when you execute the `subscriber_beam.py` script as follows:
 
 ```bash
 --runner DataflowRunner
@@ -280,37 +312,80 @@ These arguments will be passed on to our `beam.Pipeline` through the `pipeline_a
 You can fill in your `.env` the following variable to be used in your command line :
 - PROJET_ID
 - BUCKET_NAME
-- REGION
 
 <details>
-  <summary markdown='span'>💡 Hints</summary>
+  <summary markdown='span'>💡 Hint</summary>
 
 ```bash
-python app/subscriber-beam.py \
+python app/subscriber_beam.py \
     --id $PROJECT_ID \
     --subscription-name $SUBSCRIPTION_NAME \
     --output-table $BQ_TABLE \
     --runner DataflowRunner \
     --project $PROJECT_ID \
-    --streaming true \
+    --streaming \
     --temp_location gs://$BUCKET_NAME/temp \
     --staging_location gs://$BUCKET_NAME/staging \
+    --setup_file ./setup.py \
     --region europe-west4
 ```
 
+If you try to deploy your beam pipeline to GCP Dataflow and get an error, you may need to enable the Dataflow API on your GCP project. Read the error carefully and see if there is a link to enable the Dataflow API.
+
 </details>
+
+## 5.3. See the results!
 
 Now you can head to Dataflow service within GCP, have a look at your dataflow graph by clicking on the active job name.
 
 Once it is ready you can launch your publisher:
 
-```python
+```bash
 python app/publisher.py
 ```
 
+After a while, refresh BigQuery and you should see new records in your table! 🎉
+
+## 5.4. Teardown 🔨
+
+Make sure you teardown your pipeline once you've completed the challenge! By default a beam pipeline is deployed on a GCP n1-standard-2 compute instance, with a current monthly cost of approximately USD$75 per month.
+
+Make sure to first stop your `publisher.py` script.
+
+To teardown your pipeline:
+
+```bash
+# List all dataflow jobs - region in the form: europe-west4
+gcloud dataflow jobs list --region <region>
+
+# Drain or cancel the target job
+gcloud dataflow jobs drain <job_id> --region <region>
+gcloud dataflow jobs cancel <job_id> --region <region>
+
+# Confirm the job has been cancelled - the state should be updated
+gcloud dataflow jobs list --region <region>
+```
+
+Alternatively you can stop a Dataflow job through the GCP Console:
+- Starting from the [Dataflow jobs page](https://console.cloud.google.com/dataflow/jobs)
+- Click on the Dataflow job you want to stop
+- Click stop at the top of the page
+- Select drain or cancel in the next menu:
+    - **Drain** allows the pipeline to gracefully stop while processing the data that is already in flight. It ensures that no new work is accepted, but any work already started will complete before the instance is terminated.
+    - **Cancel** will force cancel the job and terminate the instance.
+
 <br>
 
-# (Super Bonus) TimeWindow Session for robustness 😅
+# 🏁 Finishing up
+
+Congratulations! 🎉 You have build a complete real-time Data Streaming ETL pipeline.
+
+Don't forget to git add, commit, and push your code to GitHub so you can track your progress on Kitt!
+
+
+<br>
+
+# (Bonus) TimeWindow Session for robustness 😅
 
 🎯 Modify pipeline windowing:
 

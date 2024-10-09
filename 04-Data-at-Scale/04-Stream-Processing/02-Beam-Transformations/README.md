@@ -214,7 +214,7 @@ Timestamp:TIMESTAMP, Airtight:FLOAT, AtmP:FLOAT, H2OC:FLOAT, Temp:FLOAT
 
 📝 Fill in the `BQ_TABLE` variable in the `.env` project configuration with the right format:
 ```bash
-BQ_TABLE=<your-project-id>.<your-bq-dataset-name>.<your-table-name>
+BQ_TABLE=<your-project-id>:<your-bq-dataset-name>.<your-table-name>
 ```
 
 ❓ Let's head to the `out_bq` part of the pipeline and add a `Write to Big Query` transformation using

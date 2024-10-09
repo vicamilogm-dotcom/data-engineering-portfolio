@@ -10,7 +10,7 @@ from google.cloud import pubsub_v1
 def get_message_data(
     sensor_name: str, sensor_center_line: float, sensor_standard_deviation: float
 ) -> str:
-    """generate messages for one specific sense, with some variation around center value, with a random latency on the timestamp"""
+    """generate messages for one specific sensor, with some variation around center value, with a random latency on the timestamp"""
     reading = np.random.normal(loc=sensor_center_line, scale=sensor_standard_deviation)
     latency = abs(random.gauss(0, 0.2))
     time.sleep(latency)
@@ -22,6 +22,20 @@ def get_message_data(
 
 
 def run(topic_name: str, project_id: str):
+    """
+    Simulates sensor data and publishes it to a messaging topic in a cloud service.
+
+    This function simulates sensor readings from four different sensors with some
+    variation and random latency. Each sensor generates a reading based on a normal
+    distribution around a center value and publishes the data to the specified topic.
+
+    Args:
+        topic_name (str): The name of the topic to which the messages will be published.
+        project_id (str): The ID of the project associated with the topic.
+
+    The function runs indefinitely, continuously publishing messages to the topic until inturrupted.
+    Every 100 messages, a status update is printed.
+    """
     sensor_names = ["AtmP", "Temp", "Airtight", "H2OC"]
     sensor_center_lines = [989.21, 9.45, 1216.02, 9.64]
     standard_deviations = [8.35, 8.42, 39.98, 4.23]
