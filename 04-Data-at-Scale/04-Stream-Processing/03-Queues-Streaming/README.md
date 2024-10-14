@@ -262,42 +262,50 @@ Let's head to your GCP console into BigQuery and check that the live streaming i
 The Google Cloud Dataflow Runner uses the Cloud Dataflow managed service. When you run your beam pipeline with the Cloud Dataflow service, the runner uploads your executable code and dependencies to a Google Cloud Storage bucket and creates a Cloud Dataflow job, which executes your pipeline on managed resources in Google Cloud Platform.
 
 Deployment into Dataflow is relatively easy with Apache Beam, we just need a few extra things:
-1. Create a `setup.py`
+1. Build our poetry package into a `.whl` - required because our beam pipeline is more than one python script.
 1. We need to change the runner option of the pipeline and provide some additional GCP parameters. Here is the [documentation](https://beam.apache.org/documentation/runners/dataflow/) of the required parameters.
 
-## 5.1. Create a setup.py
+## 5.1. Build a wheel 🛞
 
-❗ By default, the GCP Dataflow runner will only upload the target file to be executed. Because we have used a helper function, `aggregate_sensors`, in a separate file, `app/utils.py`, we need to use a `setup.py` that will tell the Dataflow runner to install additional dependencies, including our own package.
+❗ By default, the GCP Dataflow runner will only upload the target file to be executed. Because we have used a helper function, `aggregate_sensors`, in a separate file, `app/utils.py`, we need a way to upload all of our code and dependencies. We are using **poetry** as our package manager, and poetry provides an easy way to **build** our package into a standardized binary package format called `.whl`.
 
-Create a `setup.py` file in your project root:
+By including the our package `.whl`, the Dataflow runner has everything it needs to execute our pipeline!
 
-```bash
-touch setup.py
-```
-
-And paste the following contents into it:
-
-```python
-import setuptools
-
-setuptools.setup(
-    name="beam_pipeline",
-    version="0.0.1",
-    install_requires=[
-        "apache-beam[gcp]==2.56.0",
-        "pandas==1.5.3"
-    ],
-    packages=setuptools.find_packages(),
-)
-```
-
-When using a `setup.py` file, the additional required flag is:
+Create a `.whl` of your python package:
 
 ```bash
---setup_file ./setup.py
+poetry build
 ```
 
-Alternatively, you could move the `aggregate_sensors` function into `app/subscriber_beam.py` and bypass the `setup.py` completely, but for completeness and continuity we have opted to include it.
+The output should look similar to:
+
+```txt
+Building beam-stream (0.1.0)
+  - Building sdist
+  - Built beam_stream-0.1.0.tar.gz
+  - Building wheel
+  - Built beam_stream-0.1.0-py3-none-any.whl
+```
+
+This will have created a new directory in your project root named: `dist/` with two files inside:
+- `beam_stream-0.1.0.tar.gz` - essentially a zipped archive of your package
+- `beam_stream-0.1.0-py3-none-any.whl` - pre-compiled binaries of your package
+
+If you can't see the `dist/` directory in your VS Code explorer, don't worry. VS Code may be hiding some directories in the file explorer - directories like `.git` and `dist`. In your integrated terminal, run:
+
+```bash
+ls
+```
+
+From your project root to confirm the `dist/` directory is there.
+
+When using a `.whl` file as part of your Dataflow deployment, the additional required flag is:
+
+```bash
+--extra_package dist/<your_python_package.whl>
+```
+
+Alternatively, you could move the `aggregate_sensors` function into `app/subscriber_beam.py` and bypass building a wheel for your package. For completeness and continuity we have include it.
 
 ## 5.2. Additional parameters
 
@@ -310,8 +318,8 @@ To add extra parameters to the pipeline you can use command-line arguments when 
 These arguments will be passed on to our `beam.Pipeline` through the `pipeline_args`.
 
 You can fill in your `.env` the following variable to be used in your command line :
-- PROJET_ID
-- BUCKET_NAME
+- `PROJET_ID`
+- `BUCKET_NAME`
 
 <details>
   <summary markdown='span'>💡 Hint</summary>
@@ -326,7 +334,7 @@ python app/subscriber_beam.py \
     --streaming \
     --temp_location gs://$BUCKET_NAME/temp \
     --staging_location gs://$BUCKET_NAME/staging \
-    --setup_file ./setup.py \
+    --extra_package dist/beam_stream-0.1.0-py3-none-any.whl \
     --region europe-west4
 ```
 
@@ -336,7 +344,7 @@ If you try to deploy your beam pipeline to GCP Dataflow and get an error, you ma
 
 ## 5.3. See the results!
 
-Now you can head to Dataflow service within GCP, have a look at your dataflow graph by clicking on the active job name.
+Now you can head to Dataflow service within GCP, have a look at your dataflow graph by clicking on the active job name. To see more detail, expand the **Logs** section at the bottom of the page. There are logs for the overall job, and logs for each individual worker note.
 
 Once it is ready you can launch your publisher:
 
@@ -344,11 +352,13 @@ Once it is ready you can launch your publisher:
 python app/publisher.py
 ```
 
+Have a look at your Dataflow job and you should see the number of elements per second being processed.
+
 After a while, refresh BigQuery and you should see new records in your table! 🎉
 
 ## 5.4. Teardown 🔨
 
-Make sure you teardown your pipeline once you've completed the challenge! By default a beam pipeline is deployed on a GCP n1-standard-2 compute instance, with a current monthly cost of approximately USD$75 per month.
+To avoid any unwanted costs, make sure you teardown your pipeline once you've completed the challenge! By default a beam pipeline is deployed on a n1-standard-2 Compute Engine instance.
 
 Make sure to first stop your `publisher.py` script.
 
@@ -369,10 +379,10 @@ gcloud dataflow jobs list --region <region>
 Alternatively you can stop a Dataflow job through the GCP Console:
 - Starting from the [Dataflow jobs page](https://console.cloud.google.com/dataflow/jobs)
 - Click on the Dataflow job you want to stop
-- Click stop at the top of the page
-- Select drain or cancel in the next menu:
-    - **Drain** allows the pipeline to gracefully stop while processing the data that is already in flight. It ensures that no new work is accepted, but any work already started will complete before the instance is terminated.
-    - **Cancel** will force cancel the job and terminate the instance.
+- Click **stop** at the top of the page
+- Select drain or cancel in the pop up menu, then click on **Stop job**:
+    - **Drain** allows the pipeline to gracefully stop by processing any data that is already in flight. It ensures that no new work is accepted, but any work already started will complete before the instance is terminated.
+    - **Cancel** will cancel the job and terminate the instance. Any in flight data is lost.
 
 <br>
 
@@ -381,7 +391,6 @@ Alternatively you can stop a Dataflow job through the GCP Console:
 Congratulations! 🎉 You have build a complete real-time Data Streaming ETL pipeline.
 
 Don't forget to git add, commit, and push your code to GitHub so you can track your progress on Kitt!
-
 
 <br>
 

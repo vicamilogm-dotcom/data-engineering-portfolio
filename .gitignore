@@ -1,6 +1,7 @@
 # datasets
 *.csv
 *.sqlite
+*.parquet
 
 # DBT logs
 dbt.log.legacy
@@ -13,8 +14,12 @@ dbt.log.legacy
 __pycache__/
 *.ipynb_checkpoints
 *.egg-info/
+*.egg
 .pytest_cache
 *.vscode/*
+dist/
+sdist/
+wheels/
 
 #virtual env
 .venv/
