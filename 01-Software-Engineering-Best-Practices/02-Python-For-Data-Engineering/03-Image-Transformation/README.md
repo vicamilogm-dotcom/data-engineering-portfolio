@@ -14,16 +14,8 @@ We will be using a dataset of chest X-ray images to create a TFRecord file. The 
 
 # 0️⃣ Getting the data
 
-We are going to be using Kaggle, an online community and platform for data scientists and machine learning practitioners that offers datasets, competitions, notebooks, and learning resources. Most importantly **lots of great datasets are shared here!**
+We will again use kaggle to source our data. This time we’ll use this [image dataset of X-Rays](https://www.kaggle.com/datasets/paultimothymooney/chest-xray-pneumonia).
 
-Install the kaggle cli 👇
-```bash
-pipx install kaggle
-```
-
-Then follow the [instructions](https://github.com/Kaggle/kaggle-api) in the API credentials section to allow the cli to work!
-
-Once you have done this **run this command  to download the dataset!**
 ```bash
 kaggle datasets download -d paultimothymooney/chest-xray-pneumonia --unzip -p ./data
 ```

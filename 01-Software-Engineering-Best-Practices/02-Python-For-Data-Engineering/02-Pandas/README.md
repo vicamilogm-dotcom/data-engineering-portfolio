@@ -18,7 +18,20 @@ Overall, pandas serves as a versatile tool for data engineers, boosting producti
 
 # 0️⃣ Data
 
-We will again use kaggle to source our data. This time we'll use this tabular [Goodreads dataset](https://www.kaggle.com/datasets/mohamedbakhet/amazon-books-reviews).
+We are going to be using Kaggle, an online community and platform for data scientists and machine learning practitioners that offers datasets, competitions, notebooks, and learning resources. Most importantly **lots of great datasets are shared here!**
+
+Install the kaggle cli 👇
+
+```bash
+# globally with pipx - available from anywhere!
+pipx install kaggle
+```
+
+Then follow the [instructions](https://github.com/Kaggle/kaggle-api) in the API credentials section to allow the cli to work!
+
+We'll use this tabular [Goodreads dataset](https://www.kaggle.com/datasets/mohamedbakhet/amazon-books-reviews) for this challenge.
+
+Once you have done this **run the following command to download the dataset**:
 
 ```bash
 kaggle datasets download -d mohamedbakhet/amazon-books-reviews --unzip -p ./data
