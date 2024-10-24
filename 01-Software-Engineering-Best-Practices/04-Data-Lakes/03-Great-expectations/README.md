@@ -163,7 +163,9 @@ context.build_data_docs()
 
 ### 3.8. Analyzing the Validation Results:
 
-After validation, inspect the results to check if the data matches the expectations. If there are discrepancies, use the `send_message` function to notify about the failed expectations.
+After validation, inspect the results to check if the data matches the expectations. If there are discrepancies, use the `send_message` function to notify about the failed expectations. You should send a message with:
+- The name of the column
+- The message: **Expectation failed!**
 
 <details>
 <summary markdown='span'>Hint</summary>
@@ -171,14 +173,16 @@ After validation, inspect the results to check if the data matches the expectati
 You can loop through the validation results and identify any failed expectations. Depending on the results, you can send notifications about the success or failures:
 
 ```python
-failures = []
+failed_columns = []
 for expectation_result in ...:  # Iterate over validation results
     if not expectation_result["success"]:
-        failures.append(expectation_result)
+        column_name = ...
+        failed_columns.append(column_name)
 
-if failures:
-    for failure in failures:
+if failed_columns:
+    for column in failed_columns:
         send_message("Expectation failed!")
+        send_message(column)
         # More details about the failure can be sent using send_message
 else:
     send_message("All expectations passed!")
