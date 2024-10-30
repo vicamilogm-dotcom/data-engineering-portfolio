@@ -26,7 +26,7 @@ Create a `data` folder and unzip the data into it:
 mkdir -p data/original && unzip AdventureWorks-oltp-install-script.zip -d data/original
 ```
 
-The formatting of some of the CSV's is not ideal. Luckily there is a script to convert most of the CSV's to a more usable format.
+The formatting of some of the CSV's is not ideal. Luckily there is a script to convert **most** of the CSV's to a more usable format.
 
 ```bash
 mkdir -p data/processed && python pipeline/process_csvs.py

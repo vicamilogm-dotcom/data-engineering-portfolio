@@ -52,7 +52,18 @@ bigquery_schemas = {
         {"name": "SalesPersonID", "type": "INT64", "mode": "NULLABLE"},
         {"name": "rowguid", "type": "STRING", "mode": "REQUIRED"},
         {"name": "ModifiedDate", "type": "TIMESTAMP", "mode": "REQUIRED"},
-        pass  # YOUR CODE HERE
+        # $ERASE_BEGIN
+        {"name": "AnnualSales", "type": "FLOAT64", "mode": "REQUIRED"},
+        {"name": "AnnualRevenue", "type": "FLOAT64", "mode": "REQUIRED"},
+        {"name": "BankName", "type": "STRING", "mode": "REQUIRED"},
+        {"name": "BusinessType", "type": "STRING", "mode": "REQUIRED"},
+        {"name": "YearOpened", "type": "INT64", "mode": "REQUIRED"},
+        {"name": "Specialty", "type": "STRING", "mode": "REQUIRED"},
+        {"name": "SquareFeet", "type": "INT64", "mode": "REQUIRED"},
+        {"name": "Brands", "type": "STRING", "mode": "REQUIRED"},
+        {"name": "Internet", "type": "STRING", "mode": "REQUIRED"},
+        {"name": "NumberEmployees", "type": "INT64", "mode": "REQUIRED"},
+        # $ERASE_BEGIN
     ],
     "CountryRegionCurrency": [
         {"name": "CountryRegionCode", "type": "STRING", "mode": "REQUIRED"},
