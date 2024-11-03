@@ -189,7 +189,7 @@ Then, make sure you tear `down` your stack and spin it back `up` again with your
 1. First check which port you forwarded in Docker compose. If you haven't, add it now! For example:
     ```yaml
     ports:
-        - 5432:5432
+        - xxxx:xxxx
     ```
 1. Make sure the correct port is also forwarded from your VM to your host machine!
 1. Connect with dbeaver using the same values for the enviroment variables you set in the docker-compose!
