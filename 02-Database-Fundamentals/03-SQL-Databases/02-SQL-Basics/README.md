@@ -22,7 +22,7 @@ First, copy you `.env` file from the previous challenge inside this challenge's 
 - Store your code in `exercice-1.sql`.
 
 **❓ Write a query that returns the list of columns and their data types in the `movies_metadata` table.**
-- You should have a (29,2) table as a result.
+- You should have a (24,2) table as a result.
 - Store your code in `exercice-2.sql`.
 
 ## SQL tests
