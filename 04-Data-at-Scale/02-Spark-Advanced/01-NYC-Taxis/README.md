@@ -1,4 +1,4 @@
-# Goals 🎯
+# 🎯 Goal
 
 Your goal is to build a pipeline in Ppark that will do the following.
 
@@ -19,7 +19,7 @@ That might sound like a lot! But we will build it out step by step.
 ❓ First duplicate the `.env.sample` file and rename it to `.env`, fill in the values and `direnv reload` to load env variables. The bucket can be a new one just for this exercise! Then create the bucket as well.
 
 <details>
-<summary markdown='span'>💡 gsutil Reminder</summary>
+<summary markdown='span'>💡 gsutil reminder</summary>
 To create new bucket:
 
 ```bash
@@ -42,7 +42,7 @@ Why do you think we DO NOT need the extension when we are NOT WORKING locally?
 
 # 1️⃣ Download the data
 
-This gets us one month of data
+This will download one month of data:
 
 ```bash
 wget -P data https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2009-01.parquet
@@ -66,11 +66,10 @@ pytest tests/test_taxi_spark/test_functions/test_schema.py
 
 # 3️⃣ Write the write_to_raw job
 
-Now it is time to create the first job which should
-
-- Download the data of the date
+Now it is time to create the first job which should:
+- Download the data based on an input date
 - Check the schema
-- Write the data to the raw folder in the bucket
+- Write the data to the raw folder in your bucket
 
 ❓ Checkout the code in `taxi_spark/jobs/write_to_raw.py` and implement the missing parts.
 
@@ -169,27 +168,26 @@ This time you need to implement your own tests for your functions once you are d
 You should end with an output similar to:
 
 ```bash
-PYTHONDONTWRITEBYTECODE=1 pytest tests -m "not optional" -v --disable-warnings --color=yes
-======================================================================================= test session starts ========================================================================================
-platform linux -- Python 3.8.14, pytest-7.4.4, pluggy-1.5.0 -- /home/lorcanrae/code/lorcanrae/data-engineering-solutions/04-Data-at-Scale/02-Spark-Advanced/01-NYC-Taxis/.venv/bin/python
+=========================================================================== test session starts ===========================================================================
+platform linux -- Python 3.8.14, pytest-7.4.4, pluggy-1.5.0 -- /home/lr/code/lr/data-engineering-solutions/04-Data-at-Scale/02-Spark-Advanced/01-NYC-Taxis/.venv/bin/python
 cachedir: .pytest_cache
 rootdir: /home/lorcanrae/code/lorcanrae/data-engineering-solutions/04-Data-at-Scale/02-Spark-Advanced/01-NYC-Taxis
 configfile: pyproject.toml
 plugins: mock-3.14.0, anyio-4.3.0
 collected 15 items
 
-tests/test_taxi_spark/test_functions/test_calculations.py::test_calculate_trip_duration PASSED                                                                                               [ 10%]
-tests/test_taxi_spark/test_functions/test_calculations.py::test_calculate_haversine_distance PASSED                                                                                          [ 20%]
-tests/test_taxi_spark/test_functions/test_cleaning.py::test_remove_duplicates PASSED                                                                                                         [ 30%]
-tests/test_taxi_spark/test_functions/test_cleaning.py::test_handle_nulls PASSED                                                                                                              [ 40%]
-tests/test_taxi_spark/test_functions/test_cleaning.py::test_type_casting PASSED                                                                                                              [ 50%]
-tests/test_taxi_spark/test_functions/test_cleaning.py::test_normalize_strings PASSED                                                                                                         [ 60%]
-tests/test_taxi_spark/test_functions/test_cleaning.py::test_format_dates PASSED                                                                                                              [ 70%]
-tests/test_taxi_spark/test_functions/test_cleaning.py::test_filter_coordinates PASSED                                                                                                        [ 80%]
-tests/test_taxi_spark/test_functions/test_cleaning.py::test_rename_columns PASSED                                                                                                            [ 90%]
-tests/test_taxi_spark/test_functions/test_schema.py::test_enforce_schema PASSED                                                                                                              [100%]
+tests/test_taxi_spark/test_functions/test_calculations.py::test_calculate_trip_duration PASSED                                                                       [ 10%]
+tests/test_taxi_spark/test_functions/test_calculations.py::test_calculate_haversine_distance PASSED                                                                  [ 20%]
+tests/test_taxi_spark/test_functions/test_cleaning.py::test_remove_duplicates PASSED                                                                                 [ 30%]
+tests/test_taxi_spark/test_functions/test_cleaning.py::test_handle_nulls PASSED                                                                                      [ 40%]
+tests/test_taxi_spark/test_functions/test_cleaning.py::test_type_casting PASSED                                                                                      [ 50%]
+tests/test_taxi_spark/test_functions/test_cleaning.py::test_normalize_strings PASSED                                                                                 [ 60%]
+tests/test_taxi_spark/test_functions/test_cleaning.py::test_format_dates PASSED                                                                                      [ 70%]
+tests/test_taxi_spark/test_functions/test_cleaning.py::test_filter_coordinates PASSED                                                                                [ 80%]
+tests/test_taxi_spark/test_functions/test_cleaning.py::test_rename_columns PASSED                                                                                    [ 90%]
+tests/test_taxi_spark/test_functions/test_schema.py::test_enforce_schema PASSED                                                                                      [100%]
 
-======================================================================================= 15 passed in 18.68s ========================================================================================
+=========================================================================== 15 passed in 18.68s ===========================================================================
 
 ```
 
@@ -257,7 +255,7 @@ submit-create-processed:
 
 <br>
 
-# 8️⃣ Orchestrate
+# 9️⃣ Orchestrate
 
 Now we want to Orchestrate the whole process with airflow you can start it with:
 
