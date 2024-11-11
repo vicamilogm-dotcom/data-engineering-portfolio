@@ -18,9 +18,9 @@ def remove_duplicates(df: DataFrame) -> DataFrame:
 def handle_nulls(df: DataFrame) -> DataFrame:
     """
     Fills null values in specified columns with predefined constants.
-    'Tip_Amt', 'Tolls_Amt', 'surcharge', 'mta_tax' are filled with 0.
-    'Rate_Code' is filled with 'Standard'.
-    'store_and_forward' is filled with 'N'.
+    'Tip_Amt', 'Tolls_Amt', 'surcharge', 'mta_tax' are filled with 0.0
+    'Rate_Code' is filled with -1.0
+    'store_and_forward' is filled with -1.0
 
     Args:
         df (DataFrame): Input DataFrame

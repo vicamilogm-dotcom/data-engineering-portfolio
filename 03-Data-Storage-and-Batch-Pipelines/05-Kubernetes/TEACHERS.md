@@ -84,13 +84,15 @@ push_artifact:
 
 ## Helm challenge port forward
 
-Look for the deployed service:
+Do the challenge as per instructions.
+
+To access the Airflow GUI, look for the deployed service:
 
 ``` bash
 kubectl get services
 ```
 
-Expose airflow UI:
+Expose Airflow UI:
 
 ``` bash
 kubectl port-forward svc/airflow-cluster-web 8080:8080 --namespace airflow

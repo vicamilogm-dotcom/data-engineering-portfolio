@@ -60,7 +60,7 @@ If we've designed our mart following the Kimball approach, it should be relative
 ```bash
 Volume Discount 11 to 14
 
-78343230.562850073
+4,896,451.9101781
 
 0.02
 ```
@@ -74,9 +74,9 @@ Volume Discount 11 to 14
 
 | Row | SalesGroup    | TotalSales          |
 |-----|---------------|---------------------|
-| 1   | North America | 1,269,653,778.60    |
-| 2   | Europe        | 317,402,948.45      |
-| 3   | Pacific       | 170,485,375.35      |
+| 1   | North America | 79,353,361.16227    |
+| 2   | Europe        | 19,837,684.27828    |
+| 3   | Pacific       | 10,655,355.95931    |
 
 </details>
 

@@ -559,7 +559,7 @@ allowedTopologies:
 
 🔍 Read the doc for [`StorageClass`](https://kubernetes.io/docs/concepts/storage/storage-classes/), it's well explained!
 
-❓ **Then, just update your volume claim in a new `postgres-pvc.yaml`** by upgrading from 2 to `200G` to meet minimum Google requirement**
+❓ **Then, just update your volume claim in a new `postgres-pvc.yaml`** by upgrading from `2Gi` to `200Gi` to meet minimum Google requirement**
 
 ❓ **Finally, create a new `postgres-statefulset-cloud.yaml`** by simply adding an extra `PGDATA` envrioment variable to the postrgres `container`
 ```yml

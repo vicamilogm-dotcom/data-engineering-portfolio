@@ -20,7 +20,7 @@ Here are the steps to install on the VM of the [data engineering setup](https://
 2. Install airbyte
 
     ``` bash
-    sudo abctl local install
+    abctl local install
     ```
 
 3. Port forward
@@ -30,7 +30,7 @@ Here are the steps to install on the VM of the [data engineering setup](https://
 4. Retrieve password
 
     ``` bash
-    sudo abctl local credentials
+    abctl local credentials
     ```
 
 5. Take down airbyte

@@ -31,4 +31,14 @@ def calculate_haversine_distance(df: DataFrame) -> DataFrame:
     Returns:
         DataFrame: New DataFrame with a 'haversine_distance' column added.
     """
-    pass  # YOUR CODE HERE
+    R = 6371  # Earth radius in km
+    lat1_rad = F.radians(F.col("start_lat"))
+    lon1_rad = F.radians(F.col("start_lon"))
+    lat2_rad = F.radians(F.col("end_lat"))
+    lon2_rad = F.radians(F.col("end_lon"))
+    dlat = lat2_rad - lat1_rad
+    dlon = lon2_rad - lon1_rad
+    a = F.sin(dlat / 2) ** 2 + F.cos(lat1_rad) * F.cos(lat2_rad) * F.sin(dlon / 2) ** 2
+    c = 2 * F.atan2(F.sqrt(a), F.sqrt(1 - a))
+    haversine_distance = R * c
+    return df.withColumn("haversine_distance", haversine_distance)
