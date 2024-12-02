@@ -17,7 +17,7 @@ In this challenge we will create a simple macro to calculate a percentage as an 
 Like models in DBT, macros are defined in SQL and leverage Jinja templating.
 
 - In the `macros/` directory, create a `functions.sql` file.
-- Using [DBT's documention at this link](https://docs.getdbt.com/docs/build/jinja-macros#macros) on Jinja macros, define the macro: `margin_percent` with the following parameters:
+- Using [DBT's documentation at this link](https://docs.getdbt.com/docs/build/jinja-macros#macros) on Jinja macros, define the macro: `margin_percent` with the following parameters:
     - The macro should take the columns `revenue` and `purchase_cost` as inputs
     - Define what the macro should return: `margin_percent` = `margin` / `revenue`
     - Round the result to two decimal places, but provide an option for the user to control how many decimal places so show.

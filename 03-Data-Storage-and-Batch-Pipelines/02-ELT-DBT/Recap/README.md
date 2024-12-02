@@ -99,7 +99,7 @@ At the moment we are materializing the **prod** target into the same GCP Project
 
 # 2️⃣ Dynamic Sources
 
-There is much more you can do with DBT in terms of targets, for example dynamically changing the **source** data based on the **target**.
+There is much more you can do with DBT in terms of targets, for example dynamically changing the **source** BigQuery dataset based on the **target**.
 
 ❗ Requires creating a new dataset called `raw_gz_data_devsample` and three new tables:
 - **raw_gz_product**

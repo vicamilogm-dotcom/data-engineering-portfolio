@@ -1,6 +1,8 @@
 # 🎯 Goals
 
-DBT (Data Build Tool) is crucial in data engineering because it enables data teams to transform raw data into clean, structured datasets using plain SQL. It simplifies the process of building and maintaining data transformation pipelines by allowing engineers to write modular, reusable SQL code. DBT also facilitates version control, testing, and documentation, making data workflows more reliable and scalable. By integrating well with modern data warehouses, DBT streamlines data modeling and ensures data quality, helping teams deliver consistent and accurate insights.
+DBT (Data Build Tool) is crucial in data engineering because it enables data teams to transform raw data into clean, structured datasets using plain SQL. It simplifies the process of building and maintaining data transformation pipelines by allowing engineers to write modular, reusable SQL code. DBT also facilitates version control, testing, and documentation, making data workflows more reliable and scalable. By integrating well with modern data warehouses, DBT streamlines data modelling and ensures data quality, helping teams deliver consistent and accurate insights.
+
+The challenges in this unit form a case study that we'll go over in the next challenge. Before we get to that, let's setup DBT, go through some basics, and setup your raw data sources in BigQuery.
 
 In this challenge we'll get DBT setup and start with the build in example before moving onto the next, more substantial challenge.
 
@@ -172,7 +174,7 @@ Do not worry if you make an error during this process, you can modify any field 
   - **Enter a name for your project (letters, digits, underscore):** Enter `dbt_lewagon`. If prompted: _The profile dbt_lewagon already exists in ~/.dbt/profiles.yml. Continue and overwrite it?_ Hit `N`.
   - **Which database would you like to use? Enter a number:** Enter `1` (for `bigquery`)
   - **Desired authentication method option (enter a number):** Enter `2` (for `service_account`)
-  - **keyfile (/path/to/bigquery/keyfile.json):** Enter the **absolute** path of where you stored your BigQuery service account key that you created during the [Data Engineering setup](https://github.com/lewagon/data-engineering-setup/blob/main/macOS.md), including the file name and extension. It should look similiar to: `/home/username/.gcp_keys/le-wagon-de-bootcamp.json`.
+  - **keyfile (/path/to/bigquery/keyfile.json):** Enter the **absolute** path of where you stored your BigQuery service account key that you created during the [Data Engineering setup](https://github.com/lewagon/data-engineering-setup/blob/main/macOS.md), including the file name and extension. It should look similar to: `/home/username/.gcp_keys/le-wagon-de-bootcamp.json`.
   - **project (GCP project id):** Enter your GCP Project ID that you created during the [Data Engineering setup](https://github.com/lewagon/data-engineering-setup/blob/main/macOS.md)
   - **dataset (the name of your dbt dataset):** Call it `dbt_{firstletteroffirstname}{last_name}_day1`. If your name is Taylor Swift your dataset should be: `dbt_tswift_day1`
   - **threads (1 or more):** Enter `1`
@@ -187,7 +189,7 @@ This should have done 2 things:
 
 DBT Core works on the concepts of **profiles**. Typically for each DBT project you would have one **profile**, and generally one **profile** for each business unit or team that you work with.
 
-Each **profile** can contain one or more *targets*. Each *target* defines what data warehouse you are using, authentication credentials, output dataset name, and data location. With different *targets* we can apply the same pipeline to read from different source datasets and write to different output datasets. It's how we differentiate between develpoment and production.
+Each **profile** can contain one or more *targets*. Each *target* defines what data warehouse you are using, authentication credentials, output dataset name, and data location. With different *targets* we can apply the same pipeline to read from different source datasets and write to different output datasets. It's how we differentiate between development and production.
 
 If that's a bit much at the moment, don't worry too much about it, we'll go deeper into **profiles** and *targets* during the recap.
 
@@ -197,7 +199,7 @@ For more information about the DBT profile, have a look at the documentation:
 
 Let's check that the `profiles.yml` file is configured correctly:
 - Your DBT profile should be stored in a folder at your root called `.dbt`. Open it by running: `code ~/.dbt/profiles.yml`. You should be able to see all the configuration you've set when creating the DBT project.
-- Run `make test` to make sure the setup of your profile is correct. (The `test_dbt_profile` tests should all be green). Watch out with the levels of indendation in your `profiles.yml` file
+- Run `make test` to make sure the setup of your profile is correct. (The `test_dbt_profile` tests should all be green). Watch out with the levels of indentation in your `profiles.yml` file
 - Push to git.
 
 ## 3.3. Verify `dbt_project.yml` file
@@ -275,7 +277,7 @@ Let's make sure the `.sql` and `.yaml` files corresponding to each layer are in 
 mkdir models/source;
 mkdir models/staging;
 mkdir models/intermediate;
-mkdir models/mart/finance;
+mkdir -p models/mart/finance;
 ```
 
 We built the above structure (`source`, `staging`, `intermediate`, and `mart` folders) for a specific reason. When we organise our models in directories, our tables/views in BigQuery will be prefixed to make them more identifiable. We want `.sql` models:
@@ -300,6 +302,7 @@ Your DBT project structure should now look like this. The `target` folder may or
 │   │   └── schema.yml
 │   ├── intermediate
 │   ├── mart
+│   │   └── finance
 │   ├── source
 │   └── staging
 ├── seeds

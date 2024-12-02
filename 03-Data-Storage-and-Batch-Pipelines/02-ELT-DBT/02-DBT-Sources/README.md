@@ -125,7 +125,7 @@ We have our raw data loaded and our DBT project initialized, let's start with co
 - Populate this file so that DBT understands:
     - Which BigQuery dataset the source data is in
     - Which tables in this dataset we are reading from
-    - Have a look at the source propertise documentation at [this link](https://docs.getdbt.com/reference/source-properties) for more details on how to configure a source in DBT.
+    - Have a look at the source properties documentation at [this link](https://docs.getdbt.com/reference/source-properties) for more details on how to configure a source in DBT.
 - Configure 1 source dataset:
     - `raw_gz_data`
 - Configure 3 source tables:
@@ -238,7 +238,7 @@ Check out the Power User for dbt extension for VS Code [at this link](https://ma
 
 Documentation and tests are integral for your pipeline to be robust and for your team members (and yourself!) to understand how the project and models work.
 
-While not the most glamourous part of engineering, documentation and tests are some of the most essential parts of writing good software that is easy to maintain. Luckily DBT makes it *relatively* easy to add tests and documentation to a DBT project.
+While not the most glamorous part of engineering, documentation and tests are some of the most essential parts of writing good software that is easy to maintain. Luckily DBT makes it *relatively* easy to add tests and documentation to a DBT project.
 
 ## 4.1. Source Documentation
 

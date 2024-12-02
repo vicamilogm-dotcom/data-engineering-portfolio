@@ -74,7 +74,7 @@ Metric definitions:
 - `margin` = `revenue` - `purchase_cost`
 
 💡 Suggested approach:
-- Locate the data needed for the required fields and metrics in your different staging models.
+- Locate the data needed for the required fields and metrics in your different staging models and how to **reference** those models.
 - Start with the `JOIN` clause and use `SELECT *` as a placeholder.
 - Do not try to write SQL for all the fields at once. Start with one very simple query, creating 1 or 2 fields at a time. Then run your model and make sure the view is created in BigQuery, then iterate.
 

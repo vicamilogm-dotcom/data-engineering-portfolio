@@ -22,7 +22,7 @@ It's worth mentioning that Airbyte has fantastic documentation, and was designed
 
 # 1️⃣ Download and Stage Data
 
-In the case study, the marketting team put their data into a GCS Bucket every week for archiving. We'll have to imitate this by downloading the data and uploading it to our own bucket.
+In the case study, the marketing team put their data into a GCS Bucket every week for archiving. We'll have to imitate this by downloading the data and uploading it to our own bucket.
 
 Download raw marketing data:
 
@@ -35,16 +35,16 @@ curl -o ./data/marketing/raw_gz_criteo.parquet https://wagon-public-datasets.s3.
 curl -o ./data/marketing/raw_gz_facebook.parquet https://wagon-public-datasets.s3.amazonaws.com/data-engineering/gz_raw_data-raw_gz_facebook.parquet
 ```
 
-Create a bucket named: `<github_username>-greenweez-raw`. Remember the name has to be globally unique!
+Create a bucket named: `<your_github_username>-greenweez-raw`. Remember the name has to be globally unique!
 
 ```bash
-gsutil mb -l EU gs://<github_username>-greenweez-raw
+gsutil mb -l EU gs://<your_github_username>-greenweez-raw
 ```
 
 Move downloaded files to your bucket:
 
 ```bash
-gsutil cp data/marketing/* gs://<github_username>-greenweez-raw/greenweez/raw/marketing/ad-campaigns/
+gsutil cp data/marketing/* gs://<your_github_username>-greenweez-raw/greenweez/raw/marketing/ad-campaigns/
 ```
 
 Have a look on the [Google GCS console](https://console.cloud.google.com/storage/browser) to confirm that your files are in your bucket! Pay attention to the path of the files and think about why we have created such an explicit path.
@@ -53,7 +53,7 @@ Have a look on the [Google GCS console](https://console.cloud.google.com/storage
 
 # 2️⃣ Download, Install, and Run Airbyte
 
-[Airbyte OSS (Open Source Software)](https://docs.airbyte.com/using-airbyte/getting-started/oss-quickstart) uses a Kubernete's deployment - don't worry, you do not need any Kubernetes knowledge for now! Airbyte has created a command line utility called: **abctl**, that abstracts a lot of the Kubernetes aspects away.
+[Airbyte OSS (Open Source Software)](https://docs.airbyte.com/using-airbyte/getting-started/oss-quickstart) uses a Kubernetes deployment - don't worry, you do not need any Kubernetes knowledge for now! Airbyte has created a command line utility called: **abctl**, that abstracts a lot of the Kubernetes aspects away.
 
 To download and install **abctl**, run the following in your terminal:
 
@@ -121,7 +121,7 @@ Navigate to the [Service Accounts tab](https://console.cloud.google.com/iam-admi
 
 You will need some additional legacy permissions for your GCS Service Account, let's configure them now:
 - Navigate to your bucket in the [GCP Console](https://console.cloud.google.com/storage/browser). You can search for Cloud Storage in the top search bar on the console.
-- Select your bucket created for **<github_username>-greenweez-raw**
+- Select your bucket created for **<your_github_username>-greenweez-raw**
 - Select the **Permissions** tab
 - Scroll down and click on **Grant Access**
 - In the pop up window, start typing your Service Account name: airbyte-greenweez-gcs, and you shuold be able to select the service account.
@@ -160,7 +160,7 @@ Click on either **Create your first connection** on the welcome screen, or **Sou
 - Take a minute to look through all the sources that Airbyte has. When you're ready, in the search bar at the top of the screen, type **GCS**. If you can't immediately see a source for Google Cloud Storage (GCS), try the **Marketplace** tab.
 - **Name**: GCS Greenweez Ad Campaigns
 - **Service Account Information**: Paste the *entire contents* of your `de-bootcamp-airbyte-greenweez-gcs.json` into the box
-- **Bucket**: the name of your bucket, it should be **<github_username>-greenweez-raw**
+- **Bucket**: the name of your bucket, it should be **<your_github_username>-greenweez-raw**
 - On the list of streams to sync, click add. Each stream corresponds to a different schema, or table that will be created in BigQuery. We have four separate tables, so we will need four different streams. Give each stream the following parameters:
     - **Parquet Format** - easy to miss!
     - **Name** - what the output table in BigQuery will be named. Follow the convention of: `raw_gz_<company>` where company is where the ad campaign was run. For **bing** it would be: **raw_gz_bing**
@@ -202,7 +202,7 @@ On the next screen fill out the following parameters:
 - **Loading Method**: Choose Batched Standard Inserts
 - **Service Account Key JSON**: Paste the *entire contents* of your `de-bootcamp-airbyte-greenweez-bigquery.json` into the box
 
-If youre service account and the destination config is correct, the destination connector should have been created!
+If your service account and the destination config is correct, the destination connector should have been created!
 
 Congrats! You should now have a source and a destination, let's put the two together and create a connection!
 
@@ -233,7 +233,7 @@ Your Airbyte connection should start syncing your data! You can check the status
 
 When you are done, have a look at the data on BigQuery! Do you notice anything about the tables that have been loaded in from Airbyte? Airbyte has added some metadata columns that it uses internally.
 
-💡 Different sync modes are specific to the data you have and problem you are trying to solve. You can save computation and time if you select a sync mode that suits your data. Find out more on the offical docs at [this link](https://docs.airbyte.com/using-airbyte/core-concepts/sync-modes/)
+💡 Different sync modes are specific to the data you have and problem you are trying to solve. You can save computation and time if you select a sync mode that suits your data. Find out more on the official docs at [this link](https://docs.airbyte.com/using-airbyte/core-concepts/sync-modes/)
 
 <br>
 
@@ -260,7 +260,7 @@ To teardown your Airbyte cluster **while preserving any data you have created**:
 abctl local uninstall
 ```
 
-To teardown your Airbyte cluster and **purge any persistant data**:
+To teardown your Airbyte cluster and **purge any persistent data**:
 
 ```bash
 abctl local uninstall --persisted
