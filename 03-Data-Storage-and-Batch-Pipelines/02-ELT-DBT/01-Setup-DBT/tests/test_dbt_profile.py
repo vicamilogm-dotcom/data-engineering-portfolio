@@ -39,7 +39,7 @@ def test_dbt_profile_dataset():
 
 def test_dbt_profile_other_keys():
     dev = profile_dict["dbt_lewagon"]["outputs"]["dev"]
-    assert dev["location"] == "US", "Location is wrong"
+    assert dev["location"] == "EU", "Location is wrong"
     assert dev["method"] == "service-account", "Method is wrong"
     assert dev["priority"] == "interactive", "Priority is wrong"
     # TODO: parse the service account GCP file, to extract their own project ID

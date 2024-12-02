@@ -56,7 +56,7 @@ dbt init
 dbt run
 ```
 
-# ELT and DBT recap options
+# More ELT and DBT recap options
 
 Airbyte:
 - Showcase the UI for the custom connector Builder allowing to connect REST APIs

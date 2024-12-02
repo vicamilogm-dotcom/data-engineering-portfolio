@@ -1,3 +1,16 @@
+# ❗ Legacy Challenge ❗
+
+This is a legacy challenge and has been archived as is.
+
+It has been left available if you want to practice, but will not contribute towards your mandatory challenge completion percentage as part of the Le Wagon Data Engineering Bootcamp.
+
+If you want to do these challenges, here are a few notes:
+- The `pyproject.toml` has been renamed to `pyproject.toml.bak`.
+    - This was done so that a virtual environment for this challenge was not installed when your ran `make install` on Setup Day, reducing disk usage.
+    - If you want to install the poetry virtual environment, rename the `pyproject.toml.bak` to `pyproject.toml` and run: `poetry install`
+    - You may need change the path of the package: `lewagonde` in the `pyproject.toml`. `lewagonde` contains helper functions for testing.
+- Consider creating a new dbt profile for these challenges. Such as: `dbt_hackernews`
+
 # 🎯 Goals
 
 You've created your first staging models, which are refined versions of the `source` data inherited from the BigQuery dataset. This section has 2 goals:
