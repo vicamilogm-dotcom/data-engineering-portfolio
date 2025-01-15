@@ -14,7 +14,7 @@ The marketing team run ad campaigns on four platforms:
 
 You know that the marketing team place their data into a GCS Bucket as **parquet** files for archiving every week.
 
-Airbyte is a great tool to manage the ingestion of the data from a GCS Bucket to BigQuery, and even has some built in basic automation. Let's see how we could set it up.
+Airbyte is a great tool to manage the ingestion of the data from a GCS Bucket to BigQuery, and even has some basic built in orchestration. Let's see how we could set it up.
 
 It's worth mentioning that Airbyte has fantastic documentation, and was designed to be as user friendly as possible. If you get stuck on creating sources, destinations, or connectors, checking the official documentation should be the first thing you do!
 
@@ -22,7 +22,7 @@ It's worth mentioning that Airbyte has fantastic documentation, and was designed
 
 # 1️⃣ Download and Stage Data
 
-In the case study, the marketing team put their data into a GCS Bucket every week for archiving. We'll have to imitate this by downloading the data and uploading it to our own bucket.
+In the case study, the marketing team put their data into a GCS Bucket every week for archiving. We'll have to simulate this by downloading the data and uploading it to our own bucket.
 
 Download raw marketing data:
 
@@ -38,6 +38,7 @@ curl -o ./data/marketing/raw_gz_facebook.parquet https://wagon-public-datasets.s
 Create a bucket named: `<your_github_username>-greenweez-raw`. Remember the name has to be globally unique!
 
 ```bash
+# eg gs://lorcanrae-greenweez-raw
 gsutil mb -l EU gs://<your_github_username>-greenweez-raw
 ```
 
@@ -47,7 +48,7 @@ Move downloaded files to your bucket:
 gsutil cp data/marketing/* gs://<your_github_username>-greenweez-raw/greenweez/raw/marketing/ad-campaigns/
 ```
 
-Have a look on the [Google GCS console](https://console.cloud.google.com/storage/browser) to confirm that your files are in your bucket! Pay attention to the path of the files and think about why we have created such an explicit path.
+Have a look on the [Google Cloud Storage console at this link](https://console.cloud.google.com/storage/browser) to confirm that your files are in your bucket! Pay attention to the path of the files and think about why we have created such an explicit path.
 
 <br>
 
@@ -69,7 +70,7 @@ abctl local install
 
 This will create a local Kubernetes cluster. It might take a few minutes to pull the relevant images and spin up the cluster.
 
-Once the installation is complete, your should see a message saying that: A password may be required to login. The password can be found by running the command `abctl local credentials`. Obtain your credentials by running the above command in your terminal:
+Once the cluster has started, your should see a message saying: A password may be required to login. The password can be found by running the command `abctl local credentials`. Obtain your credentials by running the above command in your terminal:
 
 ```bash
 abctl local credentials
@@ -104,7 +105,7 @@ Let's create two new service accounts and service account keys with the minimum 
 
 ## 3.1.1. GCS Service Account and Key
 
-Navigate to the [Service Accounts tab](https://console.cloud.google.com/iam-admin/serviceaccounts) of IAM & Admin on the GCP Console.
+Navigate to the [Service Accounts tab at this link](https://console.cloud.google.com/iam-admin/serviceaccounts) of the **IAM & Admin** section on the GCP Console.
 - Click **Create Service Account** at the top of the page
 - Give your service account a name. It's best practice to name a service account after it's function. Name it: **airbyte-greenweez-gcs**
 - Give the service account a description
@@ -121,10 +122,10 @@ Navigate to the [Service Accounts tab](https://console.cloud.google.com/iam-admi
 
 You will need some additional legacy permissions for your GCS Service Account, let's configure them now:
 - Navigate to your bucket in the [GCP Console](https://console.cloud.google.com/storage/browser). You can search for Cloud Storage in the top search bar on the console.
-- Select your bucket created for **<your_github_username>-greenweez-raw**
+- Select your bucket created for <your_github_username>-greenweez-raw
 - Select the **Permissions** tab
 - Scroll down and click on **Grant Access**
-- In the pop up window, start typing your Service Account name: airbyte-greenweez-gcs, and you shuold be able to select the service account.
+- In the pop up window, start typing your Service Account name: airbyte-greenweez-gcs, and you should be able to select the service account.
 - Under the **Assign roles** section, select **Storage Legacy Bucket Reader** from the drop down menu.
 - Click **Save**
 
@@ -160,7 +161,7 @@ Click on either **Create your first connection** on the welcome screen, or **Sou
 - Take a minute to look through all the sources that Airbyte has. When you're ready, in the search bar at the top of the screen, type **GCS**. If you can't immediately see a source for Google Cloud Storage (GCS), try the **Marketplace** tab.
 - **Name**: GCS Greenweez Ad Campaigns
 - **Service Account Information**: Paste the *entire contents* of your `de-bootcamp-airbyte-greenweez-gcs.json` into the box
-- **Bucket**: the name of your bucket, it should be **<your_github_username>-greenweez-raw**
+- **Bucket**: the name of your bucket, it should be <your_github_username>-greenweez-raw
 - On the list of streams to sync, click add. Each stream corresponds to a different schema, or table that will be created in BigQuery. We have four separate tables, so we will need four different streams. Give each stream the following parameters:
     - **Parquet Format** - easy to miss!
     - **Name** - what the output table in BigQuery will be named. Follow the convention of: `raw_gz_<company>` where company is where the ad campaign was run. For **bing** it would be: **raw_gz_bing**
@@ -216,7 +217,7 @@ Navigate to the **Connections** tab from the left hand side menu and click on **
 - **Select Streams**:
     - Might take a minute to load, Airbyte needs to fetch schema information
     - Select all the streams to sync with the toggle next to each stream
-    - Airbyte might be unhappy that you don't have a primary key defined for the default sync mode: **Incremental | Append + Deduped**. Change the Sync mode for each stream to: **Full refresh | Overwrite**. Read more below for different sync modes.
+    - Airbyte might be unhappy that you don't have a primary key defined for the default sync mode: **Incremental, Append + Deduped**. Change the Sync mode for each stream to: **Full refresh, Overwrite**. Read more below for different sync modes.
     - If you click on a stream, you can see the schema and select a primary key or cursor field depending on the sync mode
     - Click **Next**
 - **Configure connection**:
@@ -243,8 +244,8 @@ We have gone through setting up a GCP source and BigQuery destination in Airbyte
 
 We have set things up primarily through the GUI, but you can apply settings programmatically for more fine grained control, or for more automation.
 
-If you wanted to take Airbyte further, check out the [quickstart at this link](https://docs.airbyte.com/using-airbyte/getting-started/oss-quickstart#using-an-ec2-instance-with-abctl). The quickstart has some common customizations including:
-- Using an External Database for metadata
+If you wanted to take Airbyte further, check out the quickstart at [this link](https://docs.airbyte.com/using-airbyte/getting-started/oss-quickstart#using-an-ec2-instance-with-abctl). The quickstart has some common customizations including:
+- Using an External Database for metadata. Strongly recommended for production.
 - State and Logging Storage
 - Secret Management
 
@@ -266,7 +267,6 @@ To teardown your Airbyte cluster and **purge any persistent data**:
 abctl local uninstall --persisted
 
 # And clear out any remaining data
-
 rm -rf ~/.airbyte/abctl
 ```
 

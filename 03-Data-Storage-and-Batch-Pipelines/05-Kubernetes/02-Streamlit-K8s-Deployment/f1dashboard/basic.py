@@ -129,7 +129,7 @@ def lewis_over_the_years():
     lewis_points = pd.read_sql_query(
         """
     with lewis_id as (
-        select driver_id from drivers where surname = 'Hamilton'
+        select driver_id from drivers where surname = 'Hamilton' and forename = 'Lewis'
     ),
 
     driver_points as (
@@ -141,7 +141,7 @@ def lewis_over_the_years():
     )
 
     select
-        year, sum(points) as total_points
+        year, max(points) as total_points
     from
         lewis_id
     inner join

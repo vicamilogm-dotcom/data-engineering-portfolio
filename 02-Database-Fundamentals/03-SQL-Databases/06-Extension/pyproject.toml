@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "05-extension"
+version = "0.1.0"
+description = ""
+authors = ["Oliver Giles <oliver.giles@lewagon.org>"]
+readme = "README.md"
+packages = [{include = "vector_movies"}]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+transformers = "^4.34.0"
+torch = "^2.5.1"
+pandas = "^2.0.0"
+sqlalchemy = "^2.0.22"
+pgvector = "^0.2.3"
+psycopg2-binary = "^2.9.9"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.3"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -1,14 +1,13 @@
-FROM python:3.8.14-slim
+FROM python:3.12.8-slim
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONUNBUFFERED=1
 
 ENV AIRFLOW_HOME=/app/airflow
 
-# Install curl and mysql that will be needed for our tests
-RUN apt-get update && apt-get install -y curl \
-    gcc default-mysql-server default-libmysqlclient-dev
+# Install curl
+RUN apt-get update && apt-get install -y curl
 
 WORKDIR $AIRFLOW_HOME
 

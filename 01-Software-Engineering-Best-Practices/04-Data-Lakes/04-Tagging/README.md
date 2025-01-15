@@ -51,19 +51,19 @@ gcloud beta data-catalog tag-templates create data_source_info_template --locati
 
 Now you need to implement the `catalog_entry` function in `tag.py`
 
-### 3.1. Initializing the Data Catalog Client:
+## 3.1. Initializing the Data Catalog Client:
 
 1. Import the necessary modules to work with Google Cloud's Data Catalog.
 2. Initialize a connection to the Data Catalog by creating a client instance.
 
-### 3.2. Setting up the Entry Details:
+## 3.2. Setting up the Entry Details:
 
 1. Retrieve the project ID from the environment variables.
 2. Specify the location where you're storing the data.
 3. Define an entry group for categorizing the data.
 4. Generate a unique entry ID, preferably based on the current date.
 
-### 3.3. Configuring the Entry:
+## 3.3. Configuring the Entry:
 
 1. Initialize a new entry object.
 2. Set the display name for the entry, which could be based on the current   date.
@@ -71,12 +71,12 @@ Now you need to implement the `catalog_entry` function in `tag.py`
 4. Specify the type of entry you're creating.
 5. Configure where the data is located, especially if it's in Google Cloud Storage.
 
-### 3.4. Creating or Retrieving the Entry:
+## 3.4. Creating or Retrieving the Entry:
 
 1. Use the client to attempt to create the entry in the Data Catalog.
 2. If an entry with the same ID already exists, handle the situation by retrieving the existing entry instead of creating a new one.
 
-### 3.5. Tagging the Entry:
+## 3.5. Tagging the Entry:
 
 1. Initialize a new tag object.
 2. Set the tag template to the one you created earlier.
@@ -87,13 +87,13 @@ Now you need to implement the `catalog_entry` function in `tag.py`
 
 # 4️⃣ Testing 🧪:
 
-You can run `python/main.py` and check that your entry gets tagged properly. Feel free to change it to a loop and collect the previous few days of articles to checkout how the catalog would grow!
+You can run `python scraper/main.py` and check that your entry gets tagged properly. Feel free to change it to a loop and collect the previous few days of articles to checkout how the catalog would grow!
 
-(There are no unit tests for this challenge!)
+There are no unit tests for this challenge!
 
 <br>
 
-# 🏁 Finish and Conclusion
+# 🏁 Finishing up
 
 Congratulations! Now we have a full pipeline: Scraping -> Checking Quality -> Uploading to our lake -> Tagging the data to make it more easily accessible!
 

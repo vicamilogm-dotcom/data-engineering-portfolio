@@ -143,7 +143,7 @@ def test_create_dags_dependencies():
 
     with DAG(
         dag_id="dbt",
-        schedule_interval="@monthly",
+        schedule="@monthly",
         default_args={"start_date": start_date},
     ) as dag:
         data = dbt_advanced.load_manifest("tests/advanced/dbt_light/manifest.json")
@@ -169,7 +169,7 @@ def test_create_dags_dependencies():
 
     with DAG(
         dag_id="dbt",
-        schedule_interval="@monthly",
+        schedule="@monthly",
         default_args={"start_date": start_date},
     ) as dag:
         data = dbt_advanced.load_manifest("tests/advanced/dbt/manifest.json")

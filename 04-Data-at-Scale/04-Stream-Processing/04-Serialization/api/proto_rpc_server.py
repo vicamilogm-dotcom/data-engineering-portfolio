@@ -3,7 +3,7 @@ from api.generated_proto import api_pb2_grpc
 
 import grpc
 from concurrent import futures
-from datetime import datetime
+import datetime
 
 
 class TimeService(api_pb2_grpc.TimeServiceServicer):

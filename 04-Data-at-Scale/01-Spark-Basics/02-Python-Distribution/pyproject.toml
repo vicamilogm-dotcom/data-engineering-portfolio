@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "python-distribution"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "~3.12.8"
+dask = "^2024.12.1"
+pandas = "^2.2.3"
+fastparquet = "^2024.11.0"
+polars = "^0.15.8"
+numpy = "^2.2.1"
+jupyter = "^1.1.1"
+notebook = "^7.3.2"
+graphviz = "^0.20.3"
+pydot = "^3.0.4"
+s3fs = "^2024.12.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.4"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+markers = ["optional: not required, nor saved in test_output.txt"]

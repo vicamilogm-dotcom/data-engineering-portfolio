@@ -13,7 +13,26 @@ We will be able to process over **1,000,000,000** cells of New York taxi data in
 
 <br>
 
-# 0️⃣ Cluster setup
+# 0️⃣ Before we start
+
+The Python version on the cluster is controlled by the Dask helm chart, and they are quite low (3.8 or 3.9). It is possible to create our own Docker images and other Kubernetes configuration files to upgrade to 3.12, but o keep this as simple as possible, we're just going to downgrade our local python version to 3.8.14
+
+To do this locally, make sure you're in the current challenge directory and run:
+
+```bash
+pyenv install 3.8.14
+```
+
+Locally set the python version in this challenge directory:
+
+```bash
+# Will create a .python-version text file
+pyenv local 3.8.14
+```
+
+<br>
+
+# 1️⃣ Cluster setup
 
 Let's start by creating a cluster with a lot of **CPUs**: ideal for distributing our task across!
 
@@ -46,9 +65,9 @@ gcloud container clusters delete mydaskcluster --zone=europe-west1-b
 
 <br>
 
-# 1️⃣ Adding our helm chart
+# 2️⃣ Adding our helm chart
 
-First, install **helm**** on your VM:
+First, install **helm** on your VM, if you haven't already:
 
 ```bash
 curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
@@ -80,7 +99,6 @@ Checkout the nodes:
 ```bash
 kubectl get nodes
 ```
-
 
 Then apply the **helm** chart:
 
@@ -118,7 +136,7 @@ This lets us access the dashboard which will allow us to track the computations 
 
 <br>
 
-# 2️⃣ Notebook time 📚
+# 3️⃣ Notebook time 📚
 
 ❓ **Open up `dask.ipynb` with `jupyter` (not vscode) and follow the notebook!**
 
@@ -126,7 +144,7 @@ Some jupyter dask extensions don't run in VSCode
 
 <br>
 
-# 3️⃣ Taking it further 🕵️
+# 4️⃣ Taking it further 🕵️
 
 ❓ If you have **time** you can change `config.yaml` and delete the part disabling jupyter! Then `helm upgrade` and connect to jupyter on the cluster and dask provides some great notebooks to further your knowledge!
 
@@ -134,8 +152,10 @@ Some jupyter dask extensions don't run in VSCode
 
 # 🏁 Delete your cluster 🚨
 
-Make sure to teardown your cluster to avoid an unwanted bill!
+Make sure to tear down your cluster to avoid an unwanted bill!
 
 ```bash
 gcloud container clusters delete mydaskcluster --zone=europe-west1-b
-````
+```
+
+<br>

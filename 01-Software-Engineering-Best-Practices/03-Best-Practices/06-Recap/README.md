@@ -60,11 +60,11 @@ jobs:
   format:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python 3.8.14
-      uses: actions/setup-python@v2
+    - uses: actions/checkout@v4
+    - name: Set up Python 3.12.8
+      uses: actions/setup-python@v5
       with:
-        python-version: '3.8.14'
+        python-version: '3.12.8'
     - name: Install Black
       run: pip install black
     - name: Apply Black formatting
@@ -80,11 +80,11 @@ jobs:
     needs: format
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python 3.8.14
-      uses: actions/setup-python@v2
+    - uses: actions/checkout@v4
+    - name: Set up Python 3.12.8
+      uses: actions/setup-python@v5
       with:
-        python-version: '3.8.14'
+        python-version: '3.12.8'
     - name: Install Ruff
       run: pip install ruff
     - name: Run Ruff linting
@@ -94,16 +94,15 @@ jobs:
     needs: format
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python 3.8.14
-      uses: actions/setup-python@v2
+    - uses: actions/checkout@v4
+    - name: Set up Python 3.12.8
+      uses: actions/setup-python@v5
       with:
-        python-version: '3.8.14'
+        python-version: '3.12.8'
     - name: Install mypy
       run: pip install mypy
     - name: Run type checks
       run: mypy .
-
 ```
 
 Lets go through this Github Action and what it's doing.
@@ -157,13 +156,13 @@ On the same branch create a file in the project root called `.pre-commit-config.
 repos:
   - repo: https://github.com/charliermarsh/ruff-pre-commit
     # Ruff version.
-    rev: 'v0.0.265'
+    rev: 'v0.8.3'
     hooks:
       - id: ruff
         args: ["--ignore=E501,F821"]
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v2.3.0
+    rev: v5.0.0
     hooks:
       - id: check-json
       - id: check-merge-conflict
@@ -178,7 +177,7 @@ repos:
       - id: end-of-file-fixer
 
   - repo: https://github.com/psf/black
-    rev: '23.3.0'
+    rev: '24.10.0'
     hooks:
       - id: black
         args: ['--line-length=88']
@@ -187,7 +186,6 @@ repos:
     rev: 'v1.10.0'
     hooks:
       - id: mypy
-
 ```
 
 This is the one used at Le Wagon - with the exception of the `mypy` hook.
@@ -247,9 +245,9 @@ Now that we have a quicker feedback loop using pre-commit hooks, let's fix up ou
 
 # 🏁 Resources and further reading
 
-Have a look at all the supported pre-commit hooks [here](https://pre-commit.com/hooks.html). Hooks exist for a wide range of different languages and file types!
+Have a look at all the supported pre-commit hooks [at this link](https://pre-commit.com/hooks.html). Hooks exist for a wide range of different languages and file types!
 
-[Ruff linting rules](https://docs.astral.sh/ruff/rules/) to customise your linting.
+Check out the [Ruff linting rules at this link](https://docs.astral.sh/ruff/rules/) to customise your linting.
 
 If you want to run your pre-commit hooks against all current files:
 

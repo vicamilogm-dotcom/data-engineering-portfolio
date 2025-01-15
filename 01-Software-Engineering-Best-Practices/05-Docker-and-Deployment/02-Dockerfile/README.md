@@ -29,9 +29,9 @@ Open this challenge in VSCode and head to the `Dockerfile-task-1` file. This wil
 
     *note:* **Do not use ENV as this would mean that your containers would inherit it after the build**
 
-1. Add `ENV PYTHONUNBUFFERED 1` - this forces the `stdout` and `stderr` streams to be unbuffered. Read more about why we set this environment variable in [this stack overflow post](https://stackoverflow.com/questions/59812009/what-is-the-use-of-pythonunbuffered-in-docker-file).
+1. Add `ENV PYTHONUNBUFFERED=1` - this forces the `stdout` and `stderr` streams to be unbuffered. Read more about why we set this environment variable in [this stack overflow post](https://stackoverflow.com/questions/59812009/what-is-the-use-of-pythonunbuffered-in-docker-file).
 
-1. Install python 3.8.10 from [deadsnake ppa](https://launchpad.net/~deadsnakes/+archive/ubuntu/ppa):
+1. Install python 3.12.8 from [deadsnake ppa](https://launchpad.net/~deadsnakes/+archive/ubuntu/ppa):
     ```Dockerfile
     # Upgrade package list
     apt-get -y update
@@ -41,8 +41,8 @@ Open this challenge in VSCode and head to the `Dockerfile-task-1` file. This wil
     add-apt-repository ppa:deadsnakes/ppa
     # Upgrade package list to take into account new PPA
     apt-get -y update
-    #install python 3.8
-    apt-get install -y python3.8
+    #install python 3.12
+    apt-get install -y python3.12
     ```
 
 1. Install pip
@@ -50,9 +50,9 @@ Open this challenge in VSCode and head to the `Dockerfile-task-1` file. This wil
     apt-get install -y python3-pip
     ```
 
-1. Install fastapi (0.78.0), SQLAlchemy (1.4.36), Alembic (1.7.7), and uvicorn[standard] (0.17.6). Make sure to specify the selected versions.
+1. Install fastapi (0.115.6) and uvicorn (0.33.0). Make sure to specify the selected versions.
 
-1. Create `WORKDIR` app
+1. Create a `WORKDIR` named: `app`
 
 1. Copy the complete current directory into the working directory `/server`
 
@@ -68,7 +68,7 @@ Open this challenge in VSCode and head to the `Dockerfile-task-1` file. This wil
 
 1. Create an `ENTRYPOINT` for `uvicorn`
 
-1. Create a `CMD` to run fastapi via uvicorn, listening on all interfaces on the host `0.0.0.0` and port `8000`
+1. Create a `CMD` to run FastAPI via uvicorn, listening on all interfaces on the host `0.0.0.0` and port `8000`
     ```Dockerfile
     app.main:app --host 0.0.0.0 --port 8000
     ```
@@ -115,11 +115,11 @@ Open this challenge in VSCode and head to the `Dockerfile-task-1` file. This wil
         IMAGE_NAME=base-image-fastapi-ubuntu-fat
         IMAGE_TAG=test
         ```
-    - Retag the image with the registry name:
+    - Re-tag the image with the registry name:
         ```bash
         docker tag "$IMAGE_NAME:$IMAGE_TAG" "$HOSTNAME/$PROJECT_ID/$REPOSITORY/$IMAGE_NAME:$IMAGE_TAG"
         ```
-    - Push the retagged image to Container Registry:
+    - Push the re-tagged image to Container Registry:
         ```bash
         docker push "$HOSTNAME/$PROJECT_ID/$REPOSITORY/$IMAGE_NAME:$IMAGE_TAG"
         ```
@@ -210,7 +210,7 @@ This task elaborates on the concept of a base image and how it can be used in re
 ## 3.1. Enhance the performance of your image
 
 1. Using the content of `Dockerfile-task-2`, do the following tasks in `Dockerfile-task-3-1`
-1. Update the `Dockerfile-task-3` to use python:3.8.14 as a base image. You may need to remove some of the steps since python and pip now come automatically with the base image.
+1. Update the `Dockerfile-task-3` to use **python:3.12.8** as a base image. You may need to remove some of the steps since python and pip now come automatically with the base image.
 1. We are going to use [poetry](https://python-poetry.org/) to handle all the dependencies and package-management for python instead of using the traditional `pip` and `requirements.txt`. To do so:
     1. Replace all the previously added pip packages by running the poetry command in your terminal:
         ```bash
@@ -229,7 +229,7 @@ This task elaborates on the concept of a base image and how it can be used in re
 
         #Remove all of the manual python package installations via pip
         ```
-        ☝️ `--only main` is equivalent to `--without dev` and skip `pyproject.toml` [tool.poetry.dev-dependencies] category
+        ☝️ `--only main` is equivalent to `--without dev` and skips the `[tool.poetry.group.dev.dependencies]` section in your **pyproject.toml**
 1. Change the `ENTRYPOINT` to use poetry:
     ```Dockerfile
     poetry run
@@ -246,7 +246,7 @@ This task elaborates on the concept of a base image and how it can be used in re
     ```
 1. Inspect the layers, check the image size, and check for wasted space.
 
-That's simplified our Dockefile but the size of the image is now way higher! Let's look at slimming it down a bit.
+That's simplified our Dockerfile but the size of the image is now way higher! Let's look at slimming it down a bit.
 
 🧪 Test your code with `make testTask3-1`
 
@@ -255,7 +255,7 @@ That's simplified our Dockefile but the size of the image is now way higher! Let
 There are can be multiple different types of base images depending on the application that you are building. Let's look at a slimmer python image.
 
 1. Copy the content of `Dockerfile-task-3-1` into `Dockerfile-task-3-2`
-1. Now switch to the `python:3.8.14-slim` base image
+1. Now switch to the `python:3.12.8-slim` base image
 1. Build the image using the tag `base-image-fastapi:dev`
 1. Run the container to make sure it’s functional
 1. Inspect the size and layers using `dive`:
@@ -264,7 +264,7 @@ There are can be multiple different types of base images depending on the applic
     ```
 1. Inspect the layers, check the image size, check for wasted space.
 
-That has massively shrunk our image size down from the previous iteration, but it is still slightly higher than the image we build using just ubuntu. There will always be tradeoffs in software development, by using a premade python base image and poetry we can greatly reduce the development cycle and increase the portability of our code from local to container environment.
+That has massively shrunk our image size down from the previous iteration, but it might still be higher than the image we build using just Ubuntu. There will always be trade offs in software development, by using a pre-made python base image and poetry we can greatly reduce the development cycle and increase the portability of our code from local to container environment.
 
 For more complex applications, especially where dependency resolution can be a pain, using a base image that someone else has already done the work for can make life easier.
 
@@ -334,7 +334,7 @@ This idea is called the [Principle of Least Privilege](https://en.wikipedia.org/
 
 ❓ Build the image using the tag `nonroot-image-fastapi:dev` and run the container to make sure it’s functional.
 
-👉 This time, you shouldn't be able to `touch` any file inside the container with `/bin/bash` like we did previously. You don't have `sudo` access anymore either which is exactly what we wanted! Our set up is now more secure and follows best practice.
+👉 This time, you shouldn't be able to `touch` any file inside the container with `/bin/bash` like we did previously. You don't have `sudo` access any more either which is exactly what we wanted! Our set up is now more secure and follows best practice.
 
 <br>
 

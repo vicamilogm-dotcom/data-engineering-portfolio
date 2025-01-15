@@ -18,7 +18,7 @@ If you stopped your docker container, start it up again. Make sure to use port 5
 
 # 1️⃣ Rental durations
 
-**Backstory**: The company is considering adjusting its pricing strategy based on rental durations. Longer rental durations might indicate that customers are keeping movies for extended periods, either due to personal preference or because they find the current rental periods suitable. Understanding this behavior can help the company decide whether to introduce tiered pricing or offer extended rental packages.
+**Backstory**: The company is considering adjusting its pricing strategy based on rental durations. Longer rental durations might indicate that customers are keeping movies for extended periods, either due to personal preference or because they find the current rental periods suitable. Understanding this behaviour can help the company decide whether to introduce tiered pricing or offer extended rental packages.
 
 **Problem Statement**: Identify customers who consistently keep their rentals for durations longer than the average customer. Generate a report with the following columns:
 - **first_name**: The first name of the customer

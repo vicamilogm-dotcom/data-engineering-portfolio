@@ -1,7 +1,9 @@
-# datasets
+# datasets and archives
 *.csv
 *.sqlite
 *.parquet
+*.zip
+*.jar
 
 # DBT logs
 dbt.log.legacy

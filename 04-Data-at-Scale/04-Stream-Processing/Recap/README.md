@@ -26,7 +26,7 @@ We can use resources like this [AWS article, Break a Monolith Application into M
   - Break the monolith into two apps
   - Introduce Cloud Run
 - Introducing "faster simulation" with a GPU (add a queue)
-  - GPU ressources are scarce
+  - GPU resources are scarce
   - Add a queue
 - Give access to our database as a service (break out monolith and scale out Postgres)
   - One more breakout of the app / 100s of calls per second on a given endpoint
@@ -36,6 +36,8 @@ We can use resources like this [AWS article, Break a Monolith Application into M
 ## Final picture
 
 <img src="https://storage.googleapis.com/lewagon-data-engineering-bootcamp-assets/assets/Day9-Recap.drawio.png" width=600 />
+
+<br>
 
 # Extra fun project to review
 

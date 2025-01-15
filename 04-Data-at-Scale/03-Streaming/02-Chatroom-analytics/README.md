@@ -1,16 +1,18 @@
-# Chatroom analytics
+# 🎯 Goal
 
-🎯 We have our chatroom but now we need to add a database to collect the messages in realtime, we will do this using clickhouse!
+We have our chatroom and users can send and receive messages, but now we want to add a database to collect the messages in realtime, we will do this using ClickHouse!
 
-## Setup clickhouse
+<br>
 
-First you need to setup clickhouse with the following requirements:
+# 1️⃣ Setup ClickHouse
 
-1. User named `rmq`
-2. Password from an enviroment variable `CLICKHOUSE_PASSWORD`
-3. Uses the image `clickhouse/clickhouse-server:23.7.4.5-alpine`
+First you need to setup ClickHouse with the following requirements:
 
-❓ Update the docker compose to achieve this
+1. A ClickHouse user named `rmq`
+2. The password for that user from an environment variable `CLICKHOUSE_PASSWORD`
+3. Using the image `clickhouse/clickhouse-server:23.7.4.5-alpine`
+
+❓ **Update your docker compose with a ClickHouse service**
 
 Once you are done check your progress with:
 
@@ -18,18 +20,33 @@ Once you are done check your progress with:
 make test
 ```
 
-## Setup the table
+And spin up your docker compose stack!
+
+<br>
+
+# 2️⃣ Setup the table
 
 Now we need to setup a table named `user_messages` to store our messages which will store
 the `username`, `message`, and `received_at`!
 
-❓ Workout how to connect to the db and create the table
-
-A good starting point are the docs https://clickhouse.com/docs/en/sql-reference/statements/create/table
-
+❓ **Workout how to connect to the database and create the table**
 
 <details>
-<summary markdown='span'>💡 Solution </summary>
+<summary markdown='span'>💡 Docker exec reminder</summary>
+
+To interactively connect to a container via docker:
+
+```bash
+docker exec -it <container_name> <some_command> <and_args>
+```
+
+ClickHouse has a utility very similar to `psql`. A good place to look would be the ClickHouse CLI docs at [this link](https://clickhouse.com/docs/en/interfaces/cli#interactive).
+</details>
+
+To create the table from **inside the ClickHouse instance**, a good starting point are the ClickHouse DDL docs at [this link](https://clickhouse.com/docs/en/sql-reference/statements/create/table).
+
+<details>
+<summary markdown='span'>🎁 Solution </summary>
 
 ```sql
 CREATE TABLE IF NOT EXISTS chat.user_messages (
@@ -38,16 +55,17 @@ CREATE TABLE IF NOT EXISTS chat.user_messages (
     received_at DateTime
 ) ENGINE = MergeTree() ORDER BY received_at
 ```
-
-If you can't workout where to run this think of how we did it with postgres and the `psql` command!
-
 </details>
+
+Confirm that the database and created using [ClickHouses SHOW statements](https://clickhouse.com/docs/en/sql-reference/statements/show).
 
 Now we are ready to begin using rabbitmq to automate the insertions!
 
-## Create the callback
+<br>
 
-Now we have a table we want to write each message received into our clickhouse table. The initial approach would be to rewrite our callback to index at the same time. At smaller scales this would work fine but would defeat the benefits gained by using a messaging queue.
+# 3️⃣ Create the callback
+
+Now we have a table we want to write each message received into our ClickHouse table. The initial approach would be to rewrite our callback to index at the same time. At smaller scales this would work fine but would defeat the benefits gained by using a messaging queue.
 
 - Putting it into the message displays may at some point slow our app.
 - Decoupling the messaging and indexing allows us to scale each part separately for example if we wanted to do some complex transformations at scale.
@@ -61,18 +79,20 @@ The idea here is that messages are sent to the central exchange and then sent to
 
 Here the exchange has already been setup for you:
 
-❓ Code `clickhouse_callback` following the doc string inside `rabbitmq_clickhouse.py`
+❓ **Complete** `clickhouse_callback` **following the doc string inside** `rabbitmq_clickhouse.py`
 
-Once this is done run both the original subscriber and the new clickhouse subscriber
+Once this is done run both the original subscriber and the new ClickHouse subscriber in separate terminals:
 
 ```bash
 python lwqueue/rabbitmq_subscriber.py --host localhost --port 5672 --mode rich --rmq-username rmq --rmq-password $RABBITMQ_DEFAULT_PASS
+```
+```bash
 python lwqueue/rabbitmq_clickhouse.py --host localhost --port 5672 --mode rich --rmq-username rmq --rmq-password $RABBITMQ_DEFAULT_PASS
 ```
 
-Then send a message and check that it is displayed, you can check it is indexed by entering the db and doing a `SELECT *`!
+Then send a message and check that it is displayed, you can check it is indexed by entering the database and doing a `SELECT *`!
 
-Now lets populate the db with some quotes from the bot mode
+Now lets populate the database with some quotes from the bot mode
 
 ```bash
 python lwqueue/rabbitmq_send_message.py --host localhost --port 5672 --message "Hello world" --username $USER --rmq-username rmq --rmq-password $RABBITMQ_DEFAULT_PASS --bot
@@ -80,48 +100,64 @@ python lwqueue/rabbitmq_send_message.py --host localhost --port 5672 --message "
 
 You should see the data being displayed and indexed!
 
-## Query the data
+<br>
 
-One of the main reasons for using clickhouse is the ability to do fast real time analytics so lets create some queries to analyse our data!
+# 4️⃣ Query the data
 
-Go to `clickhouse_queries.py` and we will fill out the functions:
+One of the main reasons for using ClickHouse is the ability to do fast real time analytics so lets create some queries to analyse our data!
 
-### Query
+Go to `clickhouse_queries.py` and we will fill out the functions. The tests will be running against your ClickHouse instance so make sure that it's still running!
 
-❓ Code `query_clickhouse` to allow different queries to be passed as strings and run against your db!
+### 4.1. Query
 
-### Messages
+❓ **Code** `query_clickhouse` **to allow different queries to be passed as strings and run against your database!**
 
-❓ Code `get_all_messages` in order to retrieve all of the messages
+### 4.2. Messages
 
-Once you are done run make sure to stop the bot to stop new data being added to the db and then:
+❓ **Code** `get_all_messages` **in order to retrieve all of the messages**
 
-```bash
-make test
-```
-
-### Active users
-
-❓ Code `get_top_active_users` following the docstring
-
-Run:
+Once you are done run make sure to stop the bot to stop new data being added to the database and then run:
 
 ```bash
 make test
 ```
 
-### Message gap
+### 4.3. Active users
+
+❓ **Code** `get_top_active_users` **following the docstring**
+
+Test with:
+
+```bash
+make test
+```
+
+### 4.4. Message gap
 
 We want to check how active our chatroom is
 
-❓ Code `get_average_message_gap` this will be quite a lot harder than in postgres (it is worth seeing limitations of clickhouse)
+❓ **Code** `get_average_message_gap`
 
-Once you are done 👇 and then push!
+👆 This will be quite a lot harder than in postgres. It is worth looking at the limitations of ClickHouse.
+
+Once you are done, test it all with:
 
 ```bash
 make test
 ```
 
-## Finished 🏁
+<br>
 
-We now have a messaging app + analytics. This is a really powerful pattern and can be expanded to allow huge queues and large analytics at scale with ease!
+# 🏁 Finishing up
+
+We now have a messaging app and analytics! This is a really powerful pattern and can be expanded to allow huge queues and large analytics at scale with ease!
+
+🧪 Test all your code with:
+
+```bash
+make test
+```
+
+And don't forget to git add, commit, and push to Github to track your progress on Kitt!
+
+<br>

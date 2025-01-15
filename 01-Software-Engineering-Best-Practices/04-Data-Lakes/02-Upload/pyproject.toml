@@ -7,15 +7,15 @@ readme = "README.md"
 packages = [{include = "scraper"}]
 
 [tool.poetry.dependencies]
-python = "^3.8"
-beautifulsoup4 = "^4.12.2"
-requests = "^2.31.0"
-pandas = "^1.5.3"
-requests-mock = "^1.11.0"
-google-cloud-storage = "^2.11.0"
+python = "^3.12"
+beautifulsoup4 = "^4.12.3"
+requests = "^2.32.3"
+pandas = "^2.2.3"
+google-cloud-storage = "^2.19.0"
 
 [tool.poetry.group.dev.dependencies]
-pytest = "^7.4.3"
+requests-mock = "^1.12.1"
+pytest = "^8.3.4"
 
 [build-system]
 requires = ["poetry-core"]

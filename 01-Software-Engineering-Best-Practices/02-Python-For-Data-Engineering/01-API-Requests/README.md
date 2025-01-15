@@ -74,7 +74,7 @@ If everything is good you will get a response similar to this 👇
 
 ```bash
 ============================================================================================================== test session starts ===============================================================================================================
-platform linux -- Python 3.8.14, pytest-7.3.1, pluggy-1.0.0
+platform linux -- Python 3.12.8, pytest-8.3.4, pluggy-1.5.0
 rootdir: /home/oliver.giles/code/lewagon_dev/data-engineering-solutions/01-Software-Engineering-Best-Practices/02-Python-For-Data-Engineering/01-API-Requests
 collected 1 item
 

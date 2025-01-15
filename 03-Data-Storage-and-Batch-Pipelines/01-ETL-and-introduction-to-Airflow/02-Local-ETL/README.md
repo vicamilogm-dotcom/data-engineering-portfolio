@@ -21,7 +21,7 @@ For sake of simplicity, in this challenge, the postgres "warehouse" will be the 
 - POSTGRES_USER=airflow
 ```
 
-In this challenge we're using local components so you can focus on how the different parts of Airflow work. Later in the bootcamp we will see how Airflow connects to external sources like Google Cloud Storage as a datalake and BigQuery as a warehouse instead.
+In this challenge we're using local components so you can focus on how the different parts of Airflow work. Later in the bootcamp we will see how Airflow connects to external sources like Google Cloud Storage as a data-lake and BigQuery as a warehouse instead.
 
 <br>
 
@@ -44,12 +44,20 @@ airflow connections add 'postgres_connection' \
 ```python
 PostgresOperator(
     sql=... # create warehouse table, insert translated jokes...
-    postgres_conn_id='postgres_connection')
+    postgres_conn_id='postgres_connection'
+)
 ```
 
 💡 We didn't need it in our previous challenge as we were not storing anything in a warehouse!
 
-You just have to add your `POSTGRES_PASSWORD` in a new `.env` file, enable `direnv` then launch your containers:
+It will be helpful to create our bronze, and silver folder structure for our data now. Once the containers are spun up, Airflow will lock restrict permissions on the folders:
+
+```bash
+mkdir -p data/bronze
+mkdir -p data/silver
+```
+
+Now, you just have to add your `POSTGRES_PASSWORD` in a new `.env` file, enable `direnv` then launch your containers:
 
 ```bash
 docker compose up
@@ -106,7 +114,7 @@ You need four tasks:
 <details>
 <summary markdown='span'>💡 Hint</summary>
 
-Check out [airflow template variables](https://airflow.apache.org/docs/apache-airflow/stable/templates-ref.html) for a way to programatically access Airflow variables at runtime. The values you need for this might already be provided 👀
+Check out [airflow template variables](https://airflow.apache.org/docs/apache-airflow/stable/templates-ref.html) for a way to programmatically access Airflow variables at runtime. The values you need for this might already be provided
 </details>
 
 ### 2.2.3. `transform` task_id
@@ -187,19 +195,31 @@ You can also `sudo rm -rf database` to obliterate it entirely, but that's not a 
 
 <br>
 
-# 4️⃣ (Optional) Understand tests in Airflow? 🧪
+# 4️⃣ (Optional) Understand scheduler and webserver health checks
+
+Have a look at the **healthchecks** in webserver and scheduler services of the `docker-compose.yml`. Understand how they work and what they are doing.
+
+The endpoints are taken straight from Airflow's Health Status docs located at [this link](https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/logging-monitoring/check-health.html#).
+
+Airflow has a built in *heartbeat* that updates and writes to the metadata database regularly. The **scheduler** healthcheck is just checking the most recent entry of that *heartbeat* to see if the scheduler is healthy.
+
+Airflow has a `/health` endpoint to check the health of the **webserver**. We are simply pinging the API and if we receive a 200 http response, then we exit with status code `0`, telling Docker that the webserver container is healthy. A non 200 http response (4xx, 5xx) would exit with status code `1`, telling Docker that the webserver is unhealthy with the `|| exit 1` section of the healthcheck test.
+
+<br>
+
+# 5️⃣ (Optional) Understand tests in Airflow 🧪
 
 It can be interesting to read our tests to learn how to write tests for your own DAGs!
 
 👉 Have a look at your `makefile`, and let's focus on `test_dag_config`
 
 - We don't want to test your code against your "production" database `db`.
-- Therefore, everytime you're running `make test_dag_config`, we're creating a local sqlite metadata db on which we will run your dags.
+- Therefore, every time you're running `make test_dag_config`, we're creating a local sqlite metadata db on which we will run your dags.
 - How does it work?
   - We're changing AIRFLOW_HOME to a new temp folder.
   - Then run `airflow db init`, which will create a brand new airflow project which by default creates a sqlite metadata db with correct schema migrations.
 - You can inspect the 3 files that were created inside `tests/temp`
-  - `airflow.db` is the sqlite copy of you postgresdb. You can peer inside with VSCode SQLlite extension: you should see some swedified jokes inside it!
+  - `airflow.db` is the sqlite copy of your postgres metadata db. You can peer inside with VSCode SQLlite extension: you should see some swedified jokes inside it!
   - `webserver_config.py`
   - `airflow.cfg`
     - check line 185: your `sql_alchemy_conn` refers to that local sqlite!

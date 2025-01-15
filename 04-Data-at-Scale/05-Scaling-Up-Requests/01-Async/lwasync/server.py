@@ -1,6 +1,6 @@
 import asyncio
 import time
-from datetime import datetime
+import datetime
 
 from fastapi import FastAPI
 
@@ -8,11 +8,16 @@ from fastapi import FastAPI
 app = FastAPI()
 
 # Add a unique app_instance_id, which changes every time the app is started
-app_instance_id = str(datetime.utcnow())
+app_instance_id = str(datetime.datetime.now(datetime.UTC))
+
+
+@app.get("/")
+def root():
+    return {"App": "Running"}
 
 
 @app.get("/say-hi")
-async def root():
+async def say_hi():
     await asyncio.sleep(0.2)
     return {"message": "Hello World", "time": time.time()}
 

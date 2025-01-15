@@ -7,12 +7,12 @@ readme = "README.md"
 packages = [{include = "lwsql"}]
 
 [tool.poetry.dependencies]
-python = "^3.8"
-pyparsing = "^3.1.1"
+python = "^3.12"
+pyparsing = "^3.2.0"
 
 [tool.poetry.group.dev.dependencies]
-ipython = "^8.0.0"
-pytest = "^7.4.2"
+ipython = "^8.30.0"
+pytest = "^8.3.4"
 
 [build-system]
 requires = ["poetry-core"]

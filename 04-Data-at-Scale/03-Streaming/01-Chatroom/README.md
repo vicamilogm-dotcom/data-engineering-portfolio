@@ -1,12 +1,10 @@
 # 🎯 Goals
 
-Queues
-
 When there is too much data to handle for our workers, when data flow needs to be managed, or processing scheduled, queues come to the rescue.
 
 To decouple our applications, it is good practice to have them talk to one another through messages, and to have these messages managed by a queue 🚥.
 
-A fun way to practice with queues is to replace machines by humans and build a chat application 🐦.
+A fun way to practice with queues is to replace machines by humans and build a chat application 🐦
 
 We'll build that in a few steps:
 
@@ -22,14 +20,18 @@ We'll build that in a few steps:
 
 # 1️⃣ Our RabbitMQ server
 
-We'll use Docker Compose again to easily deploy RabbitMQ.
+We'll use Docker Compose again to deploy RabbitMQ.
 
-Follow the [Docker Hub documentation](https://hub.docker.com/_/rabbitmq) to add `rabbitmq:3.10.6-management` to the `docker-compose.yml`.
+Follow the [Docker Hub documentation](https://hub.docker.com/_/rabbitmq) to add `rabbitmq:3.13.7-management` to the `docker-compose.yml`.
 
 **Instructions:**
 
-- We'll need to map ports 5672 and 15672.
-- Set the environment variables `RABBITMQ_DEFAULT_USER` to `rmq` and `RABBITMQ_DEFAULT_PASS` must be read from the `.env`.
+- Name your service: **rabbitmq**
+- Name your container: **rabbitmq**
+- We'll need to map ports **5672** and **15672**.
+- Set the environment variables `RABBITMQ_DEFAULT_USER` to `rmq`
+- Pass in your entire `.env` file to load any environment variables inside it.
+- Optional: Add a [stage 1 healthcheck](https://www.rabbitmq.com/docs/monitoring#health-checks)
 
 **Note** Your `.env` is read by `docker compose` but not by your code when you run it directly from the terminal. When you run the `lwqueue/*.py` files in this exercise, make sure you have exported the environment variable(s) in your `.env` with:
 
@@ -43,19 +45,23 @@ Or if you have changed environment variables, make sure to reload them with:
 direnv reload
 ```
 
-Then run the server in a detached state in the background with `docker compose up -d`.
+Then run the server in a detached state in the background with:
 
-You can check that it's up and running by forwarding port 15672 and opening `localhost:15672` in your web browser.
+```bash
+docker compose up -d
+```
+
+Check that it's up and running by forwarding port 15672 and opening `localhost:15672` in your web browser.
 
 <details>
-  <summary markdown='span'>💡 Hint</summary>
+<summary markdown='span'>💡 Hint</summary>
 
-  Start from the example of a Postgres image from previous units and adapt it to RabbitMQ. The concepts are the same:
-  - container image
-  - container name
-  - environment variables
-  - ports
-  - mounted volumes
+If you're looking for inspiration, start with a Postgres section of `docker-compose.yaml` from previous challenges and adapt it to RabbitMQ. The concepts are the same:
+  - Container image
+  - Container name
+  - Environment variables
+  - Ports
+  - Mounted volumes
 </details>
 
 💡 On Docker Hub, there were two main flavors of the RabbitMQ Docker image. There was one that ended with `-management`, that's the one we picked. It comes with a plugin that brings a management dashboard for our RabbitMQ server.
@@ -64,9 +70,9 @@ You can check that it's up and running by forwarding port 15672 and opening `loc
 
 # 2️⃣ Client and server code
 
-Now that we've got our RabbitMQ instance running and accessible, let's work on the `lwqueue/rabbitmq*.py` files to receive messages from the queue (ie. our chat), and post to it.
+Now that we've got our RabbitMQ instance running and accessible, let's work on the `lwqueue/rabbitmq_subscriber.py` and `lwqueue/rabbitmq_send_message.py` files to receive and send messages to our queue, our chat.
 
-The code is heavily inspired by the [official tutorial](https://www.rabbitmq.com/tutorials/tutorial-three-python.html). **Please start by reading it to understand the main concepts**.
+The code is heavily inspired by the official RabbitMQ tutorial at [this link](https://www.rabbitmq.com/tutorials/tutorial-three-python.html). **Please start by reading it to understand the main concepts**.
 
 By the end of this section we should be able to run:
 
@@ -84,40 +90,47 @@ python lwqueue/rabbitmq_send_message.py --host localhost --port 5672 --rmq-usern
 
 ## 2.1. Shared code
 
-Let's get to work and start with the shared `rabbitmq.py` file. In the tutorial, notice that two files are created:
+Let's get to work and start with the `rabbitmq.py` file that contains our connection function. In the tutorial, notice that two files are created:
 
 - [emit_log.py](https://github.com/rabbitmq/rabbitmq-tutorials/blob/master/python/emit_log.py) which is the equivalent of our (cleaner) `lwqueue/rabbitmq_send_message.py`
-- [receive_logs.py](https://github.com/rabbitmq/rabbitmq-tutorials/blob/master/python/receive_logs.py), equivalent ot `lwqueue/rabbitmq_subscriber.py`.
+- [receive_logs.py](https://github.com/rabbitmq/rabbitmq-tutorials/blob/master/python/receive_logs.py), equivalent to `lwqueue/rabbitmq_subscriber.py`.
 
 Both share a common start, creating the connection to RabbitMQ. Grab this piece of code and adapt it for our function `get_connection(...)` in `lwqueue/rabbitmq.py`.
 
 Because we protected our RabbitMQ server with a username and password, we'll need to pass credentials to the connection parameters. Can you find documentation on how to authenticate the connection and adapt the code accordingly?
 
 <details>
-  <summary markdown='span'>💡 Hint</summary>
+<summary markdown='span'>💡 Hint</summary>
 
-  [This link here](https://pika.readthedocs.io/en/stable/modules/parameters.html) is a great starting point.
+The pika docs at [this link](https://pika.readthedocs.io/en/stable/modules/parameters.html) is a great starting point.
 </details>
 
 By now, we have a connection that can be shared between `rabbitmq_send_message.py::send_message(...)` and `rabbitmq_subscriber.py::receive_messages(...)`. Notice how we use it at the beginning of both functions.
 
 ## 2.2. Message sender
 
-We've pre-filled `send_message(...)` in `lwqueue/rabbitmq_send_message.py`. Based on the [tutorial](https://www.rabbitmq.com/tutorials/tutorial-three-python.html), the command to publish the message is missing. We'll need you to add it. There's one tricky part though, the `message` variable in the tutorial is a string, while in our code the `message` variable, which we'd like to send, is a dictionary. How would you send it?
+We've pre-filled `send_message(...)` in `lwqueue/rabbitmq_send_message.py`. Based on the [tutorial](https://www.rabbitmq.com/tutorials/tutorial-three-python.html), the command to publish the message is missing. Your challenge is to add it.
+
+❓ **Complete the function** `send_message()`
+
+There's one tricky part though, the `message` variable in the tutorial is a string, while in our code the `message` variable, which we'd like to send, is a dictionary. How would you send it?
 
 <details>
-  <summary markdown='span'>💡 Hint</summary>
+<summary markdown='span'>💡 Hint</summary>
 
-  Remember our course about serialization? Try and serialize the message to JSON.
+Try and serialize the message to JSON.
 </details>
 
 Let's see if it worked:
-- Run `python lwqueue/rabbitmq_send_message.py --host localhost --port 5672 --message "Hello world" --username $USER --rmq-username rmq --rmq-password $RABBITMQ_DEFAULT_PASS`.
+- Run:
+    ```bash
+    python lwqueue/rabbitmq_send_message.py --host localhost --port 5672 --message "Hello world" --username $USER --rmq-username rmq --rmq-password $RABBITMQ_DEFAULT_PASS
+    ```
 - Navigate to [http://localhost:15672/#/exchanges](http://localhost:15672/#/exchanges)
 - In the `exchanges` tab, do you see `chat`?
 - Click on it and paste the URL into `tests.json` as a value to the `"chat"` key.
 
-**Did you notice a spike in the message rate when you sent the message?**
+**Did you notice a spike in the message rate when you sent the message?** If under message rate it says `Currently idle`, change the time window by clicking on **last hour** and change to **last ten minutes** from the right pop-out menu.
 
 🧪 Test your code with, the first two tests should pass:
 
@@ -129,29 +142,32 @@ And don't forget to git add, commit and push your code to GitHub so Kitt can tra
 
 ## 2.3. The subscriber
 
-Let's get to the hard part, we'll deal with callbacks, that can sometimes be tricky to understand.
+Time to create the subscriber. We'll deal with callbacks, that can sometimes be tricky to understand.
 
-In the `receive_messages(...)` function of `lwqueue/rabbitmq_subscriber.py`, we've left out the part that registers the callback, itself passed as the argument `on_message_callback`. Your job is to **fill it in.**
+<details>
+<summary markdown='span'>💡 I've heard of callbacks before?</summary>
 
-A callback here is a function with the signature
+A `callback` is a common idea in software development.
+
+Typically a callback is a function that is passed as an argument to another function or method with the expectation that it will be executed (or "called back") at a later time. Callbacks are commonly used to manage asynchronous operations, customize behaviour, or handle events. In our scenario, we're using it to handle an event: consuming messages from the queue.
+</details>
+
+In the `receive_messages(...)` function of `lwqueue/rabbitmq_subscriber.py`, we've left out the part that registers the callback, itself passed as the argument `on_message_callback`.
+
+❓ **Complete the function** `receive_messages()`
+
+A callback here is a function with the signature:
 
 ```python
 def callback(channel: str, method, properties, body):
   # do stuff here
 ```
 
-Which is called every time a new message is received by the **subscriber**. We'll implement the simplest possible callback here, which simply prints the `"Received"` followed by the `body` value, to the console. Fill in the function `print_callback(...)` which was left empty.
+Which is called every time a new message is received by the **subscriber**. We'll implement a simple callback, which prints `"Received"` followed by the `body` value, to the console.
 
-Now, notice in the `main` function how `print_callback` is passed as the argument of `receive_messages`, **does it make sense?**
+❓ **Complete the function** `print_callback(...)`
 
-<details>
-  <summary markdown='span'>💡 Hint</summary>
-
-  We're building a flexible subscriber here, that can accept callbacks as parameters. First, we implement the simplest possible behavior, which is to just `print(...)` to the console the newest message received. In Python, this "behavior" is a function.
-
-  Functions that are passed to other functions and called "on demand" are usually called **callbacks**.
-</details>
-
+Notice in the `main` function how `print_callback` is passed as the argument of `receive_messages`, **does it make sense?**
 
 🧪 When you think you've completed the callback, test with:
 
@@ -175,7 +191,7 @@ python lwqueue/rabbitmq_subscriber.py --host localhost --port 5672 --mode simple
 python lwqueue/rabbitmq_send_message.py --host localhost --port 5672 --message "Hello world" --username $USER --rmq-username rmq --rmq-password $RABBITMQ_DEFAULT_PASS
 ```
 
-What happens?
+What happens? 🤔
 
 ## 2.4. Optional (but nice!) - Add a cool UI to it 🎨
 
@@ -183,7 +199,9 @@ The basic terminal is pretty boring isn't it? Let's display nicely messages we'r
 
 **Try out the [two top examples](https://rich.readthedocs.io/en/stable/live.html) to get familiar with Rich**
 
-Now that you're familiar with Rich, we've pre-populated `lwqueue/ui.py` to create a new Rich table. It's missing the bit where messages are added as rows to the table. **Can you add it?**
+Now that you're familiar with Rich, we've pre-populated `lwqueue/ui.py` to create a new Rich table. It's missing the bit where messages are added as rows to the table.
+
+❓ **Complete the function** `make_rich_table()`
 
 Once you've updated `lwqueue/ui.py`, change the mode to `rich` in your subscriber by changing the `--mode` flag, and send new messages from your publisher:
 
@@ -191,9 +209,9 @@ Once you've updated `lwqueue/ui.py`, change the mode to `rich` in your subscribe
 python lwqueue/rabbitmq_subscriber.py --host localhost --port 5672 --mode rich --rmq-username rmq --rmq-password $RABBITMQ_DEFAULT_PASS
 ```
 
-Awesome, now we're ready to talk to other folks.
+Awesome! now we're ready to talk to other folks.
 
-### Back to the management dashboard
+## 2.5. Back to the management dashboard
 
 When your subscriber is up, go to the `Queues` tab. Anything new?
 
@@ -222,11 +240,13 @@ If you've reached this point, this means you've got RabbitMQ in a Docker network
   - The target tag `rabbitmq-<your_username>` given to your firewall rule above corresponds to a network target tag. Now look for `Network tags` and type `rabbitmq-<your_username>`
   - Then click `SAVE` which will update your instance
 
+<!-- it's TCP -->
+
 Your RabbitMQ server should be open to the world!
 
 ## 3.2. Share with the group
 
-We wouldn't want to share our root user password though
+We don't want to share our root user password, that's a no-no.
 
 ❓ Create a user which is only allowed to send messages and that is it!
 
@@ -239,9 +259,7 @@ docker exec -it <your_rabbit_mq_container> rabbitmqctl set_permissions -p / mess
 ```
 
 Where a RabbitMQ user named: `messaging_user` with the password: `abc123` has been created. Your classmates should be able to execute both `rabbitmq_subscriber.py` and `rabbitmq_send_message.py` with these credentials and your VM's public IP address.
-
 </details>
-
 
 Share the following with your class mates (in Slack / Zoom / Gathertown):
 - Your server IP address and your RabbitMQ username
@@ -253,10 +271,9 @@ Share the following with your class mates (in Slack / Zoom / Gathertown):
 ```bash
 python lwqueue/rabbitmq_send_message.py --host <classmates_vm_ip> --port 5672 --message "your message here" --username $USER --rmq-username <classmates_rmq_username> --rmq-password <classmates_rmq_password>
 ```
-
 </details>
 
-Now, are you receiving messages from your classmates?
+Are you receiving messages from your classmates?
 
 <br>
 

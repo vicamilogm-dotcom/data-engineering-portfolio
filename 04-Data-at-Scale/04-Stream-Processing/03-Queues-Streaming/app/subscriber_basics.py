@@ -35,7 +35,7 @@ def run(subscription_name: str, project_id: str):
         streaming_pull_future = None
         pass  # YOUR CODE HERE
 
-        print(f"Listening for messages on {subscription_path}..\n")
+        print(f"Listening for messages on {subscription_path}...\n")
 
         # streaming_pull_future is a Thread in background that listens to Pub/sub.
         # To await the future callback, the method `result` needs to be called

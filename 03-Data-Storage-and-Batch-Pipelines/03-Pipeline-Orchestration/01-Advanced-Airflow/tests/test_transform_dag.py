@@ -1,7 +1,7 @@
 import os
 
 import pandas as pd
-from airflow.hooks.sqlite_hook import SqliteHook
+from airflow.providers.sqlite.hooks.sqlite import SqliteHook
 from airflow.models import DagBag
 from airflow.models.taskinstance import TaskInstance
 from airflow.utils.state import DagRunState

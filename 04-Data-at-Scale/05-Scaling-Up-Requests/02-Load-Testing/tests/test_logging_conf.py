@@ -9,6 +9,6 @@ class TestLoggingConf:
         # assess presence of key elements
         assert txt.count("propagate=1") > 2
         assert "args=" in txt
-        assert "/app/app/logs/error.log" in txt
-        assert "/app/app/logs/access.log" in txt
+        assert "/app/logs/error.log" in txt
+        assert "/app/logs/access.log" in txt
         assert "level=debug" in txt

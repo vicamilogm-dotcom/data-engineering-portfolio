@@ -20,6 +20,8 @@ def calculate_trip_duration(df: DataFrame) -> DataFrame:
 
 def calculate_haversine_distance(df: DataFrame) -> DataFrame:
     """
+    We don't expect you to have geospatial domain knowledge, this one is for free.
+
     Calculates the haversine distance between start and end coordinates.
     Uses columns 'start_lat', 'start_lon', 'end_lat', 'end_lon' for calculations.
     The distance is calculated in kilometers.

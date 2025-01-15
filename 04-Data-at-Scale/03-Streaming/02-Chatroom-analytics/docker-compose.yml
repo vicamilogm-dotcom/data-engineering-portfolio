@@ -1,7 +1,6 @@
-version: "3.2"
 services:
   rabbitmq:
-    image: rabbitmq:3.10.6-management
+    image: rabbitmq:3.13.7-management
     container_name: rmq
     ports:
       - 5672:5672
@@ -10,4 +9,11 @@ services:
       - RABBITMQ_DEFAULT_USER=rmq
     env_file:
       - .env
+    # Optional healthcheck
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
 # YOUR CODE HERE

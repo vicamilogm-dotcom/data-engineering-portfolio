@@ -1,11 +1,13 @@
 import json
 import os
 
-from airflow.hooks.sqlite_hook import SqliteHook
+from airflow.providers.sqlite.hooks.sqlite import SqliteHook
 
 from dags import local_etl
+
 # Set this variable temporarily back to student-config but without affecting airflow test configuration.
 os.environ["AIRFLOW_HOME"] = "/app/airflow"
+
 
 def test_read_from_json():
     content = local_etl.read_from_json("tests/test_data/joke_without_single_quote.json")
@@ -31,16 +33,25 @@ def test_read_from_json():
 
 
 def test_translate_joke_to_swedish():
-    joke = local_etl.read_from_json("tests/test_data/joke_without_single_quote.json")["value"]
+    joke = local_etl.read_from_json("tests/test_data/joke_without_single_quote.json")[
+        "value"
+    ]
     translated_joke = local_etl.translate_joke_to_swedish(joke)
-    assert translated_joke == "Chuck Norris bortf\u00f6r utl\u00e4nningar."
-    joke = local_etl.read_from_json("tests/test_data/joke_with_single_quote.json")["value"]
+    assert translated_joke == "Chuck Norris kidnappar utomjordingar."
+    joke = local_etl.read_from_json("tests/test_data/joke_with_single_quote.json")[
+        "value"
+    ]
     translated_joke = local_etl.translate_joke_to_swedish(joke)
-    assert translated_joke == "En skillnad mellan din kod och Chuck Norris \u00e4r o\u00e4ndlig."
+    assert (
+        translated_joke
+        == "En skillnad mellan din kod och Chuck Norris \u00e4r o\u00e4ndlig."
+    )
 
 
 def test_write_jokes_to_json():
-    joke = local_etl.read_from_json("tests/test_data/joke_without_single_quote.json")["value"]
+    joke = local_etl.read_from_json("tests/test_data/joke_without_single_quote.json")[
+        "value"
+    ]
     swedified_joke = local_etl.translate_joke_to_swedish(joke)
     temp_file = "tests/temp/swedified_joke.json"
     if os.path.isfile(temp_file):
@@ -54,9 +65,16 @@ def test_write_jokes_to_json():
 
 
 def test_double_single_quote():
-    joke = local_etl.read_from_json("tests/test_data/joke_with_single_quote.json")["value"]
-    assert local_etl.double_single_quote(joke) == "A diff between your code and Chuck Norris''s is infinite."
-    joke = local_etl.read_from_json("tests/test_data/joke_without_single_quote.json")["value"]
+    joke = local_etl.read_from_json("tests/test_data/joke_with_single_quote.json")[
+        "value"
+    ]
+    assert (
+        local_etl.double_single_quote(joke)
+        == "A diff between your code and Chuck Norris''s is infinite."
+    )
+    joke = local_etl.read_from_json("tests/test_data/joke_without_single_quote.json")[
+        "value"
+    ]
     assert local_etl.double_single_quote(joke) == joke
 
 
@@ -68,8 +86,13 @@ def test_transform():
 
     with open(temp_file, "r") as file:
         joke = json.load(file)
-        assert joke["joke"] == "A diff between your code and Chuck Norris''s is infinite."
-        assert joke["swedified_joke"] == "En skillnad mellan din kod och Chuck Norris \u00e4r o\u00e4ndlig."
+        assert (
+            joke["joke"] == "A diff between your code and Chuck Norris''s is infinite."
+        )
+        assert (
+            joke["swedified_joke"]
+            == "En skillnad mellan din kod och Chuck Norris \u00e4r o\u00e4ndlig."
+        )
 
 
 def test_load_to_database():
@@ -94,6 +117,10 @@ def test_load_to_database():
         "Chuck Norris använder inte en mikrovågsugn för att poppa sin popcorn.Han sitter helt "
         "enkelt paketet på räknaren och kernalerna hoppar i rädsla för en rund husspark"
     )
-    assert hook.get_records("SELECT * FROM swedified_jokes;")[0] == (1, joke, swedified_joke)
+    assert hook.get_records("SELECT * FROM swedified_jokes;")[0] == (
+        1,
+        joke,
+        swedified_joke,
+    )
     local_etl.load("tests/test_data/swedified_joke.json", hook)
     assert hook.get_records("SELECT COUNT(*) FROM swedified_jokes;")[0][0] == 2

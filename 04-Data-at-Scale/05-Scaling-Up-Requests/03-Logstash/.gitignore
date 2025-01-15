@@ -1,0 +1,2 @@
+*.sql.init
+logs/*.json

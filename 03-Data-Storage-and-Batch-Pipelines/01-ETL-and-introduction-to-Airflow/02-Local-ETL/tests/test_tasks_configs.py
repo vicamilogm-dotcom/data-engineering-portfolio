@@ -1,6 +1,7 @@
 import os.path
 
-from airflow.hooks.sqlite_hook import SqliteHook
+# from airflow.hooks.sqlite_hook import SqliteHook
+from airflow.providers.sqlite.hooks.sqlite import SqliteHook
 from airflow.models import DagBag
 from airflow.models.taskinstance import TaskInstance
 from airflow.utils.state import DagRunState
@@ -46,7 +47,7 @@ class TestTasksConfigs:
         #         swedified_joke VARCHAR NOT NULL
         #     );"""
         # )
-        assert task.postgres_conn_id == "postgres_connection"
+        assert task.conn_id == "postgres_connection"
 
         assert list(map(lambda task: task.task_id, task.upstream_list)) == []
         assert list(map(lambda task: task.task_id, task.downstream_list)) == ["extract"]

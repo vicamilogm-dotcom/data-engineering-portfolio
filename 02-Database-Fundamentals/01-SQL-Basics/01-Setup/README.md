@@ -75,7 +75,7 @@ You might not have reloaded your `.env` after changing the `POSTGRES_USER` or `P
 The easiest fix is to do a complete teardown:
 - Stop your running postgres container
 - Remove your postgres container: `docker rm <YOUR_CONTAINER_NAME>`
-- Delete the volume that is holding your persistent data. When the postgres container was first run, postgres has an initialisationit that created a super-user with the values in your `.env`:
+- Delete the volume that is holding your persistent data. When the postgres container was first run, postgres has an initialisation script that created a super-user with the values in your `.env`:
     ```bash
     # List volumes
     docker volume ls
@@ -185,7 +185,7 @@ You should now be ready for a few warm up queries!
 
 ## 3.3. Change time zone in DBeaver
 
-Your Virtual Machine should be running on UTC (Coordinated Universal Time) time. UTC is not a timezone, it is a standard time used to globally synchronize time across the world, including synchronizing computers.
+Your Virtual Machine should be running on UTC (Coordinated Universal Time) time. UTC is not a time zone, it is a standard time used to globally synchronize time across the world, including synchronizing computers.
 
 The time on your *local* computer, where your are running DBeaver, may be different from UTC. To make sure the queries you execute on DBeaver and on your VM match up and return the same result, we need to change the time in DBeaver to match your VM.
 
@@ -198,10 +198,10 @@ date
 # Mon Oct 7 09:52:10 AM UTC 2024
 ```
 
-To change the Timezone in DBeaver:
+To change the time zone in DBeaver:
 - From your DBeaver client, click **Window** from the top ribbon menu, then **Preferences** from the drop down menu.
 - In the **Preferences** pop up, make sure that **User Interface** is selected in the left side menu.
-- Under **Regional settings** change the timezone to: `UTC (UTCZ)`
+- Under **Regional settings** change the time zone to: `UTC (UTCZ)`
 - Make sure to close DBeaver, and open it again.
 
 Now queries you execute on DBeaver should match queries on your VM! 🎉

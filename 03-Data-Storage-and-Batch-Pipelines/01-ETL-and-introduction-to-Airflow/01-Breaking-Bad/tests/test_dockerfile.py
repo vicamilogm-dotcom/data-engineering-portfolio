@@ -7,7 +7,7 @@ import pytest
 @pytest.fixture
 def dockerfile_validation():
     return [
-        ("FROM", "python:3.8.10-slim"),
+        ("FROM", "python:3.12.8-slim"),
         ("ARG", "DEBIAN_FRONTEND=noninteractive"),
         ("ENV", "PYTHONUNBUFFERED 1"),
         ("ENV", "AIRFLOW_HOME /app/airflow"),
@@ -15,8 +15,12 @@ def dockerfile_validation():
         ("COPY", "scripts scripts"),
         ("RUN", "chmod +x scripts/entrypoint.sh"),
         ("COPY", "pyproject.toml poetry.lock ./"),
-        ("RUN", "pip3 install --upgrade --no-cache-dir pip && pip3 install poetry && poetry install --only main"),
+        (
+            "RUN",
+            "pip3 install --upgrade --no-cache-dir pip && pip3 install poetry && poetry install --only main",
+        ),
     ]
+
 
 @pytest.mark.optional
 def test_dockerfile(dockerfile_validation):
@@ -31,6 +35,9 @@ def test_dockerfile(dockerfile_validation):
             s = re.sub(r"\s+", " ", command.value[0])
             assert s == validation[1]
         elif len(command.flags) != 0:
-            assert " ".join([" ".join(command.flags), " ".join(command.value)]) == validation[1]
+            assert (
+                " ".join([" ".join(command.flags), " ".join(command.value)])
+                == validation[1]
+            )
         else:
             assert " ".join(command.value) == validation[1]

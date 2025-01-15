@@ -1,3 +1,3 @@
-## Recap
+# Recap
 
-Two topics on one day so the recap should just be an opportunity for the teacher to dive in and explain one of the exercises in detail be it the chatroom or grpc!
+Queues and streaming is a pretty technically dense topic. Take the opportunity to go over any concepts students aren't sure of or create an architecture diagram for a service that uses streaming.

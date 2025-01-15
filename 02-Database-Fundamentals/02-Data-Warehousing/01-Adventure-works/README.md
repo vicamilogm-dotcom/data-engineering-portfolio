@@ -52,7 +52,7 @@ Checkout the `pipeline/process_store.py`. The goal is to read data from `./data/
     <details>
     <summary markdown='span'>💡 Processed dictionary</summary>
 
-    The built in python [pprint libary](https://docs.python.org/3/library/pprint.html) might help you visualize terminal outputs!
+    The built in python **pprint** library, [docs at this link](https://docs.python.org/3/library/pprint.html), might help you visualize terminal outputs!
 
     ```python
     {
@@ -81,7 +81,18 @@ Checkout the `pipeline/process_store.py`. The goal is to read data from `./data/
 
 That's all the cleaning we're going to do for now. Let's move onto creating our data warehouse assets.
 
-🧪 To test you have processed the CSV's, run `make test_process_store`
+🧪 To test you have processed the CSV's, run:
+
+```bash
+make test_process_store
+```
+
+<details>
+<summary markdown='span'>💡 Warnings on my tests!</summary>
+
+Feel free to alter the `Makefile` to view the warnings and see if they are anything to worry about!
+
+</details>
 
 <br>
 

@@ -1,22 +1,22 @@
-# 🎯 Streaming with queues!
+# 🎯 Goal
 
 When there is too much data to handle for our workers, when data flow needs to be managed, or processing scheduled, **queues** come to the rescue.
 
-**Pub/Sub** at its core is a messaging service. It can be leveraged in multiple use-cases where real-time or event driven data transfer is required. **Pub/Sub** is fully managed by GCP and can be easily integrated with other GCP or open-source services.
+**Pub/Sub** at its core is a messenger/subscriber service. It can be leveraged in multiple use-cases where real-time or event driven data transfer is required. **Pub/Sub** is fully managed by GCP and can be easily integrated with other GCP or open-source services.
 
-🎯 In this Challenge, we will create a **Pub/Sub Topic** and publish real-time data. Then, we will stream this data via a **subscriber** to transform the data and load it to **BigQuery**.
+In this Challenge we will create a **Pub/Sub Topic** and publish real-time data. Then, we will stream this data via a **subscriber** to transform the data and load it to **BigQuery**.
 
 <br>
 
 # 1️⃣ Topic Creation 📕
 
-We will create a new Pub/Sub Topic. From the Navigation Menu select Pub/Sub.
+Let's start by creating a new **Pub/Sub** Topic. From the GCP Console select **Pub/Sub**.
 
-In the Pub/Sub page (Enable Pub/Sub API if prompted to), click on create topic.
+In the **Pub/Sub** page (Enable Pub/Sub API if prompted to), click on create topic.
 
 You can name it `data-stream` as in the below example:
 
-<img src="https://wagon-public-datasets.s3.amazonaws.com/data-engineering/W3D4/0403-03-topic_creation.png" witdh=200>
+<img src="https://wagon-public-datasets.s3.amazonaws.com/data-engineering/W3D4/0403-03-topic_creation.png" width=600>
 
 <details>
 <summary markdown='span'>💡 Create a topic in the cli</summary>
@@ -28,18 +28,19 @@ gcloud pubsub topics create <topic name>
 </details>
 
 
-Store your Topic ID in your .env in the variable `TOPIC_NAME` and make sure to reload your direnv.
-You can test that it has been stored by executing this command:
+Store your **Topic ID** in your `.env` in the variable `TOPIC_NAME` and make sure to reload with `direnv reload`
+
+You can test that it has been stored by executing:
+
 ```bash
 echo $TOPIC_NAME
 ```
 
-❗If it is not working even after a `direnv reload`, make sure to have a `dotenv` line in your .envrc file.
+By default, a subscription is created as `<Topic id>-sub`. For example, if you created a topic named: `data-stream`, the subscription would be named: `data-stream-sub`
 
+**Let's publish** the first message in the console and pull it via the GCP console subscriber.
 
-By default a subscription is created as `\<Topic id\>-sub`. **Let's publish** the first message in the console and pull it via the GCP console subscriber.
-
-We can see the Pub/Sub in action by clicking on your topic Id and clicking on Publish Message via the tab Messages 👇
+We can see **Pub/Sub** in action by clicking on your topic Id and clicking on Publish Message via the tab Messages 👇
 
 <img src="https://wagon-public-datasets.s3.amazonaws.com/data-engineering/W3D4/0403-03-create_message.png" width=700>
 
@@ -48,15 +49,14 @@ We can see the Pub/Sub in action by clicking on your topic Id and clicking on Pu
 
 Once the message is published, we can go back to our subscription page to pull and receive the message. **Follow the instructions  in the image below** 👇
 
-❗ If you created the Pub/Sub topic with the CLI, you might not have a default subscriber. Create one from the Subscribions tab.
+❗ If you created the Pub/Sub topic with the CLI, you might not have a default subscriber. Create one from the Subscription tab.
 
 <img src="https://wagon-public-datasets.s3.amazonaws.com/data-engineering/W3D4/0403-03-pull_message2.png" width=700>
 
 
-❗️ Once the message is **acknowledged** (**ack**), it is flushed from the **queue** and won't be sent anymore.
+❗️ Once the message is **acknowledged** (**ACK**), it is flushed from the **queue** and won't be sent any more.
 
-Now that we have seen how to subscribe to a message in the UI, let's code it in python 🐍.
-It will help receive high quantities of messages and apply transformations to them as they come in!
+Now that we have seen how to subscribe to a message in the UI, let's code it in python 🐍. It will allow us to receive high quantities of messages and apply transformations to them as they come in!
 
 <br>
 
@@ -66,7 +66,7 @@ It will help receive high quantities of messages and apply transformations to th
 
 ❓ Now head to the file `subscriber_basics.py` and implement the **run** function by following the comments inside the function.
 
-❓ Now let's code the **callback** function. This callback function is meant to be called at each published message during the subscription. For our simple subscriber, let's just print the message and _ack_ it.
+❓ Now let's code the **callback** function. This callback function is meant to be called at each published message during the subscription. For our simple subscriber, let's start with printing the message and **ack**'ing it.
 
 ❗️ Don't forget to **ack** every message, otherwise Pub/Sub will continue sending it.
 
@@ -84,9 +84,11 @@ Create some messages in the GCP console like we did in the first part of the cha
 
 Now we can implement a **publisher** to send the **real-time** data from the previous challenge.
 
+<br>
+
 # 3️⃣ Publish data ✍️
 
-Back to the first challenge of the day: real-time streaming 💪. To stream the data we first need to source it. Let’s simulate multiple sensors publishing to the same **topic** in **Pub/Sub**.
+Back to the end goal for the unit: real-time streaming 💪. To stream the data we first need to source it. Let’s simulate multiple sensors publishing to the same **topic** in **Pub/Sub**.
 
 Head to `app/publisher.py`. You’ll notice that there is already a `get_message_data` method that generates a message for a specific sensor like in the first challenge.
 
@@ -100,19 +102,20 @@ Let's open a new terminal and launch the publisher and let it publish some messa
 
 Launch the publisher with this command:
 
-```python
+```bash
 python app/publisher.py
 ```
 
 Now launch the subscriber with this command:
 
-```python
+```bash
 python app/subscriber_basics.py
 ```
 
-Even if the publisher is stopped, the subscriber unstacked the queue and acked the messages. The messages stays in the Pub/Sub queue until they are acked.
+Even if the publisher is stopped, the subscriber unstacked the queue and **ack**'ed the messages. The messages stays in the Pub/Sub queue until they are **ack**'ed.
 
-You can lauch the publisher and the subscriber simultanously in two different terminals.<br>
+You can launch the publisher and the subscriber simultaneously in two different terminals.
+
 💪 We are streaming data in real-time!
 
 Now let's subscribe to the data with Apache Beam and make some transformations before loading the data into BigQuery.
@@ -125,28 +128,28 @@ First head to subscriber `app/subscriber_beam.py` and go to the `run` function!
 
 The structure of the pipeline:
 
-- data: pull data from the Pub/Sub Topic
-- windowing: round off the timestamp to make intervals
-- grouping: aggregate the records per sensor per interval
-- out: write the data to BigQuery
+- **data:** pull data from the Pub/Sub Topic
+- **windowing:** round off the timestamp to make intervals
+- **grouping:** aggregate the records per sensor per interval
+- **out:** write the data to BigQuery
 
 We have already implemented the main structure with the file example earlier, now we have to adapt it to streaming mode.
 
-❓ For the data part of the pipeline, where do you think we can source the data from ?
+❓ For the data part of the pipeline, where do you think we can source the data from?
 
 <details>
 <summary markdown='span'>💡 Answer</summary>
 
-Directly from Pub/Sub with Apache Beam!
+Directly from Pub/Sub with **Apache Beam**!
 
 </details>
 
 ## 4.1. Data
 
-❓ Implement the data section to read the data from Pub/Sub and decode it!
+❓ Implement the **data** section to read the data from Pub/Sub and decode it!
 
 To check that it works run the following command:
-```python
+```bash
 python app/subscriber_beam.py --id $PROJECT_ID --subscription-name $SUBSCRIPTION_NAME
 ```
 In another terminal **start the publisher**. It should look something like this 👇
@@ -167,17 +170,17 @@ Let's first shutdown the **publisher** and then the **beam subscriber**, so that
 <summary markdown='span'>🕵️ Ack all messages in your queue</summary>
 
 ```bash
-gcloud pubsub subscriptions seek $SUBSCRIPTION_NAME --time "2025-01-01T00:00:00Z"
+gcloud pubsub subscriptions seek $SUBSCRIPTION_NAME --time "2026-01-01T00:00:00Z"
 ```
 
 </details>
 
 
-## 4.2. Windowing and grouping!
+## 4.2. Windowing and grouping
 
 For that we need a windowing and grouping pipeline.
 
-In the previous challenge, we already implemented those two parts.
+In the previous challenge, we already implemented these two parts.
 
 ❓ Add the code from the previous exercise into the **window** and **group sections**. Let's keep the same implementation and try to execute the pipeline with the following command:
 
@@ -193,24 +196,24 @@ ValueError: GroupByKey cannot be applied to an unbounded PCollection with global
 
 Before, we had access to **all the data** before executing the transformation.
 
-🤔 During the streaming what could be problematic for grouping?
+🤔 During the streaming, what could be causing this issue for grouping?
 
 <details>
-  <summary markdown='span'>💡 Explanations</summary>
+<summary markdown='span'>💡 Explanations</summary>
 
-With an unbounded data set, it is impossible to collect all of the elements, since new elements are constantly being added and it may be an infinite stream.
+With an unbounded data set, it is impossible to collect all of the elements, since new elements are constantly being added and it could be an infinite stream.
 
-Beam’s default windowing behavior is to assign all elements of a PCollection to a single, global window.
-Before you use a grouping transform such as `GroupByKey` on an unbounded PCollection, you must at least set a non-global windowing function such as Fixed-time windows to gather data within a time window and trigger the grouping.
+Beams default windowing behaviour is to assign all elements of a PCollection to a single, global window.
 
+Before you use a grouping transform such as `GroupByKey` on an unbounded PCollection, you must set a non-global windowing function such as **fixed-time windows** to gather data within a time window to trigger the grouping.
 </details>
 
-❓ **Implement a windowing pipeline**. You can have a look at this example in the [programming guide](https://beam.apache.org/documentation/programming-guide/#using-fixed-time-windows). Also refer to the **example** from the lecture.
+❓ **Implement a windowing pipeline**. You can have a look at this example in the Apache Beam Programming Guide at [this link](https://beam.apache.org/documentation/programming-guide/#using-fixed-time-windows). Also refer to the **example** from the lecture.
 
-Our workflow is:
+We'll have to make some modifications to our windowing section. Our workflow is:
 - Attach a timestamp
 - Put our element into key, value format: (timestamp_rounded, [iot data])
-- Finally create fixed windows of our interval size!
+- Finally, create fixed windows of our interval size!
 
 We are now ready to test if this works. But first let's **make sure to empty the queue.**
 
@@ -232,11 +235,10 @@ Under schema click on Edit as text and paste the following schema:
 Timestamp:TIMESTAMP, Airtight:FLOAT, AtmP:FLOAT, H2OC:FLOAT, Temp:FLOAT
 ```
 
-**📝 Now fill in the `BQ_TABLE` variable in your `.env`**
-with the right format:
+**📝 Make sure to update the `BQ_TABLE` variable in your `.env`** with the right format:
 
 ```bash
-BQ_TABLE=<your-project-id>.<your-bq-dataset-name>.<your-table-name>
+BQ_TABLE=<your-project-id>:<your-bq-dataset-name>.<your-table-name>
 ```
 
 👉 Let's head to the `out_bq` part of the pipeline and add `Write to Big Query` transformation using
@@ -256,18 +258,19 @@ Let's head to your GCP console into BigQuery and check that the live streaming i
 
 <br>
 
+# 5️⃣ (Optional) Deploy the Pipeline to Dataflow
 
-# 5️⃣ (Optional) Deploy the pipeline to Dataflow
-
-The Google Cloud Dataflow Runner uses the Cloud Dataflow managed service. When you run your beam pipeline with the Cloud Dataflow service, the runner uploads your executable code and dependencies to a Google Cloud Storage bucket and creates a Cloud Dataflow job, which executes your pipeline on managed resources in Google Cloud Platform.
+The Google Cloud **Dataflow Runner** uses the **Cloud Dataflow** managed service. When you run your Beam pipeline with the Cloud Dataflow service, the runner uploads your executable code and dependencies to a Google Cloud Storage bucket and creates a Cloud Dataflow job, which executes your pipeline on managed resources on Google Cloud Platform.
 
 Deployment into Dataflow is relatively easy with Apache Beam, we just need a few extra things:
-1. Build our poetry package into a `.whl` - required because our beam pipeline is more than one python script.
-1. We need to change the runner option of the pipeline and provide some additional GCP parameters. Here is the [documentation](https://beam.apache.org/documentation/runners/dataflow/) of the required parameters.
+1. Build our poetry package into a `.whl` - required because our Beam pipeline is more than one python script.
+1. We need to change the runner option of the pipeline and provide some additional GCP parameters. Here is the [documentation at this link](https://beam.apache.org/documentation/runners/dataflow/) with the additional required parameters.
 
 ## 5.1. Build a wheel 🛞
 
-❗ By default, the GCP Dataflow runner will only upload the target file to be executed. Because we have used a helper function, `aggregate_sensors`, in a separate file, `app/utils.py`, we need a way to upload all of our code and dependencies. We are using **poetry** as our package manager, and poetry provides an easy way to **build** our package into a standardized binary package format called `.whl`.
+❗ By default, the GCP Dataflow runner will only upload the target file to be executed. Because we have used a helper functions in a separate file, `app/utils.py`, we need a way to upload all of our code and dependencies.
+
+We are using **poetry** as our package manager, and poetry provides an easy way to **build** our package into a standardized binary package format called `.whl`.
 
 By including the our package `.whl`, the Dataflow runner has everything it needs to execute our pipeline!
 
@@ -279,7 +282,7 @@ poetry build
 
 The output should look similar to:
 
-```txt
+```bash
 Building beam-stream (0.1.0)
   - Building sdist
   - Built beam_stream-0.1.0.tar.gz
@@ -288,10 +291,10 @@ Building beam-stream (0.1.0)
 ```
 
 This will have created a new directory in your project root named: `dist/` with two files inside:
-- `beam_stream-0.1.0.tar.gz` - essentially a zipped archive of your package
+- `beam_stream-0.1.0.tar.gz` - essentially a zipped (compressed) archive of your package
 - `beam_stream-0.1.0-py3-none-any.whl` - pre-compiled binaries of your package
 
-If you can't see the `dist/` directory in your VS Code explorer, don't worry. VS Code may be hiding some directories in the file explorer - directories like `.git` and `dist`. In your integrated terminal, run:
+Don't worry if you can't see the `dist/` directory in your VS Code explorer. VS Code may be hiding some directories in the file explorer - directories like `.git` and `dist`. In your integrated terminal, run:
 
 ```bash
 ls
@@ -305,7 +308,7 @@ When using a `.whl` file as part of your Dataflow deployment, the additional req
 --extra_package dist/<your_python_package.whl>
 ```
 
-Alternatively, you could move the `aggregate_sensors` function into `app/subscriber_beam.py` and bypass building a wheel for your package. For completeness and continuity we have include it.
+Alternatively, you could move all the helper functions from `app/utils.py` into `app/subscriber_beam.py` and bypass building a wheel for your package. For completeness and continuity we have include it, and no one likes mega long scripts.
 
 ## 5.2. Additional parameters
 
@@ -315,14 +318,18 @@ To add extra parameters to the pipeline you can use command-line arguments when 
 --runner DataflowRunner
 ```
 
-These arguments will be passed on to our `beam.Pipeline` through the `pipeline_args`.
+These arguments will be passed on to our `beam.Pipeline` object through the `pipeline_args` variable in on the very last line of `app/subscriber_beam.py`.
 
-You can fill in your `.env` the following variable to be used in your command line :
-- `PROJET_ID`
+Fill in your `.env` the following variable to be used in your command line:
+- `PROJECT_ID`
 - `BUCKET_NAME`
 
+And don't forget to `direnv reload`!
+
 <details>
-  <summary markdown='span'>💡 Hint</summary>
+  <summary markdown='span'>🎁 Deploy command solution</summary>
+
+Alter region flag as required.
 
 ```bash
 python app/subscriber_beam.py \
@@ -335,16 +342,24 @@ python app/subscriber_beam.py \
     --temp_location gs://$BUCKET_NAME/temp \
     --staging_location gs://$BUCKET_NAME/staging \
     --extra_package dist/beam_stream-0.1.0-py3-none-any.whl \
-    --region europe-west4
+    --region europe-west1
 ```
 
-If you try to deploy your beam pipeline to GCP Dataflow and get an error, you may need to enable the Dataflow API on your GCP project. Read the error carefully and see if there is a link to enable the Dataflow API.
+<!-- Note that of 2025/01/09 the DataFlow workers use Python 3.12.7, that is why the version in the `pyproject.toml` is lower -->
 
+Give DataFlow a few minutes to spin up and create the workers.
+
+If you try to deploy your beam pipeline to GCP Dataflow and get an error, you may need to enable the Dataflow API on your GCP project. Read the error carefully and see if there is a link to enable the Dataflow API.
 </details>
 
 ## 5.3. See the results!
 
-Now you can head to Dataflow service within GCP, have a look at your dataflow graph by clicking on the active job name. To see more detail, expand the **Logs** section at the bottom of the page. There are logs for the overall job, and logs for each individual worker note.
+Now you can head to Dataflow service within GCP, have a look at your dataflow graph by clicking on the active job name. To see more detail, expand the **Logs** section at the bottom of the page. There are logs for:
+- The overall pipeline
+- Each individual worker node - particularly useful for debugging and aligning worker and dev environments
+- Each component of the pipeline.
+
+As well as detailed metrics!
 
 Once it is ready you can launch your publisher:
 
@@ -365,7 +380,7 @@ Make sure to first stop your `publisher.py` script.
 To teardown your pipeline:
 
 ```bash
-# List all dataflow jobs - region in the form: europe-west4
+# List all dataflow jobs - region in the form: europe-west1
 gcloud dataflow jobs list --region <region>
 
 # Drain or cancel the target job

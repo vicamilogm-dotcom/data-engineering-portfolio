@@ -1,8 +1,12 @@
-The DevOps grail that teams want to achieve is **Continuous Deployment**. The idea is to configure your hosting environment in such a way that every change in `master` which yields a green build on the Build Automation tool _can_ and _will_ be pushed to production as soon as possible.
+# 🎯 Goal
+
+The DevOps grail that teams want to achieve is **Continuous Deployment**. The idea is to configure your hosting environment in such a way that every change in `main` which yields a green build on the Build Automation tool **can** and **will** be pushed to production as soon as possible.
 
 In this exercise, we will set up a [**PaaS**](https://en.wikipedia.org/wiki/Platform_as_a_service) to host our longest word game.
 
-# HTTP server
+<br>
+
+# 1️⃣ HTTP server
 
 Before pushing our code to a hosting provider, we would like to be able to interact with it. The easiest way to do this is to encapsulate the game around a small HTTP server.
 
@@ -17,24 +21,25 @@ Open VS code workspace at your "longest-word" folder, and create a branch to sta
 ```bash
 cd ~/code/<user.github_nickname>/longest-word
 
-git status # is that clean?
-git checkout master
-git pull origin master
+git status # is it clean?
+git checkout main
+git pull origin main
 git branch -d dictionary-api
 git checkout -b http-server
 ```
 
-We are going to use [Flask](http://flask.pocoo.org/), a microframework to quickly build web apps.
+We are going to use [Flask](http://flask.pocoo.org/), a micro framework to quickly build web apps.
 
 ```bash
 poetry add flask
 touch wsgi.py # "Web Server Gateway Interface"
 ```
 
-Open the `wsgi.py` file and copy paste the following code:
+Open the `wsgi.py` file and copy-paste the following code:
 
 ```python
 # wsgi.py
+
 # pylint: disable=missing-docstring
 
 from flask import Flask
@@ -51,9 +56,11 @@ You can start this very basic Flask app with:
 FLASK_DEBUG=true poetry run flask run
 ```
 
-Open your browser and go to [localhost:5000](http://localhost:5000/). Is it working, do you get "Hello World" as a text response from the server? If not, call a teacher.
+Open your browser and go to [localhost:5000](http://localhost:5000/). Is it working, do you get "Hello World" as a text response from the server? If not, open a ticket with a TA.
 
-This exercise's goal is **not** about implementing the little application (we will cover Flask or FastAPI in details in future lectures. Let's just build together our User Interface:
+This exercise's goal is **not** about implementing this little application or the specifics of web development, we will cover building API's in detail in future lectures.
+
+Let's build our User Interface:
 
 ```bash
 mkdir static
@@ -62,10 +69,11 @@ mkdir templates
 touch templates/home.html
 ```
 
-We just created a CSS stylesheet and the HTML template for the Home page. Let's add the business logic in `wsgi.py`:
+We just created a CSS stylesheet and the HTML template for the Home page. Let's add the logic in `wsgi.py`:
 
 ```python
 # wsgi.py
+
 # pylint: disable=missing-docstring
 
 from flask import Flask, render_template
@@ -85,6 +93,7 @@ Let's add this code in `templates/home.html`:
 
 ```html
 <!-- templates/home.html -->
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -116,6 +125,7 @@ We give you also some CSS to add in `static/style.css`:
 
 ```css
 /* static/style.css */
+
 body {
   font-family: sans-serif;
   display: flex;
@@ -145,11 +155,13 @@ body {
 
 Phew! Now let's try this! Head over to your browser and reload the page. Can you see the grid with a form? Awesome!
 
-If you try to play, you will get an error. It's because we have not implemented the `/check` endpoint yet (the one where the form gets submitted to).
-Let's do it :
+If you try to play, you will get an error. It's because we have not implemented the `/check` endpoint yet - the endpoint where the user input gets submitted for checking.
+
+Let's do it. Update `wsgi.py` with:
 
 ```python
 # wsgi.py
+
 # pylint: disable=missing-docstring
 
 from flask import Flask, render_template, request
@@ -167,7 +179,7 @@ def check():
 
 ❓ Take some time to understand how this works.
 - When we GET "/", we generate a grid and send game.grid to the `home.html`
-- When we POST "/check", the `home.html` l:19 sends us back the `form['grid']` that we can parse in python
+- When we POST "/check", the `home.html` sends us back the `form['grid']` that we can parse in python
 - We also receive `form['word']` that we check for validity
 - We finally feed all this information back to the `check.html` view to be used to display the results...
 
@@ -179,6 +191,7 @@ touch templates/check.html
 
 ```html
 <!-- templates/check.html -->
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -218,19 +231,20 @@ git push origin http-server
 # head to github.com to open a Pull Request!
 ```
 
+<br>
 
-# Deployment with Google App Engine (GAE)
+# 2️⃣ Deployment with Google App Engine (GAE)
 
-We'll put our app in production on a live server accessible through world-wide-web.
+We'll put our app in production on a live server accessible anywhere on the internet.
 
-There are various ways to do so, but we'll start today by the easiest one: Platform as a service (PaaS). In PaaS, you just give the application-code (here, our python package) to your cloud provider, which is going to "pip install it" for you on its own server, and make it readily available through public https address. Most importantly, it will auto-scale the servers for you should you start making lots of requests to the app. For all these convenient reasons, PaaS are almost never free.
+There are many ways to put a web app into production, but we'll start with the easiest: Platform as a Service (PaaS). With PaaS, you give the application-code (our python package) to your cloud provider, which is going to "pip install it" for you on its own server, and make it readily available through a public https address. Most importantly, it will auto-scale the servers for you if lots of people start sending lots requests to the app. For all these convenient reasons, PaaS are almost never free.
 
-In Google Cloud, the relevant service is called **Google App Engine**. Equivalents options are:
+In Google Cloud, the relevant service is **Google App Engine**. Equivalents options with different providers would be:
 - AWS Elastic Beanstalk
 - Azure App Service
 - Salesforce Heroku
 
-According to the [Google App Engine docs](https://cloud.google.com/appengine/docs/standard/python3/building-app/writing-web-service), your package requires at least the following minimal structure on top of our python package
+According to the [Google App Engine docs at this link](https://cloud.google.com/appengine/docs/standard/python3/building-app/writing-web-service), your package requires at least the following minimal structure on top of our python package
 
 ```bash
 ├── app.yaml # Config file for GCE
@@ -243,8 +257,7 @@ According to the [Google App Engine docs](https://cloud.google.com/appengine/doc
 
 ```
 
-
-#### `main.py`
+## 2.1. main.py
 This entrypoint should simply call your app instantiated in `wsgi.py`
 
 ```python
@@ -252,19 +265,19 @@ from wsgi import app
 
 if __name__ == '__main__':
     # This is used when running locally only. When deploying to Google App
-    # Engine, a webserver process such as Gunicorn will serve the app
+    # Engine, a webserver process will serve the app
     app.run(host='127.0.0.1', port=8080, debug=True)
 
 ```
 
-#### `requirements.txt`
+## 2.2. requirements.txt
 
 Google AE is not taking into account the modern poetry syntax but is going to try to "pip install -r requirements.txt" the good old way. Therefore, we need to convert `poetry.lock` into `requirements.txt` format:
 
 ```bash
 poetry export --without-hashes --output requirements.txt
 ```
-#### `app.yaml`
+## 2.3. app.yaml
 
 The `app.yaml` contains configuration for the deployment of your app to Google AE.
 
@@ -277,20 +290,27 @@ touch app.yaml
 Add the following contents:
 
 ```yaml
-runtime: python39 # Define the python version pre-installed on the machine
+runtime: python312 # Define the python version pre-installed on the machine
 service: default # Give a name to your app. ❗️ First deployment must be called "default"
 handlers: # Define how to handle incoming requests. Here, any request will be handled by main.py
   - url: /.*
     script: main.py
 ```
 
-❗ We have bumped the python version to 3.9 for deployment on Google App Engine. While this isn't advisable to do when you're developing an app, we have done so for compatability.
-
 💡 [Stack Overflow post](https://stackoverflow.com/questions/42360790/why-do-i-need-to-deploy-a-default-app-before-i-can-deploy-multiple-services-in) explaining why the first service deployed should be named "default"
 
-#### `.gcloudignore`
+## 2.4. .gcloudignore
 
-Because we are going to use the older `pip install -r requirements.txt` method of package management, there is no reason to upload the files related to our poetry virtual environment, located in `.venv`. We can add a file to tell Google AE to ignore files and directories.
+Because we are going to use the older `pip install -r requirements.txt` method of package management, there is no reason to upload some files:
+- `.venv/` - local python virtual environment created by poetry
+- `pyproject.toml` - used by poetry
+- `poetry.lock` - created by poetry
+- `tests/` - then tests should run before the app is deployed!
+- `.github/` - contains our Github workflows. GAE isn't going to run them!
+- `.gitignore` - used by git. GAE isn't going to use it.
+- `README.md` - your project readme. Used to communicate details of your project on Github.
+
+We only want to deploy the absolute minimum files our application needs to run. We can add a file to tell Google AE to ignore files and directories.
 
 To create a `.gcloudignore`:
 
@@ -302,33 +322,40 @@ Add the following line to your `.gcloudignore`:
 
 ```bash
 .venv/
+poetry.lock
+pyproject.toml
+tests/
+.github/
+.gitignore
+README.md
 ```
 
-🎉 And that's it! There are tons of other potential configuration parameters to play with for a real app, (how to scale, how to handle secrets etc...) but we don't need them today!
+🎉 And that's it! There are tons of other potential configuration parameters to play with for a more complex app (how to scale, how to handle secrets etc...) but we don't need them for today!
 
-#### Deploy
+## 2.4. Deploy
 
 ```bash
 gcloud app deploy
 ```
 Should give you a public https address with your game playing!
 
+<br>
 
-# Continuous Deployment with Google App Engine + Gihub Actions
+# 3️⃣ Continuous Deployment with Google App Engine + Github Actions
 
 We are almost there. A quick recap gives us:
 
 1. Our code is on GitHub
 1. We have Continuous Integration set up thanks to Github Actions
-1. Every commit (in `master` or a feature branch) triggers a compilation from Github Actions
-1. A Pull Request status is updated by  Github Actions and gives context to reviewer
+1. Every commit, in `main` or a feature branch, triggers a compilation from Github Actions
+1. A Pull Request status is updated by Github Actions and gives context to reviewer
 1. We still need to **manually** run the `gcloud app deploy` command to deploy
 
 Let's automated this last part and reach the grail!
 
-## Create new Github Action `cd.yml`
+## 3.1. Create new Github Action `cd.yml`
 
-We want to create a GHA that is going to "gcloud app deploy" at each "push" on "master".
+We want to create a GHA that is going to "gcloud app deploy" at each "push" on "main".
 
 Remember how we told you that there are tons of officially maintained github actions that you can re-use? Well, we're going to use Google official [deploy-appengine](https://github.com/google-github-actions/deploy-appengine) GHA! (Google talking Microsoft language, how cool is that?)
 
@@ -345,11 +372,12 @@ The only difficulty is to give GitHub VMs your Google Cloud Credentials.
   - Artifact Registry Reader (roles/artifactregistry.reader): to read the application's container image
 - "Key" --> "Create new KEY" and download the JSON (keep it safe!)
 
-👉 Now, go to your github repo, "Settings", "Secrets and variables", "Actions"
-- Add this JSON as a new secret, name it for instance `GCP_SA_KEY`
+👉 Now, go to your github repo, **Settings** -> **Secrets and variables** -> **Actions** -> **New Repository Secret**.
+- Add the **entire JSON** as a new secret, name it for instance `GCP_SA_KEY`
 - You can now use the this key in your GHA using `'${{ secrets.GCP_SA_KEY }}'`
 
 👉 Let's now create the GHA passing these secrets
+
 ```bash
 touch .github/workflows/.app-engine-cd.yml
 ```
@@ -374,17 +402,16 @@ jobs:
     # Authenticate via Service Account Key JSON
     # See https://github.com/google-github-actions/auth#authenticating-via-service-account-key-json-1
     - id: 'auth'
-      uses: 'google-github-actions/auth@v1'
+      uses: 'google-github-actions/auth@v2'
       with:
         credentials_json: '${{ secrets.GCP_SA_KEY }}'
 
     # Use Google official GHA to deploy 🎉
     - id: 'deploy'
-      uses: 'google-github-actions/deploy-appengine@v1'
-
+      uses: 'google-github-actions/deploy-appengine@v2'
 ```
 
-## Let's test it!
+## 3.2. Let's test it!
 
  That's it! But is it really working?
 
@@ -396,6 +423,7 @@ git checkout -b yellow-letter
 
 ```css
 /* static/style.css */
+
 /* [...] */
 .letter {
   /* [...] */
@@ -417,24 +445,37 @@ git push origin yellow-letter
 Go to github.com:
 - create a Pull Request
 - wait for your "CI" Action to turn it green
-- merge it to `master`
+- merge it to `main`
 - **Go check your new "CD Action" running** --> It should work!
 - Check your updated app online 🎉
 
 👏 👏 👏
 
-**Going further**
-
-This kind of development with small feature branches which are automatically deployed to production as soon as they are merged to master might not work for big feature which need several steps, several pull request, etc. You don't want to keep a feature branch open for weeks as the Pull Request would be basically horrible to review, and merging it back to `master` would be a nightmare. We still encourage small pull requests, but hide the feature being developed behind a [**feature toggle**](https://en.wikipedia.org/wiki/Feature_toggle).
-
+<br>
 
 # (Optional) Score & Session
 
 If this is done as well, you can try to implement a feature in the Longest Word Game: a global **score**! The idea is that every time a user finds a valid word, you increment points (1 point per letter). As HTTP is stateless, you need to use the Flask extension [Flask-Session](https://flask-session.readthedocs.io/en/latest/) to handle the concept of **session** (with `SESSION_TYPE='filesystem'`).
 
-# 🏁 Delete your Google App to save costs
-In the Google Cloud console, go to
+There are no tests for this, but it could be fun to implement!
+
+<br>
+
+# 🔨 Teardown
+
+Delete your Google App to save costs
+In the Google Cloud console, go to:
 - App Engine
-- --> Settings
-- --> Disable application
-- --> Enter your project ID
+- Settings
+- Disable application
+- Enter your project ID
+
+<br>
+
+# 🏁 Finishing up
+
+This kind of development with small feature branches which are automatically deployed to production as soon as they are merged to main might not work for big feature which need several steps, several pull request, etc. You don't want to keep a feature branch open for weeks as the Pull Request would be horrible to review, and merging it back to `main` would be a nightmare.
+
+We still encourage small pull requests, but hide the feature being developed behind a [**feature toggle**](https://en.wikipedia.org/wiki/Feature_toggle).
+
+<br>

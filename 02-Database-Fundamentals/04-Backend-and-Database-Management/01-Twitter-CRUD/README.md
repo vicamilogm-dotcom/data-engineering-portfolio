@@ -2,13 +2,11 @@
 
 The goal of this exercise is to create:
 - a Twitter **database** using *alembic*, containing a `tweets` and a `users` table
-- and a functioning **front-end** with `FastAPI`
+- and a functioning **back-end** integration with `FastAPI`
 
 <br>
 
 # 0️⃣ Setup: Creating the database with psql
-<details>
-<summary markdown='span'>❓ Instruction (expand me)</summary>
 
 ❓ Lets create a new database in our postgres called `twitter`
 
@@ -38,21 +36,16 @@ Then, connect to our new database through DBeaver like we did in previous units!
 
 Now we are ready to start creating our python files! 🚀
 
-</details>
-
 <br>
 
 # 1️⃣ Python connection with sqlalchemy
-
-<details>
-<summary markdown='span'>❓ Instruction (expand me)</summary>
 
 We have set up a file for you at `twitter_api/database.py`. It has everything required to connect to the database from our API. Try to read it and understand how the code is working.
 
 1. First we define the necessary imports from sqlalchemy.
     ```python
     import os
-    from sqlalchemy import create_engine
+    from sqlalchemy import create_engine, text
     from sqlalchemy.orm import sessionmaker
     ```
 
@@ -73,21 +66,19 @@ We have set up a file for you at `twitter_api/database.py`. It has everything re
 4. You can now test your connection! Run the file `python twitter_api/database.py`, if it runs successfully, your postgres connection string and `sqlalchemy` is allowing us to execute queries against the database!
     ```python
     if __name__ == "__main__":
-        with SessionLocal() as db:
-            print(db.execute("""
-                SELECT * FROM information_schema.tables
-                WHERE table_schema = 'public'
-                """).fetchall())
-    ```
+        query = text("""
+            SELECT * FROM information_schema.tables
+            WHERE table_schema = 'public'
+            """
+        )
 
-</details>
+        with SessionLocal() as db:
+            print(db.execute(query).fetchall())
+    ```
 
 <br>
 
 # 2️⃣ Creating the users table with alembic
-
-<details>
-<summary markdown='span'>❓ Instructions (expand me)</summary>
 
 ❓ **Go to `twitter_api/models.py` and fill up the
 `Users` class** using sqlalchemy [declarative mapping](https://docs.sqlalchemy.org/en/14/orm/mapping_styles.html).
@@ -101,7 +92,7 @@ CREATE TABLE users (
 );
 ```
 
-💡 Start with just the tablename and columns section.
+💡 Start with just the table name and columns section.
 
 Now that the table is defined, we are ready to use [alembic](https://alembic.sqlalchemy.org/en/latest/autogenerate.html) to autogenerate migrations!
 
@@ -163,14 +154,10 @@ The initial setup of alembic is a little tricky, so we have included the steps h
     👉 Go check your database, you should see a `users` table created with all the columns and two roles!
 
     ❗️ Note that there are some restrictions to what autogenerate will detect. You can more about them [here](https://alembic.sqlalchemy.org/en/latest/autogenerate.html#what-does-autogenerate-detect-and-what-does-it-not-detect).
-</details>
 
 <br>
 
 # 3️⃣ Creating an API with FastAPI + Pydantic
-
-<details>
-<summary markdown='span'>❓ Instructions (expand me)</summary>
 
 We have three steps to creating the API:
 
@@ -206,12 +193,12 @@ class UserCreate(UserBase):
 class User(UserBase):
     id: int
 
-    class Config:
-        orm_mode = True
+    # This line allows the equivalent of ORM Mode
+    model_config = ConfigDict(from_attributes=True)
 ```
 </details>
 
-Here, the main piece you were probably missing was `orm_mode` to allow us to leverage the models using [ORM patterns](https://www.altexsoft.com/blog/object-relational-mapping/)!
+Here, the main piece you were probably missing was the `model_config` to allow us to leverage the models using [ORM patterns](https://www.altexsoft.com/blog/object-relational-mapping/)!
 
 ## 3.2. Interact with the database via `FastAPI` without writing SQL (`crud.py` + `main.py`)
 
@@ -294,14 +281,9 @@ make test_users
 
 If you have 3/3 passed tests: add, commit and push your code to github!
 
-</details>
-
 <br>
 
 # 4️⃣ Tweets 🦜
-
-<details>
-<summary markdown='span'>❓ Instructions (expand me)</summary>
 
 Now we want to create our tweets table, but don't worry, most of the code you have already written has patterns/logic that can be repeated here!
 
@@ -366,14 +348,9 @@ make test_tweets
 
 If all the tests pass: add, commit and push your code to github!
 
-</details>
-
 <br>
 
 # 5️⃣ Likes (optional)
-
-<details>
-<summary markdown='span'>❓ Instructions (expand me)</summary>
 
 🎯 Our last goal for today is to integrate the likes feature.
 
@@ -412,24 +389,37 @@ Notice the last route `GET/users/{user_id}/liked_tweets/` in particular!
 make test
 ```
 
-</details>
-
 <br>
 
 # 🏁 Finishing up
 
-<details>
-<summary markdown='span'>❓ Instructions (expand me)</summary>
-
 Congratulations! You're now able to build your own REST API with `fastapi`, `pydantic`, `sqlalchemy` and `alembic`! 🚀
 
-🧪 Don't forget to add, commit, and push your code to github so Kitt can track your progress!
+🧪 Don't forget to run:
+
+```bash
+make test
+```
+
+And git add, commit, and push your code to github so you can track you progress on Kitt!
 
 ### Further Reading
 
 #### Inspect tests
 
 If you've completed all the challenges for this unit, have a look at the way we build our tests: using a FastAPI [TestClient](https://fastapi.tiangolo.com/tutorial/testing/) to spawn a new server at each test, as well as a temporary local `sqlite` database to mimic your postgres instance!
+
+Can you tell why with each `make test_...` we had to run all the tests that came before?
+
+<details>
+<summary markdown='span'>🎁 Solution</summary>
+
+Because the tests are dumping the local `sqlite` database on every test run.
+
+Our API's are inherently dependent on each other. When we test **likes**, they need to have **tweets** and **users** associated with them, so we need to maintain state. The easy way to do that is to just run the previous tests that creates tests users, tweets, and likes.
+
+</details>
+
 
 #### FastAPI Backend Template
 
@@ -444,7 +434,5 @@ It contains:
 - CI for Pre-Commit auto-update
 - Pre-Commit hooks
 - CodeCov test report monitoring
-
-</details>
 
 <br>

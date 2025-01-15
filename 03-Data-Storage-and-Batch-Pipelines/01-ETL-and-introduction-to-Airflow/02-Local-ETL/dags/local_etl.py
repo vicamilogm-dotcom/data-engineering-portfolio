@@ -2,6 +2,7 @@ import os
 
 from airflow import DAG
 from airflow.providers.postgres.hooks.postgres import PostgresHook
+from airflow.providers.postgres.operators.postgres import PostgresOperator
 
 # IMPORT YOUR PACKAGES HERE
 
@@ -18,7 +19,8 @@ def read_from_json(joke_file: str) -> dict:
 def translate_joke_to_swedish(joke: str) -> str:
     """
     Returns the translated to Swedish joke using
-    the googletrans library: https://github.com/ssut/py-googletrans
+    the deep-translator library: https://github.com/nidhaloff/deep-translator
+    Specifically use GoogleTranslator - it's free and doesn't require an API key
     """
     pass  # YOUR CODE HERE
 

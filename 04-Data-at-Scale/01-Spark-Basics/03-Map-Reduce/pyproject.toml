@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "mapreduce"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+packages = [{include = "lwmr"}]
+
+[tool.poetry.dependencies]
+python = "~3.12.8"
+lewagonde = { path = "../../../common/lewagonde/", develop = true }
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.4"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

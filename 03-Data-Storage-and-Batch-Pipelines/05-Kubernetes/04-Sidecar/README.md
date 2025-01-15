@@ -1,12 +1,14 @@
-# Sidecar 🚗
+# 🎯 Goal
 
 The previous exercise the **frontend** and **backend** were passing the styled images via a volume.
 
 🎯 Instead to save us needing a volume lets put them in the same pod to share a file system!
 
-# 1) Context
+<br>
 
-- You have the backend image from before + a new `europe-west1-docker.pkg.dev/data-engineering-students/student-images/style-frontend-sidecar` image!
+# 1️⃣ Context
+
+You have the backend image from before + a new `europe-west1-docker.pkg.dev/data-engineering-students/student-images/style-frontend-sidecar` image!
 
 ❓ Why?
 
@@ -35,7 +37,7 @@ volumes:
   emptyDir: {}
 ```
 
-Then mount it as normal! In this challenge mount this as we mounted volumes before **at `/storage` in both containers!**
+Then mount it as normal! In this challenge, mount this as we mounted volumes before **at `/storage` in both containers!**
 
 Finally you will need to override the `CMD` of the frontend and replace it with:
 
@@ -43,6 +45,10 @@ Finally you will need to override the `CMD` of the frontend and replace it with:
 ["streamlit", "run", "main.py", "--server.port=8501", "--server.address=0.0.0.0"]
 ```
 
-# 2) Your turn 😅
+<br>
+
+# 2️⃣ Your turn 😅
 
 This exercise is a lot less guided than previous ones but you should have the tools you need at this point to write your own **k8s** config files!
+
+<br>

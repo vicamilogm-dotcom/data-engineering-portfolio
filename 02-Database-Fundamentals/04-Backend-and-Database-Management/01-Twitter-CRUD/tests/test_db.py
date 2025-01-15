@@ -37,9 +37,9 @@ def test_read_root():
 
 @pytest.mark.users
 def test_create_user():
-    response = client.post("/users/", json={"email": "test@test", "password": 123})
+    response = client.post("/users/", json={"email": "test@test", "password": "123"})
     assert response.status_code == 200
-    response = client.post("/users/", json={"email": "test@test", "password": 123})
+    response = client.post("/users/", json={"email": "test@test", "password": "123"})
     assert response.status_code == 400
 
 
@@ -55,7 +55,7 @@ def test_read_users():
 def test_read_user():
     response = client.get("/users/1")
     assert response.status_code == 200
-    assert type(response.json()) == dict
+    assert isinstance(response.json(), dict)
     assert list(response.json().keys()) == ["email", "id"]
 
 

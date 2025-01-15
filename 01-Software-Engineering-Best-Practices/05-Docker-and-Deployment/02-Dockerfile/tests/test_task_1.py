@@ -16,7 +16,7 @@ class TestTask1:
                 "add-apt-repository ppa:deadsnakes/ppa",
                 "apt-get -y update",
                 "apt-get -y install python3.8 python3-pip",
-                "pip3 install fastapi==0.78.0 SQLAlchemy==1.4.36 alembic==1.7.7 uvicorn[standard]==0.17.6",
+                "pip3 install fastapi==0.115.6 uvicorn==0.33.0",
                 "apt-get clean",
                 "rm -rf /var/lib/apt/lists/*",
             ],

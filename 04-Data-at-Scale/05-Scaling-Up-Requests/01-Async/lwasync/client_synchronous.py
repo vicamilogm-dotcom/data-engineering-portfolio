@@ -6,7 +6,7 @@ import pandas as pd
 import requests
 
 
-def make_one_call(index) -> Dict[str, Any]:
+def make_one_call(index, url: str = "http://localhost:8080/say-hi") -> Dict[str, Any]:
     """
     Make one call to the API's /say-hi endpoint
     """
@@ -18,7 +18,9 @@ def make_one_call(index) -> Dict[str, Any]:
     return {**response, "index": index, "duration_seconds": duration_seconds}
 
 
-def make_many_calls(number: int) -> List[Dict[str, Any]]:
+def make_many_calls(
+    number: int, url: str = "http://localhost:8080/say-hi"
+) -> List[Dict[str, Any]]:
     """
     Runs `number` synchronous calls to the local server and returns all the responses in an array
     """
@@ -33,14 +35,16 @@ def make_many_calls(number: int) -> List[Dict[str, Any]]:
     return pd.DataFrame(responses), duration_seconds
 
 
-def generate_statistics_sync(number: int = 10):
+def generate_statistics_sync(
+    number: int = 10, url: str = "http://localhost:8080/say-hi"
+):
     """
     The main function to run this file as a standalone program and output /say-hi API endpoint statistics
     """
     # Then we call the function `make_many_calls` with the argument `number`
-    return make_many_calls(number)
+    return make_many_calls(number, url)
 
 
 if __name__ == "__main__":
     # Here we simply call `generate_statistics()` when this file is run as a program and not imported as a library
-    generate_statistics_sync()
+    generate_statistics_sync(10)

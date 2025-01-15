@@ -1,13 +1,12 @@
-## Goal 🎯
+# 🎯 Goal
 
 In this challenge, we will learn how to deploy our first application with **Kubernetes** and **Minikube** by putting a FastAPI endpoint onto a cluster. 🚀
 
-Minikube allows developers to run Kubernetes **locally** on their machine, as though it was a cluster of nodes.
-It is an excellent tool to **help developers and new Kubernetes users in deploying applications with K8s**.
+Minikube allows developers to run Kubernetes **locally** on their machine, as though it was a cluster of nodes. It is an excellent tool to **help developers and new Kubernetes users in deploying applications with K8s**.
 
-Under the hood, Minikube creates a virtual machine in your container in which there is single cluster of one node.
+Under the hood, Minikube creates a virtual machine in a container with a single cluster of one node.
 
-To use Minikube, as mentioned in the [documentation](<https://minikube.sigs.k8s.io/docs/start/>), you'll need:
+To use Minikube, as detailed in the documentation at [this link](<https://minikube.sigs.k8s.io/docs/start/>), we'll need:
 
 - **2 CPUs** or more
 - **2GB of RAM**
@@ -16,15 +15,17 @@ To use Minikube, as mentioned in the [documentation](<https://minikube.sigs.k8s.
 
 In our case, we will use Docker to launch Minikube.
 
+<br>
 
 # 0️⃣ First, some theory
 
 📚 Take 5 min to read [this amazing summary article 📚](https://medium.com/google-cloud/kubernetes-101-pods-nodes-containers-and-clusters-c1509e409e16) that complement this morning's lecture.
 
+<br>
 
 # 1️⃣ K8s Power User Setup 🎁
 
-### ZSH autocompletions
+### K8's terminal auto-completion
 
 Add the two following lines at the end of your `~/.zshrc` file then reopen a new terminal
 
@@ -33,7 +34,7 @@ Add the two following lines at the end of your `~/.zshrc` file then reopen a new
 [[ $commands[minikube] ]] && source <(minikube completion zsh)
 ```
 
-If you type `minikube <TAB>` or `kubectl <TAB>` it should give you a list of commands
+If you type `minikube <TAB>` or `kubectl <TAB>` it should give you a list of commands! In the terminal, the **tab** key is your best friend!
 
 ### VScode Extensions
 
@@ -49,8 +50,7 @@ To launch Minikube and start a cluster, you'll need to open a terminal and run t
 minikube start
 ```
 
-
-Please wait Minikube to start, it can take up to a few minutes.
+Wait Minikube to start, it can take up to a few minutes.
 
 Once started, you can interact with your cluster thanks to `kubectl`, just like for for any other K8s cluster.
 
@@ -60,12 +60,14 @@ For instance, you can inspect your cluster node.
 kubectl get node
 ```
 
-You should see something like
+You should see something like:
 
-```txt
+```bash
 NAME       STATUS   ROLES                  AGE   VERSION
 minikube   Ready    control-plane,master   75s   v1.23.3
 ```
+
+<br>
 
 # 3️⃣ Sharing your Docker daemon 🐳
 
@@ -88,7 +90,9 @@ Now any `docker` command you run in this current terminal will run against the D
 docker build -t app .
 ```
 
-💡 *Alternatively, there is one other effective way to push your local Docker image directly to Minikube, which could save time from building the images in Minikube again: `minikube image load <image_name>`*
+💡 Alternatively, there is one other effective way to push your local Docker image directly to Minikube, which could save time from building the images in Minikube again: `minikube image load <image_name>`
+
+<br>
 
 # 4️⃣ Our first K8s Service 🗄️
 
@@ -139,7 +143,6 @@ This specification creates a new Service object named "fastapi-service". But how
 - `targetPort` 8000: The port of the pods (where the fastAPI is running).
 - `port` 5000: The exposed port external users use to access the Service
 
-
 Finally apply the `service.yaml` config file to create the service 👇
 
 ```bash
@@ -156,11 +159,12 @@ kubectl get service fastapi-service
 
 You should see something like this (don't worry about IP for now)
 
-```text
+```bash
 NAME            TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
 fastapi-service   LoadBalancer   10.96.231.152   <pending>     5000:30604/TCP   24s
 ```
 
+<br>
 
 # 5️⃣ Add the Deployment 🛰
 
@@ -208,11 +212,11 @@ spec:
         app: fastapi
     spec:
       containers:
-      - name: fastapi-container
-        image: app:latest
-        imagePullPolicy: Never
-        ports:
-        - containerPort: 8000 # Same as service target port
+        - name: fastapi-container
+            image: app:latest
+            imagePullPolicy: Never
+            ports:
+              - containerPort: 8000 # Same as service target port
 ```
 
 In the first part of the configuration, we specify that the configuration we are applying is for a Deployment resource that we call `fastapi-deployment`.
@@ -225,14 +229,15 @@ We then specify the port exposed in the container, here 8000 (as per Service's t
 
 By Default, a Deployment will always try to pull the image from a remote registry. If you want to use a local image to build a container in the pods, you need to specify the `imagePullPolicy` to `Never`.
 
+💡 You might get a warning that resource limits haven't been defined, that's ok for the moment.
+
 Run the below command to run the deployment 👇
 
 ```bash
 kubectl apply -f deployment.yaml
 ```
 
-you should see `deployment.apps/fastapi-deployment created`
-
+You should see `deployment.apps/fastapi-deployment created`
 
 Let's inspect our 4 pods created 👇
 
@@ -242,13 +247,15 @@ kubectl get pods
 
 You should see 4 pods running:
 
-```text
+```bash
 NAME                                READY   STATUS    RESTARTS   AGE
 fastapi-deployment-746c85b46f-2sdp2   1/1     Running   0          26s
 fastapi-deployment-746c85b46f-dqcxs   1/1     Running   0          26s
 fastapi-deployment-746c85b46f-h5vls   1/1     Running   0          26s
 fastapi-deployment-746c85b46f-rgm82   1/1     Running   0          26s
 ```
+
+<br>
 
 # 6️⃣ Forwarding our service 🔗
 
@@ -280,6 +287,8 @@ minikube dashboard
 
 Then follow the address it gives and open it in your local browser! (with ssh-port-forwarding from your VM..)
 
+<br>
+
 # 8️⃣ Stopping Minikube 🛑
 
 To delete your local cluster 👇
@@ -288,18 +297,24 @@ To delete your local cluster 👇
 minikube delete
 ```
 
-
 To stop Minikube 👇
 
 ```bash
 minikube stop
 ```
 
-# 🏁 Well done! 🙌
+<br>
+
+# 🏁 Finishing up
+
+Well done! 🙌 You've created a service using Kubernetes! In the next challenge we'll create a more detailed Kubernetes deployment of the Streamlit app we created in the previous unit.
+
+🧪 Test all your code with:
 
 ```bash
 make test
-git add --all
-git commit -m "Minikube-and-Kubectl challenge completed"
-ggpush
 ```
+
+And don't forget to git add, commit, and push your code to Github to track your progress on Kitt!
+
+<br>

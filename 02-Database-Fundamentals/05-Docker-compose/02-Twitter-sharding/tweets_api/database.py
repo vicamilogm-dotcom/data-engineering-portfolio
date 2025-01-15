@@ -1,5 +1,5 @@
 import os
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 
 DB_URL = os.environ.get("POSTGRES_DATABASE_URL")
@@ -11,9 +11,11 @@ if __name__ == "__main__":
     with SessionLocal() as db:
         print(
             db.execute(
-                """
+                text(
+                    """
             SELECT * FROM information_schema.tables
             WHERE table_schema = 'public'
             """
+                )
             ).fetchall()
         )

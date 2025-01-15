@@ -1,8 +1,8 @@
-FROM python:3.8.10-slim
+FROM python:3.12.8-slim
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONUNBUFFERED=1
 
 ENV AIRFLOW_HOME=/app/airflow
 

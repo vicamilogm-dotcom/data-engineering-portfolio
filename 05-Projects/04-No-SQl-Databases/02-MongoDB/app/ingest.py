@@ -1,4 +1,4 @@
-import pymongo
+from pymongo.collection import Collection
 from app.pymongo_get_database import get_database
 
 db = get_database()
@@ -10,7 +10,7 @@ pass  # YOUR CODE HERE
 
 
 # Insert the documents into the "customers" collection
-def ingest_data(customers: pymongo.collection.Collection) -> None:
+def ingest_data(customers: Collection) -> None:
     """Ingest data into the customers collection."""
     # Create a collection named `customers` and insert the following documents
     # { "name": "John Doe", "age": 35, "gender": "male", "address": "123 Main St" },

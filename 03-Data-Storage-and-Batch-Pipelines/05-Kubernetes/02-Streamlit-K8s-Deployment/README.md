@@ -37,12 +37,11 @@ Compared with 1 `docker-compose.yml`, K8s will require us to explode configurati
   - volumes cloud claim
 
 🔍 Through this we will see a number of important concepts in k8s such as:
-- secrets
-- volumes
-- communication between services
-- scaling
-- fault tolerance
-
+- Secrets
+- Volumes
+- Communication between services
+- Scaling
+- Fault tolerance
 
 Let's do it! 🏎️
 
@@ -70,7 +69,7 @@ kubectl get svc
 
 which should return:
 
-```text
+```bash
 NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
 kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   2m12s
 ```
@@ -260,9 +259,9 @@ To get our previously defined secrets into the environment variables of the cont
 
 ```yaml
 env:
-- name: POSTGRES_USER
+  - name: POSTGRES_USER
     valueFrom:
-    secretKeyRef:
+      secretKeyRef:
         key: POSTGRES_USER
         name: postgres-secrets
 ```
@@ -273,7 +272,7 @@ Then we have our ports section exposing 5432 on our container:
 
 ```yaml
 ports:
-- containerPort: 5432
+  - containerPort: 5432
     name: access
     protocol: TCP
 ```
@@ -282,10 +281,10 @@ Finally the most complicated difference is how we use our volume we created befo
 
 ```yaml
     volumeMounts:
-    - name: postgres-mount
+      - name: postgres-mount
         mountPath: /var/lib/postgresql/data
 volumes:
-- name: postgres-mount
+  - name: postgres-mount
     persistentVolumeClaim:
         claimName: postgres-volume-claim
 ```

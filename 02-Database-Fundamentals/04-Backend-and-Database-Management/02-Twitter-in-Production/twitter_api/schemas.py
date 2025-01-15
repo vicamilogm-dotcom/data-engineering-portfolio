@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 # User section
 
@@ -14,8 +14,7 @@ class UserCreate(UserBase):
 class User(UserBase):
     id: int
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(coerce_numbers_to_str=True)
 
 
 # Tweet section
@@ -33,8 +32,7 @@ class Tweet(TweetBase):
     id: int
     owner_id: int
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 # Like section
@@ -52,5 +50,4 @@ class Like(LikeBase):
     id: int
     owner_id: int
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)

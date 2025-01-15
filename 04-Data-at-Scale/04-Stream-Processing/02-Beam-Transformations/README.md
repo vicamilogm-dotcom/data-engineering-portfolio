@@ -1,9 +1,10 @@
 # 🎯 Goal
 
-* Group data coming from different IoT sources within a fixed interval of time
-* Load the transformed data into **BigQuery**
+We'll start with `batch processing` data with **Apache Beam**. We have provided a static log file which contains values from different sensors with timestamps. In this challenge we will:
+- Group data coming from different IoT sources within a fixed interval of time using **Apache Beam**
+- Load the transformed data into **BigQuery**
 
-✅ We'll start with `batch processing` data with Apache Beam. We have provided you an old log file which contains values from different sensors with the timestamp. `Streaming` will be covered in the next challenge 🙌
+Don't worry, we'll cover processing real streaming data in the next challenge 🙌 But we'll start small with a static file.
 
 <br>
 
@@ -15,10 +16,13 @@ To do so, execute this command:
 mkdir -p data
 curl https://wagon-public-datasets.s3.amazonaws.com/data-engineering/W3D4/sensors_latency.csv > data/sensors_latency.csv
 ```
+
 👉 Let's have a quick look at the data in the terminal:
+
 ```bash
 head data/sensors_latency.csv
 ```
+
 ☝️ The data contains 3 pieces of information:
 - The `sensor` name
 - The `value` recorded
@@ -34,7 +38,7 @@ In this challenge, we use the paradigm of Map/Reduce with Apache Beam and we'll 
 
 👇 Here is an overview of the pipeline:
 
-<img src="https://wagon-public-datasets.s3.amazonaws.com/data-engineering/W3D4/03-04-02_beam_pipeline.png" witdh=400>
+<img src="https://wagon-public-datasets.s3.amazonaws.com/data-engineering/W3D4/03-04-02_beam_pipeline.png" width=800>
 
 👉 Head to `app/beam_sample.py` and have a look at the different parts of the pipeline inside the `run` function.
 
@@ -102,9 +106,9 @@ make test_first_read
 
 <br>
 
-# 5️⃣ Let's Create a key for each element
+# 5️⃣ Create a key for each element
 
-Inside the `windowing` transformation, let's create a (key,value) tuple so it will be possible to group the elements by keys later.
+Inside the `windowing` transformation, let's create a `(key, value)` tuple so it will be possible to group the elements by keys later.
 
 ❓ What could be a good way to group the data for this type of data?
 <details>
@@ -126,8 +130,8 @@ For TimeStamped data, a good strategy of grouping is to create intervals to gath
 ...
 ```
 
-* key: rounded value of the timestamp (you can use the `strtime_window_rounded` function we provided for you)
-* value: sensor name and sensor value
+- **key:** rounded value of the timestamp - you can use the `strtime_window_rounded()` function provided in `app/utils.py`
+- **value:** sensor name and sensor value
 
 ❗️ We have manually created the time intervals by rounding the timestamp. Beam is actually able to create time windows with TimeStamped elements. We'll do that in the next challenge.
 
@@ -152,7 +156,7 @@ With these tuples we are now ready to group!
 
 <br>
 
-# 6️⃣ Let's Group/Combine the data
+# 6️⃣ Group/Aggregate the data
 
 In the previous step, we already created a key for each element. Now, we just need to group & reduce these elements together by taking their mean within each 15-min time interval.
 
@@ -175,7 +179,7 @@ In the previous step, we already created a key for each element. Now, we just ne
 {'Timestamp': '2022-11-25 09:00:30.000000', 'AtmP': 993.7766113281240, 'Temp': 10.66554260253947, ...}
 ```
 
-💡 We advise you to work in two steps: print (or save) the output of the GroupByKey first, and only then work on aggretating the resulting group!
+💡 We advise you to work in two steps: print (or save) the output of the GroupByKey first, and only then work on aggregating the resulting group!
 
 💡 We advise you to isolate the pure-python aggregation function logic in a separate `utils.aggregate_sensors` function!
 
@@ -198,11 +202,13 @@ python app/beam_sample.py \
 make test_beam_output
 ```
 
-- 🧙‍♂️ (optional): Feel free to use a `beam.ParDo` instead of `MapTuple` to fine-tune your Beam skills
+## 🧙‍♂️ (Optional) Pardo instead of MapTuple
+
+Feel free to use a `beam.ParDo` instead of `MapTuple` to fine-tune your Beam skills
 
 <br>
 
-# 7️⃣ Let's Load the data into BigQuery
+# 7️⃣ Load the data into BigQuery
 
 ❓ 💻  Create a _dataset_ in BigQuery, make sure it's located in the EU. Add 1 new _table_ named: `stream-test` to your newly created dataset.
 
@@ -234,13 +240,13 @@ BQ_TABLE=<your-project-id>:<your-bq-dataset-name>.<your-table-name>
 A small, annoying thing is that `WRITE_TRUNCATE` requires a mandatory "temp" location in Google Cloud Storage to load data **before** it is sent to **BigQuery**. You can create a bucket with:
 
 ```bash
-gsutil mb -l eu gs://$USER-deng-tmp
+gsutil mb -l eu gs://$USER-beam-iot-tmp
 ```
 
 And then add the argument `GCS_TEMP=gs://...` to your `.env` file. Don't forget to run `direnv reload` before executing your pipeline!
 
 <details>
-  <summary markdown='span'> Google Application Credentials problems? </summary>
+<summary markdown='span'> Google Application Credentials problems? </summary>
 
 You might need to configure your [`GOOGLE_APPLICATION_CREDENTIAL`](https://cloud.google.com/sdk/gcloud/reference/auth/application-default/login) (not to be confused with your gcloud CLI credentials which are already set).
 
@@ -251,10 +257,9 @@ To set the environment variable so it's always accessible in your VM, you can ad
 ```bash
 export GOOGLE_APPLICATION_CREDENTIALS="~/.gcp_keys/le-wagon-de-bootcamp.json"
 ```
-
 </details>
 
-You can execute your code with this command:
+You can execute your code and send the data to BigQuery with:
 
 ```bash
 python app/beam_sample.py \
@@ -269,10 +274,12 @@ python app/beam_sample.py \
 
 # 🏁 Finishing up
 
-Congratulations 🎉 Tou have built a complete pipeline to transform and load your data. Here is an overview of what you have built during this challenge:
+Congratulations 🎉 You have built a complete pipeline to transform and load your data. Here is an overview of what you have built during this challenge:
 
 <img src="https://wagon-public-datasets.s3.amazonaws.com/data-engineering/040402-beam-transformation-pipeline.png">
 
 Don't forget to commit and push your code to github to track your progress on Kitt!
+
+We've made our pipeline work on static data, the next step is to see it in action on streaming data!
 
 <br>

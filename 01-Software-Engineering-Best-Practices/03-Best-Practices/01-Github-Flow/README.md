@@ -18,6 +18,8 @@ In 2011, Scott Chacon, one of the original founder of GitHub wrote a [blog artic
 - Once it is merged and pushed to `master`, you should deploy immediately
 ```
 
+💡 Note that the primary branch of most repositories is now named `main` instead of `master`.
+
 ## Create repo
 
 Before we actually do our first commit, we need to create a GitHub repository!
@@ -34,7 +36,7 @@ git commit -m "Initialize repository"
 
 gh repo create --public --source=.
 
-git push origin master
+git push origin main
 ```
 
 Use `gh browse` you should see the commit and two files!
@@ -47,7 +49,7 @@ Let's start working on this repository. Before touching the code, we must create
 git checkout -b html-skeleton
 ```
 
-This commands _creates_ the branch and _switches_ to it. You can see the Git Bash prompt is updated and no longer displays `master`. You are ready to code in this branch!
+This commands _creates_ the branch and _switches_ to it. You can see the Git Bash prompt is updated and no longer displays `main`. You are ready to code in this branch!
 
 Let's open a new VScode at the root of the repo
 ```bash
@@ -116,20 +118,20 @@ Head over to `github.com/<user.github_nickname>/github-flow/settings/collaborati
 
 Once this setup is done, ask them to go to the Pull Request page (should be PR #1) and review the code. If they have some comments (indentation, error, etc.), you need to do some fixes: go back to VS Code, in the same branch, update the code and do another commit. Push this commit to GitHub: you will see that the Pull Request automatically updates!
 
-In the end, if you and your reviewer agree on the code, the reviewer should **merge** the Pull Request. After merging, there is a button "Delete branch". We advise that you click on it, because in the GitHub flow, a **merged branch is a dead branch** and no work should be pushed to it anymore.
+In the end, if you and your reviewer agree on the code, the reviewer should **merge** the Pull Request. After merging, there is a button "Delete branch". We advise that you click on it, because in the GitHub flow, a **merged branch is a dead branch** and no work should be pushed to it any more.
 
 ### What happens next?
 
-Merging the Pull Request on GitHub created a merge commit on `master`. It means that your local repository on your laptop is not up to date anymore.
+Merging the Pull Request on GitHub created a merge commit on `main`. It means that your local repository on your laptop is not up to date any more.
 
 Here is what you need to do:
 
 ```bash
 # Go back to the branch
-git checkout master
+git checkout main
 
-# Get your `master` branch up to date with GitHub's
-git pull origin master
+# Get your `main` branch up to date with GitHub's
+git pull origin main
 
 # The feature branch is dead. Remove it! Keep a clean repo
 git branch -d html-skeleton
@@ -148,9 +150,9 @@ glog
 
 If you have a simple **static** website to host, GitHub provides a great solution: [GitHub Pages](https://pages.github.com/). You can turn a repository into a host provider!
 
-It is really simple to enable. On your `github-flow` repository, go to `Settings` tabs then `Pages` on the side nagivation menu.
+It is really simple to enable. On your `github-flow` repository, go to `Settings` tabs then `Pages` on the side navigation menu.
 
-Under the `Source`, click on the dropdown list and select the `master` branch. Then click `Save`
+Under the `Source`, click on the dropdown list and select the `main` branch. Then click `Save`
 
 ![](https://res.cloudinary.com/wagon/image/upload/v1560714628/enable-github-pages_w5clbv.png)
 
@@ -160,7 +162,7 @@ It will reload the page. If you scroll down you should see a sentence: Your site
 https://<user.github_nickname>.github.io/$REPO_NAME/
 ```
 
-😎 Every time a commit happens in `master` (through a merged Pull Request using the GitHub flow), GitHub Pages will automatically deploy the changes to this URL. With this set up, the `Merge` button under a Pull Request becomes a **Deploy** one.
+😎 Every time a commit happens in `main` (through a merged Pull Request using the GitHub flow), GitHub Pages will automatically deploy the changes to this URL. With this set up, the `Merge` button under a Pull Request becomes a **Deploy** one.
 
 If you own a domain, GitHub Pages also supports [`CNAME`](https://help.github.com/articles/using-a-custom-domain-with-github-pages/) configuration.
 

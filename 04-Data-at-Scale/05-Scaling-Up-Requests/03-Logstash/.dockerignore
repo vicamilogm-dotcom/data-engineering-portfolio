@@ -1,0 +1,10 @@
+Makefile
+README.md
+.pytest*
+.venv
+docker*
+.env.sample
+.env
+.envrc
+database
+.gitignore

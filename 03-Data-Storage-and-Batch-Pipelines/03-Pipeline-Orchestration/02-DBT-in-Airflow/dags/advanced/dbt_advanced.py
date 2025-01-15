@@ -58,12 +58,13 @@ def create_dags_dependencies(data: dict, dbt_tasks: dict):
 
 with DAG(
     "dbt_advanced",
-    default_args={"depends_on_past": False,},
+    default_args={
+        "depends_on_past": False,
+    },
     start_date=pendulum.today("UTC").add(days=-1),
-    schedule_interval="@daily",
+    schedule="@daily",
     catchup=True,
 ) as dag:
-
     with open(f"{DBT_DIR}/manifest.json") as f:
         data = json.load(f)
     dbt_tasks = create_tasks(data)

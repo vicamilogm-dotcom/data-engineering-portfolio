@@ -1,1 +1,8 @@
 .venv
+tests/
+Makefile
+README.md
+__pycache__/
+*.pyc
+.gitignore
+.envrc

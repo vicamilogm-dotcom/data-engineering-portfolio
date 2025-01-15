@@ -33,21 +33,21 @@ Now lets add dgraph to our cluster
 kubectl --kubeconfig=./k3s.yaml create --filename https://raw.githubusercontent.com/dgraph-io/dgraph/main/contrib/config/kubernetes/dgraph-single/dgraph-single.yaml
 ```
 
-Thats it!
+That's it!
 
 ## Connect to dgraph
 
 Port forward from the pods
 
-```
+```bash
 kubectl --kubeconfig=./k3s.yaml port-forward pod/dgraph-0 8080:8080
 ```
 
-```
+```bash
 kubectl --kubeconfig=./k3s.yaml port-forward pod/dgraph-0 8000:8000
 ```
 
-Now if you **port forard to your host machine** you should be able to access the ui at localhost:8000
+Now if you **port forward to your host machine** you should be able to access the ui at localhost:8000
 
 ## Test it out
 

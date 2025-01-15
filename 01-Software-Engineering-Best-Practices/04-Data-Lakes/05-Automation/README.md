@@ -55,7 +55,7 @@ Here's a basic guide to deploying a multi-file Cloud Function:
 
    ```bash
    gcloud functions deploy my_cloud_function \
-     --runtime python310 \
+     --runtime python312 \
      --trigger-http \
      --allow-unauthenticated \
      --set-env-vars "KEY=VALUE" \
@@ -64,7 +64,7 @@ Here's a basic guide to deploying a multi-file Cloud Function:
 
    In the command above:
    - `my_cloud_function` is the name of the function you're deploying.
-   - `--runtime python310` specifies that you're using Python 3.10.
+   - `--runtime python310` specifies that you're using Python 3.12
    - `--trigger-http` indicates that this function is triggered by HTTP requests.
    - `--allow-unauthenticated` allows the function to be called without authentication (for testing purposes, but be careful in a production environment).
    - `--set-env-vars "KEY=VALUE"` sets environment variables for the function. You can set multiple variables by separating them with commas, like this: `--set-env-vars "KEY1=VALUE1,
@@ -87,7 +87,7 @@ Start by copying over the code files from the previous challenge. You will need 
 
 ❓ The first code change you will need is to make main accept an argument (it does not need to be used) and return a string.
 
-❓ The second code code change is that the csv needs to be written to `/tmp` this is a special directory that is writable by the cloud function.
+❓ The second code code change is that the csv needs to be written to `/tmp` this is a special directory that is writeable by the cloud function.
 
 😓 Great expectations does not work so well in a cloud function so you should also probably remove that step (you would generally use it inside airflow which we will see later)!
 
@@ -116,8 +116,8 @@ gcloud scheduler jobs run daily_scrape
 
 <br>
 
-# 🏁 Finish
+# 🏁 Finishing up
 
-We now have a fully automated scraper that runs everyday without our intervention!
+We now have a fully automated scraper that runs everyday without our intervention! 🎉
 
 <br>

@@ -2,7 +2,7 @@
 
 Airflow is a common tool used by Data Engineers to **orchestrate processes**. These processes could be bash commands, python operations, sending emails, accessing API's, and many more.
 
-The goal of this challeneg is to setup an Airflow instance running in Docker Compose that will trigger a DAG every 5 minutes. The DAG will call an API, process the result, and append it to a CSV.
+The goal of this challenge is to setup an Airflow instance running in Docker Compose that will trigger a DAG every 5 minutes. The DAG will call an API, process the result, and append it to a CSV.
 
 There is a few steps involved, so lets get into it! 🚀
 
@@ -13,7 +13,7 @@ There is a few steps involved, so lets get into it! 🚀
 First we'll have **Airflow running through docker-compose**.
 
 To build the lightest version of Airflow you need at least three services:
-- A **postgres database** to store Airflow *metadata* (e.g: what dags do I have to orchestrate, when was the last run,...)
+- A **postgres database** to store Airflow *metadata* (e.g: what DAGs do I have to orchestrate, when was the last run,...)
 - A **webserver** to display Airflow UI
 - A **scheduler** to orchestrate and execute your DAGs (for example: start every 5 minutes...)
 
@@ -207,7 +207,7 @@ docker compose up
 
 Finally, open [your localhost](http://localhost:8080/home) to see how your DAG looks.
 
-You should see your two tasks. Turn the DAG on and see what happens! Both tasks should be green becuase your tasks call functions that do not do anything for now.
+You should see your two tasks. Turn the DAG on and see what happens! Both tasks should be green because your tasks call functions that do not do anything for now.
 
 <img src="https://wagon-public-datasets.s3.amazonaws.com/data-engineering/W1D4/first_dag.png" width=500>
 
@@ -275,7 +275,6 @@ docker compose down
 docker compose run -it webserver poetry run airflow db reset
 docker compose up
 ```
-
 </details>
 
 <br>
@@ -284,12 +283,19 @@ docker compose up
 
 Congratulations, you now have orchestrated code running on a schedule!
 
-🧪 Run `make test`, add, commit, and push your code to github so Kitt can track your progress!
+🧪 To test the entire challenge, run:
+
+```bash
+make test
+```
+
+And don't forget to git add, commit, and push your code to Github to track your progress on Kitt!
 
 Once you've committed all your code and `test_output.txt`, teardown the service to free up ports for the next challenge:
 
 ```bash
-docker compose down # To free-up your ports for next challenges
+# To free-up your ports for next challenges
+docker compose down
 ```
 
 <br>

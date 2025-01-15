@@ -1,10 +1,10 @@
-FROM python:3.8.10
+FROM python:3.12.8-slim
 
 #Do not use env as this would persist after the build and would impact your containers, children images
 ARG DEBIAN_FRONTEND=noninteractive
 
 # force the stdout and stderr streams to be unbuffered.
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONUNBUFFERED=1
 
 #Setup workdir
 WORKDIR /app

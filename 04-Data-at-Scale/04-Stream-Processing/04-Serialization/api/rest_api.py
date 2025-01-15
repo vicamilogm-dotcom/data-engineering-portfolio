@@ -2,7 +2,7 @@
 
 from api import rural
 
-# Create an `app` variable with a FastAPI API
+# Create an `app` variable with the correct FastAPI object
 # YOUR CODE HERE
 
 
@@ -23,10 +23,10 @@ def time() -> dict:
 pass  # YOUR CODE HERE
 def get_rural_population(country: str, year: int):
     df = rural.load_rural_csv()
-    # Fill the `value` of the rural population percentage for the right country and year
+    # Fill the `value` of the rural population percentage for the input country and year
     value = 0
     pass  # YOUR CODE HERE
-    return value
+    return {"rural_pop_perc": value}
 
 
 if __name__ == "__main__":

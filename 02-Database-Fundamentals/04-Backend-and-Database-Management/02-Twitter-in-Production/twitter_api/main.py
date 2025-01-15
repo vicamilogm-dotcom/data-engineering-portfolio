@@ -104,7 +104,7 @@ def create_like(user_id: int, like: schemas.LikeCreate, db: Session = Depends(ge
 @app.get("/users/{user_id}/likes/", response_model=List[schemas.Like], tags=["likes"])
 def read_user_likes(user_id: int, db: Session = Depends(get_db)):
     """get endpoint to read all the the likes for a given user id"""
-    likes = crud.read_users_likes(db=db, user_id=user_id)
+    likes = crud.read_user_likes(db=db, user_id=user_id)
     return likes
 
 

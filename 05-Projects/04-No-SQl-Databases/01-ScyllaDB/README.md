@@ -16,9 +16,9 @@ Then we check that it is running
 docker exec -it node-a nodetool status
 ```
 
-It will take a little while when it is up the status shoud be UN which stands for Up/Normal which is the state a properly running node should be!
+It will take a little while when it is up the status should be **UN** which stands for Up/Normal which is the state a properly running node should be!
 
-```
+```bash
 Datacenter: datacenter1
 =======================
 Status=Up/Down
@@ -83,17 +83,21 @@ CREATE TABLE users (
 ```
 
 With ScyllaDB **the PRIMARY KEY is very important** we will see why later! Lets add some data:
-```SQL
+
+```sql
 INSERT INTO users(user_id, name, age) values (1, 'Jeff', 35);
 INSERT INTO users(user_id, name, age) values (2, 'Tim', 50);
 ```
+
 Lets fetch our `users`
-```SQL
+
+```sql
 SELECT * FROM users;
 ```
 
 Now lets try to filter by age 👇
-```
+
+```bash
 cqlsh:mykeyspace> SELECT * FROM users WHERE age < 40
               ... ;
 InvalidRequest: Error from server: code=2200 [Invalid query] message="Cannot execute this query as it might involve data filtering and thus may have unpredictable performance. If you want to execute this query despite the performance unpredictability, use ALLOW FILTERING"
@@ -101,4 +105,10 @@ InvalidRequest: Error from server: code=2200 [Invalid query] message="Cannot exe
 
 ScyllaDB does not allow this by default because it does not know where the data is stored and so will have to do a linear scan of all of the nodes to check which takes forever! When you design a wide column db it is very important that you decide what you will query in advance. They are optimised for writes but not for analytical queries!
 
+<br>
+
+# 🏁 Finishing Up
+
 If you want to dig deeper into wide column dbs ScyllaDB provides extensive learning resources on their website: https://university.scylladb.com/
+
+<br>

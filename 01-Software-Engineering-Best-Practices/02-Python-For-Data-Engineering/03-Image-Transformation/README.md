@@ -97,7 +97,7 @@ pytest tests/test_process.py::TestImageProcessing::test_write_image
 
 <br>
 
-# 🏁 Final Steps
+# 🏁 Finishing up
 
 🧪 Once you have completed all the functions and passed all the tests, it's time to run all the tests together:
 

@@ -28,7 +28,7 @@ def test_profiles_yml():
         assert dev["dataset"].endswith("day2")
         assert dev["job_execution_timeout_seconds"] == 300
         assert dev["job_retries"] == 1
-        assert dev["location"] == "US"
+        assert dev["location"] == "EU"
         assert dev["method"] == "service-account"
         assert dev["priority"] == "interactive"
         assert dev["project"] is not None

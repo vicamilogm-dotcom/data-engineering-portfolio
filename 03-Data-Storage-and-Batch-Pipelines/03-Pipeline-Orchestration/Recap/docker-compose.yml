@@ -1,86 +1,106 @@
-version: '3'
 services:
-    git-sync:
-      image: k8s.gcr.io/git-sync/git-sync:v3.6.5
-      volumes:
-        - gitdags:/tmp/git
-      environment:
-        - GIT_SYNC_REPO=https://github.com/ogiles1999/test-dag-repo.git
-        - GIT_SYNC_SSH=false
-        - GIT_SYNC_USERNAME=token
-        - GIT_SYNC_PASSWORD=${GIT_SYNC_PASSWORD_ENV}
-        - GIT_SYNC_WAIT=60
-        - GIT_SYNC_BRANCH=main
-        - GIT_SYNC_DEST=dags
-        - GIT_SYNC_PERMISSIONS=0777
+  git-sync:
+    image: k8s.gcr.io/git-sync/git-sync:v3.6.5
+    restart: always
+    healthcheck: # verifies that the /tmp/git/repo-dags folder exists and contains files
+      test: ["CMD-SHELL", "test -d /tmp/git/repo-dags && [ $(ls -A /tmp/git/repo-dags | wc -l) -gt 0 ]"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    environment:
+      - GIT_SYNC_REPO=https://github.com/lorcanrae/dag-sync.git
+      - GIT_SYNC_SSH=false
+      - GIT_SYNC_BRANCH=main
+      - GIT_SYNC_ONE_TIME=false
+      - GIT_SYNC_WAIT=15
+      - GIT_SYNC_USERNAME=token
+      - GIT_SYNC_PASSWORD=$GIT_SYNC_PASSWORD_ENV
+      - GIT_SYNC_DEST=repo-dags # will become a child folder in /tmp/git in the git-sync container
+      - GIT_SYNC_PERMISSIONS=0777
+      - GIT_SYNC_LOG_LEVEL=info # more log data
+      - GIT_SYNC_UID=50000
+      - GIT_SYNC_GID=0
+    volumes:
+      - ./git-dags:/tmp/git
 
+  postgres:
+    image: postgres:14
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d db -U airflow || exit 1"]
+      interval: 15s
+      retries: 5
+    environment:
+      - POSTGRES_DB=db
+      - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+      - POSTGRES_USER=airflow
+    volumes:
+      - ./database/:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
 
-    postgres:
-        image: postgres:14
-        environment:
-            - POSTGRES_DB=db
-            - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
-            - POSTGRES_USER=airflow
-        volumes:
-            - ./database/:/var/lib/postgresql/data
-        healthcheck:
-            test: ["CMD", "pg_isready -d db -U airflow"]
-            interval: 5s
-            retries: 5
-        ports:
-          - "5433:5432"
-        restart: always
+  scheduler:
+    build: .
+    command: poetry run airflow scheduler
+    restart: on-failure
+    healthcheck:
+      test: ["CMD-SHELL", "poetry run airflow jobs check --job-type SchedulerJob --local || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    depends_on:
+      - postgres
+      - git-sync
+    environment:
+      - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+      - AIRFLOW__DEBUG__FAIL_FAST=true
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:$POSTGRES_PASSWORD@postgres:5432/db
+      - AIRFLOW__CORE__LOAD_EXAMPLES=false
+      - AIRFLOW__CORE__DAGS_FOLDER=/app/airflow/dags/repo-dags # changed to match path from git-sync
+      - AIRFLOW__CORE__MIN_FILE_PROCESS_INTERVAL=15
+      - PYTHONDONTWRITEBYTECODE=1 # prevent __pycache__ from being generated - done to avoid permission conflicts with git-sync
+    volumes:
+      - ./git-dags:/app/airflow/dags
+      - ./data:/app/airflow/data
+      - ./logs:/app/airflow/logs
+    tty: true
+    stdin_open: true
 
-    scheduler:
-        build: .
-        command: poetry run airflow scheduler
-        restart: on-failure
-        depends_on:
-            - postgres
-            - git-sync
-        environment:
-            - AIRFLOW__CORE__EXECUTOR=LocalExecutor
-            - AIRFLOW__DEBUG__FAIL_FAST=true
-            - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:$POSTGRES_PASSWORD@postgres:5432/db
-            - AIRFLOW__CORE__LOAD_EXAMPLES=false
-            - AIRFLOW__CORE__DAGS_FOLDER=/app/airflow/dags/dags
-            - AIRFLOW__CORE__MIN_FILE_PROCESS_INTERVAL=15
-        volumes:
-            - gitdags:/app/airflow/dags
-            - ./data:/app/airflow/data
-            - ./logs:/app/airflow/logs
-        tty: true
-        stdin_open: true
+  webserver:
+    build: .
+    command: poetry run scripts/entrypoint.sh
+    restart: on-failure
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/health || exit 1"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+      start_period: 60s
+    depends_on:
+      - postgres
+      - scheduler
+      - git-sync
+    environment:
+      - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:$POSTGRES_PASSWORD@postgres:5432/db
+      - AIRFLOW__CORE__DAGS_FOLDER=/app/airflow/dags/repo-dags
+      - AIRFLOW__CORE__MIN_FILE_PROCESS_INTERVAL=15
+      - AIRFLOW__CORE__DAG_DISCOVERY_SAFE_MODE=true
+      - POSTGRES_DB=db
+      - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+      - POSTGRES_USER=airflow
+      - PYTHONDONTWRITEBYTECODE=1 # prevent __pycache__ from being generated - done to avoid permission conflicts with git-sync
+    volumes:
+      - ./git-dags:/app/airflow/dags
+      - ./data:/app/airflow/data
+      - ./logs:/app/airflow/logs
+    ports:
+      - "8080:8080"
+    tty: true
+    stdin_open: true
 
-    webserver:
-        build: .
-        command: poetry run scripts/entrypoint.sh
-        restart: on-failure
-        depends_on:
-            - postgres
-            - scheduler
-            - git-sync
-        environment:
-            - AIRFLOW__CORE__EXECUTOR=LocalExecutor
-            - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:$POSTGRES_PASSWORD@postgres:5432/db
-            - AIRFLOW__CORE__DAGS_FOLDER=/app/airflow/dags/dags
-            - AIRFLOW__CORE__MIN_FILE_PROCESS_INTERVAL=15
-            - POSTGRES_DB=db
-            - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
-            - POSTGRES_USER=airflow
-        volumes:
-            - gitdags:/app/airflow/dags
-            - ./data:/app/airflow/data
-            - ./logs:/app/airflow/logs
-        ports:
-            - "8080:8080"
-        healthcheck:
-            test: ["CMD-SHELL", "[ -f /home/airflow/airflow-webserver.pid ]"]
-            interval: 30s
-            timeout: 30s
-            retries: 3
-        tty: true
-        stdin_open: true
-
-volumes:
-  gitdags:
+# volumes:
+#   git-dags:
+#     external: true

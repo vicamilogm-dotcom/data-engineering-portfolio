@@ -1,6 +1,6 @@
 # Dockerfile
 ## Build venv
-FROM python:3.8.14-buster
+FROM python:3.12.8-buster
 
 # Install poetry, see https://python-poetry.org/docs/#installation
 RUN curl -sSL https://install.python-poetry.org | python3 -

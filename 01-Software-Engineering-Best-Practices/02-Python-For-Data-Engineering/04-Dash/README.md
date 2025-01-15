@@ -32,7 +32,7 @@ But feel free to experiment with any type of graph you want! 🚀
 
 # 🏁 Finishing up
 
-**Plotly** and **dash** are useful tools in order to build interactive dashboards and graphs. They are easy to use and integrate well with pandas and other python tools. At scale they are not as efficent as dedicated BI tools like Looker Studio or Tableau, but they are great for small projects!
+**Plotly** and **dash** are useful tools in order to build interactive dashboards and graphs. They are easy to use and integrate well with pandas and other python tools. At scale they are not as efficient as dedicated BI tools like Looker Studio or Tableau, but they are great for small projects!
 
 Creating the logic in the previous exercise to output the CSV files has made the dashboard more responsive because we do not require pandas to do any computation in background before displaying the graphs!
 

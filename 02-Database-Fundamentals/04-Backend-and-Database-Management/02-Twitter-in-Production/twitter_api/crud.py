@@ -40,7 +40,7 @@ def read_tweets(db: Session, skip: int = 0, limit: int = 100):
 
 def create_tweet(db: Session, tweet: schemas.TweetCreate, user_id: int):
     """Function should create a new tweet in the database"""
-    db_tweet = models.Tweet(**tweet.dict(), owner_id=user_id)
+    db_tweet = models.Tweet(**tweet.model_dump(), owner_id=user_id)
     db.add(db_tweet)
     db.commit()
     db.refresh(db_tweet)
@@ -59,7 +59,7 @@ def read_users_tweets(db: Session, user_id: int):
 
 def create_like(db: Session, like: schemas.LikeCreate, user_id: int):
     """Function should create a new like in the database"""
-    db_like = models.Like(**like.dict(), owner_id=user_id)
+    db_like = models.Like(**like.model_dump(), owner_id=user_id)
     db.add(db_like)
     db.commit()
     db.refresh(db_like)

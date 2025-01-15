@@ -31,7 +31,7 @@ def make_live_callback(live_params: LiveParams):
     def live_callback(channel: str, method, properties, body):
         parsed_body = json.loads(body)
         live_params["messages"].append(
-            {**parsed_body, "received_at": str(datetime.datetime.utcnow())}
+            {**parsed_body, "received_at": str(datetime.datetime.now(datetime.UTC))}
         )
         live_params["live"].update(ui.make_rich_table(live_params["messages"]))
 

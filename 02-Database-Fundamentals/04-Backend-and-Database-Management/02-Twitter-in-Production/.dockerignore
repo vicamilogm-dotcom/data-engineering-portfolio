@@ -1,7 +1,0 @@
-alembic
-.env
-.env.sample
-.envrc
-.venv
-.alembic.ini
-.README.md

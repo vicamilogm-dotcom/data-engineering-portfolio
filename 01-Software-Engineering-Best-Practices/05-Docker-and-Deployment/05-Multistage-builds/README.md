@@ -2,7 +2,7 @@
 
 Docker has some advanced features that can be used in conjunction with compiled languages that can produce some very small images. Let's explore multi-stage builds and how they work.
 
-In this example is a program written in `Golang`, a compiled language that is popular for writing API's.
+In this example is a program written in `Golang`, a compiled language that is popular for writing API's and back-end development.
 
 <br>
 
@@ -28,7 +28,7 @@ Let's explore the image with dive!
 docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock wagoodman/dive:latest single-stage
 ```
 
-That image size is large! It includes the Golang `tool-chain`, the necessary tools required to compile `.go` files into an executable machine code binary.
+That image size is large! It includes the Golang `tool-chain`, the necessary tools required to compile `.go` files into an executable binary.
 
 Now let's see what benefits we get with a multistage build!
 

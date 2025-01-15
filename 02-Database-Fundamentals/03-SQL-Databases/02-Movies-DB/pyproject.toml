@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "00-setup-exercise"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.12"
+psycopg2-binary = "^2.9.10"
+lewagonde = { path = "../../../common/lewagonde/", develop = true }
+csvkit = "^1.0.7"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.4"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

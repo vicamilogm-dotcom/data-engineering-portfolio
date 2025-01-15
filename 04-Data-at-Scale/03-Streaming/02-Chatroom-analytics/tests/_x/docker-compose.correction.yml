@@ -1,7 +1,6 @@
-version: "3.2"
 services:
   rabbitmq:
-    image: rabbitmq:3.10.6-management
+    image: rabbitmq:3.13.7-management
     container_name: rmq
     ports:
       - 5672:5672
@@ -12,6 +11,7 @@ services:
       - .env
   clickhouse:
     image: clickhouse/clickhouse-server:23.7.4.5-alpine
+    container_name: clickhouse
     ports:
       - 9000:9000
     environment:

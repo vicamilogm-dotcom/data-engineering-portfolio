@@ -27,8 +27,10 @@ The data that we'll be using is from Greenweez. There will be more context on th
 To download the data and save to the `data/` folder run the following commands:
 
 ```bash
+# Create the folder
 mkdir -p data/
 
+# Download the data
 curl -o ./data/raw_gz_sales.parquet https://wagon-public-datasets.s3.amazonaws.com/data-engineering/gz_raw_data-raw_gz_sales.parquet
 curl -o ./data/raw_gz_product.parquet https://wagon-public-datasets.s3.amazonaws.com/data-engineering/gz_raw_data-raw_gz_product.parquet
 curl -o ./data/raw_gz_ship.parquet https://wagon-public-datasets.s3.amazonaws.com/data-engineering/gz_raw_data-raw_gz_ship.parquet
@@ -177,7 +179,7 @@ Do not worry if you make an error during this process, you can modify any field 
   - **keyfile (/path/to/bigquery/keyfile.json):** Enter the **absolute** path of where you stored your BigQuery service account key that you created during the [Data Engineering setup](https://github.com/lewagon/data-engineering-setup/blob/main/macOS.md), including the file name and extension. It should look similar to: `/home/username/.gcp_keys/le-wagon-de-bootcamp.json`.
   - **project (GCP project id):** Enter your GCP Project ID that you created during the [Data Engineering setup](https://github.com/lewagon/data-engineering-setup/blob/main/macOS.md)
   - **dataset (the name of your dbt dataset):** Call it `dbt_{firstletteroffirstname}{last_name}_day1`. If your name is Taylor Swift your dataset should be: `dbt_tswift_day1`
-  - **threads (1 or more):** Enter `1`
+  - **threads (1 or more):** Enter `2`
   - **job_execution_timeout_seconds [300]:** Enter `300`
   - **Desired location option (enter a number):** Enter `2` for `EU`. This is important!
 
@@ -198,7 +200,7 @@ For more information about the DBT profile, have a look at the documentation:
 - BigQuery dbt profile documentation [at this link](https://docs.getdbt.com/reference/warehouse-profiles/bigquery-profile)
 
 Let's check that the `profiles.yml` file is configured correctly:
-- Your DBT profile should be stored in a folder at your root called `.dbt`. Open it by running: `code ~/.dbt/profiles.yml`. You should be able to see all the configuration you've set when creating the DBT project.
+- By default, your DBT profile will be stored in your VM's **home directory** at `~/.dbt/profiles.yml`. Open it by running: `code ~/.dbt/profiles.yml`. You should be able to see all the configuration you've set when creating the DBT project.
 - Run `make test` to make sure the setup of your profile is correct. (The `test_dbt_profile` tests should all be green). Watch out with the levels of indentation in your `profiles.yml` file
 - Push to git.
 
@@ -244,8 +246,8 @@ In the `models` folder there should be two files:
 - `/example/my_first_dbt_model.sql`
 - `/example/my_second_dbt_model.sql`
 - Having a look at the two example models:
-    - `my_first_dbt_model.sql` is generating some dummy `source` data, through a CTE, and is then storing this result in a `table`, called `my_first_dbt_model`.
-        - The block at the top of the model defines the output of the model should be a table, overriding the default materialization.
+    - `my_first_dbt_model.sql` is generating some dummy `source` data, through a CTE, and is then storing this result in a `table` called `my_first_dbt_model`.
+        - The block at the top of the model defines the output of the model should be a table, over-riding the default materialization.
         - The table created in BigQuery will be named `my_first_dbt_model` - DBT uses the name of the file without the `.sql` on the end.
     - `my_second_dbt_model.sql` references to `my_first_dbt_model` model.
         - The materialization is not specified so it will be stored as the default materialization defined in the `dbt_project.yml` - a view

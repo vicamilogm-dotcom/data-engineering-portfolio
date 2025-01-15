@@ -4,6 +4,12 @@ pass  # YOUR CODE HERE
 
 
 def query_clickhouse(query):
+    """
+    Create a ClickHouse clinet and executes the passed query with the client.
+
+    Returns:
+    - Query results
+    """
     pass  # YOUR CODE HERE
 
 
@@ -41,3 +47,9 @@ def get_average_message_gap():
     query = ""
     pass  # YOUR CODE HERE
     return query_clickhouse(query)
+
+
+if __name__ == "__main__":
+    from pprint import pprint as print
+
+    print(get_average_message_gap())

@@ -5,3 +5,4 @@ Readme.md
 .pytest*
 .venv
 docker*
+main.py.bak

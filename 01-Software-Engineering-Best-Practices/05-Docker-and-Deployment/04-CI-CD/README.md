@@ -27,7 +27,7 @@ To set up, go to your Cloud Run service:
 
     <img src="https://wagon-public-datasets.s3.amazonaws.com/data-engineering/W0D5/cloud-run-select-repo.png" width=500>
 
-1. Select the branch you want to deploy and the name of your dockefile
+1. Select the branch you want to deploy and the name of your dockerfile
 
     <img src="https://wagon-public-datasets.s3.amazonaws.com/data-engineering/W0D5/cloud-run-build-config.png" width=500>
 
@@ -68,10 +68,10 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Run Hadolint
-      uses: hadolint/hadolint-action@v1.5.0
+      uses: hadolint/hadolint-action@v3.1.0
       with:
         dockerfile: Dockerfile
 
@@ -80,7 +80,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Build Docker image
       run: docker build -t my_fastapi_app .
@@ -98,7 +98,7 @@ jobs:
       run: docker save my_fastapi_app:latest > my_fastapi_app.tar
 
     - name: Upload Docker image as artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: my_fastapi_app
         path: my_fastapi_app.tar
@@ -108,7 +108,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Download Docker image from artifact
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v4
       with:
         name: my_fastapi_app
 
@@ -128,6 +128,49 @@ Add, commit, and push the action. Does something break?
 Checkout the output of the actions and try to fix it!
 
 They will probably fail but give interesting insights in improving your containers!
+
+<details>
+<summary markdown='span'>🎁 Solution (mostly)</summary>
+
+A solution that will make at least hadolint pass.
+
+It's highly likely that the Trivy security scan will fail. The issues is probably with an operating system level package in the base image, something we have no control over.
+
+The changes to the Dockerfile are:
+- Reasonable assume that there is a valid version of `pip` included in the base `python:3.12.8-slim` image to install poetry, so skip upgrading pip.
+- But `CMD` arguments into JSON format.
+
+```Dockerfile
+FROM python:3.12.8-slim
+
+ARG DEBIAN_FRONTEND=noninteractive
+
+ENV PYTHONUNBUFFERED=1
+
+RUN apt-get -y update \
+    && apt-get -y upgrade \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && useradd --uid 10000 -ms /bin/bash runner
+
+WORKDIR /home/runner/app
+
+USER 10000
+
+ENV PATH="${PATH}:/home/runner/.local/bin"
+
+COPY ./  ./
+
+RUN pip install --no-cache-dir poetry==1.8.5 \
+    && poetry install --only main
+
+EXPOSE 8000
+
+ENTRYPOINT [ "poetry", "run" ]
+
+CMD [ "sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port $PORT" ]
+```
+</details>
 
 <br>
 

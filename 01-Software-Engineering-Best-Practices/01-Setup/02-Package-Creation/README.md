@@ -4,7 +4,7 @@ The goal of this challenge is to:
 - Create a command line tool to start and stop your VM using python and shell scripts.
 - Use `poetry` to create the python package and manage dependencies.
 - Publish the package so that your package is available to install anywhere.
-    - Firstly to the public **pypi** repository
+    - Firstly to the public **PyPI** repository
     - Secondly to a private package repository: **Gemfury**
 - Optional: install the package locally if you have a local developer environment.
 
@@ -45,7 +45,7 @@ readme = "README.md"
 packages = [{include = "<user.lower_github_nickname>_de_toolkit"}]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.12"
 
 
 [build-system]
@@ -57,7 +57,7 @@ build-backend = "poetry.core.masonry.api"
 
 <details>
 <summary markdown='span'>💡 When wouldn't I want to install my own package?</summary>
-If you were only using poetry purely as an external python package depency manager and didn't want to install your python project locally. An example would be in a DBT or Airflow project, but we can save that idea for later!
+If you were only using poetry purely as an external python package dependency manager and didn't want to install your python project locally. An example would be in a DBT or Airflow project, but we can save that idea for later!
 </details>
 
 Lets add [click](https://click.palletsprojects.com/en/8.1.x/) to our project to help develop our CLI:
@@ -163,14 +163,14 @@ Commands:
 
 # 3️⃣ Publishing your package
 
-## 3.1. Publish to pypi
+## 3.1. Publish to PyPI
 <img src="https://wagon-public-datasets.s3.amazonaws.com/data-engineering/W0D1/pypi-logo.png" width=100>
 
 🎯 Now we have our CLI. We want to publish it to make it available from any computer with python without needing the `.py` files.
 
-The python package index (known as pypi) is where packages that you can install directly with `pip` or in our case `poetry`, so that your package can become available on a new setup without having to re-clone the repository.
+The python package index, known as **PyPI**, is where packages that you can install directly with `pip` or in our case `poetry`, so that your package can become available on a new setup without having to re-clone the repository.
 
-❓ Signup to [pypi](https://pypi.org/account/register/). Then create an api token from [account settings](https://pypi.org/manage/account/) and make sure it has the scope entire account so that it can generate new projects!
+❓ Sign up to [PyPI](https://pypi.org/account/register/). Then create an api token from [account settings](https://pypi.org/manage/account/) and make sure it has the scope entire account so that it can generate new projects!
 
 **Then create a `.env` at the root of your package** containing the following to store your token:
 
@@ -198,7 +198,7 @@ If it doesn't work, you may need to `direnv allow` once for all for this folder.
 ```bash
 poetry publish --build --username $PYPI_USERNAME --password $PYPI_TOKEN
 ```
-(no worries, `.env` are not going to be part of the built archive, so won't be pushed to pypy by poetry)
+(no worries, `.env` are not going to be part of the built archive, so won't be pushed to pypi by poetry)
 
 Now go to [your package](https://pypi.org/project/<user.github_nickname>-de-toolkit/) directly on pypi. You should now be able to install this package from any machine. With pypi, the package is publicly available which is not an issue in our case but be careful in cases when you do not want to share the code with the rest of the world. The solution is using private package repositories instead!
 
@@ -237,7 +237,7 @@ poetry source add fury https://pypi.fury.io/<user.lower_github_nickname>/
 poetry add --source fury <user.lower_github_nickname>_de_toolkit
 ```
 
-You can see that this workflow is slightly more long-winded than publishing to pypi, but it is something you only need to do at the start or end of projects and can add a lot of flexibility to how you distribute python packages around your team.
+You can see that this workflow is slightly more long-winded than publishing to PyPI, but it is something you only need to do at the start or end of projects and can add a lot of flexibility to how you distribute python packages around your team.
 
 <br>
 
@@ -257,7 +257,7 @@ If you have python and pip installed locally, there are two options for installi
 trusted-host = pypi.fury.io
 extra-index-url = https://<YOUR_GEMFURY_TOKEN_HERE>@repo.fury.io/<user.lower_github_nickname>/
 ```
-pip will now use Gemfury instead of pipy whenever the package name exists on the former:
+Pip will now use Gemfury instead of PyPI whenever the package name exists on the former:
 ```bash
 pip install <user.github_nickname>-de-toolkit
 ```

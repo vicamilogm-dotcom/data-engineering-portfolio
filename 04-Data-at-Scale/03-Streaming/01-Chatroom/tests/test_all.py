@@ -53,3 +53,6 @@ def test_rich():
 #     assert (
 #         get_tests_json()["queues"] == "http://localhost:15672/#/queues"
 #     ), "tests.json is incomplete, fill in the 'queues' value"
+
+if __name__ == "__main__":
+    test_docker_compose()

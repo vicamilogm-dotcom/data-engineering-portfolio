@@ -28,13 +28,16 @@ We want to deploy the API inside our container to the cloud so that anybody can 
 
     In `makefile`:
     ```bash
-    -e PORT=$(PORT)
+    -e PORT=${PORT}
     ```
 
     In `Dockerfile`:
     ```Dockerfile
     CMD uvicorn app.main:app --host 0.0.0.0 --port $PORT
     ```
+
+    Docker might warn you that the `CMD` arguments are not as JSON arguments. That's fine. When `CMD` arguments are NOT put in an array, a shell is invoked to execute your command. When we put arguments in an array like `CMD ['uvicorn', 'app.main:app', ...]`, Docker is NOT invoking a shell, and therefore can't process environment variables.
+
     </details>
 
 4. Add one last command to the makefile:

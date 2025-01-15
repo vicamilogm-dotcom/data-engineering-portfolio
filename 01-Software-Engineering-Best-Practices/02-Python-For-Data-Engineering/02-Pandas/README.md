@@ -43,7 +43,7 @@ kaggle datasets download -d mohamedbakhet/amazon-books-reviews --unzip -p ./data
 
 We want to use pandas to build a data pipeline. We have two CSV files at the moment: `books_data.csv` and `Books_rating.csv`. The pipeline specifications are written out below. After completing Step 1 you can work in any order, more specific instructions are included in all of the functions docstring's!
 
-1. Complete `pandas_pipeline/load.py` which loads data relevent data from an input path.
+1. Complete `pandas_pipeline/load.py` which loads data relevant data from an input path.
 2. Complete `pandas_pipeline/best_books.py` which will generate a CSV file of the top 10 best performing books based on their average review score.
 🧪 Test
 ```bash
@@ -54,12 +54,12 @@ pytest -k test_best_performing_books_csv
 ```bash
 pytest -k test_category_distribution_csv
 ```
-4. Complete `pandas_pipeline/top_authors.py` which will generate a CSV of the 10 most impactful authors baset on their average score and number of reviews.
+4. Complete `pandas_pipeline/top_authors.py` which will generate a CSV of the 10 most impactful authors based on their average score and number of reviews.
 🧪 Test
 ```bash
 pytest -k test_author_impact_analysis_csv
 ```
-5. Complete `pandas_pipeline/review_years.py` that will calculate the average review scroes over time and save the results to a CSV file
+5. Complete `pandas_pipeline/review_years.py` that will calculate the average review scores over time and save the results to a CSV file
 🧪 Test
 ```bash
 pytest -k test_review_years_csv

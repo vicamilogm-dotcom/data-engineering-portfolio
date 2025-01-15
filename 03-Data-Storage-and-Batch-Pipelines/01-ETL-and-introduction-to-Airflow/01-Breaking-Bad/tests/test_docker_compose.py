@@ -9,7 +9,6 @@ def test_docker_compose():
     with open("docker-compose.yml") as f:
         docker_compose_data = load(f, SafeLoader)
 
-    assert docker_compose_data.get("version") == "3"
     assert set(docker_compose_data.get("services", {}).keys()) == {
         "postgres",
         "scheduler",

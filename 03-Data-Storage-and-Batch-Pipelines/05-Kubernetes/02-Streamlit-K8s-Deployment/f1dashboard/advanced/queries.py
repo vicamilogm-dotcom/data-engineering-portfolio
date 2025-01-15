@@ -87,7 +87,7 @@ class F1Queries:
         lewis_points = self._run_query(
             """
         with lewis_id as (
-            select driver_id from drivers where surname = 'Hamilton'
+            select driver_id from drivers where surname = 'Hamilton' and forename = 'Lewis'
         ),
 
         driver_points as (
@@ -98,7 +98,7 @@ class F1Queries:
             select race_id, year from races
         )
         select
-            year, sum(points) as total_points
+            year, max(points) as total_points
         from
             lewis_id
         inner join

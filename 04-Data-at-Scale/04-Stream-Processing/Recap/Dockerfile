@@ -1,8 +1,8 @@
-FROM python:3.8.10-slim
+FROM python:3.12.8-slim
 
 # Setting PYTHONUNBUFFERED to 1 is useful for logs
 # See https://stackoverflow.com/a/59812588
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONUNBUFFERED=1
 
 # Set a working directory that maps our data-engineering-challenges repository structure
 WORKDIR /repo/02-Data-at-Scales/04-Large-DB/05-Recap/

@@ -108,23 +108,59 @@ We need to add a connection between Airflow and our GCP account, so that Airflow
 
 🕵️‍♀️ **Time for a bit of research**!
 - Take 5 minute to read Airflow docs about [Managing Connections](https://airflow.apache.org/docs/apache-airflow/stable/howto/connection.html) and [Google Cloud Connection](https://airflow.apache.org/docs/apache-airflow-providers-google/stable/connections/gcp.html).
+- You can either use the Airflow GUI to add the connection, or from the CLI.
 - Try to setup a connection using your GCP service account key that is stored somewhere on your VM.
-- We only ask you to name it "google_cloud_connection" so we can test it later on.
+- We only ask you to name it **google_cloud_connection** so we can test it later on.
 
 <details>
 <summary markdown='span'>🎁 Solution (don't look, try it before!)</summary>
 
 You can do it directly from the Airflow UI: hover the `Admin` tab and select `Connections`. Click on the white cross to add a new record:
-- name the `Connection Id` `google_cloud_connection`
-- set the `Connection Type` to `Google Cloud`
-- copy paste the whole content of your `service-account.json` to the `Keyfile JSON`
+- Name the `Connection Id` `google_cloud_connection`
+- Set the `Connection Type` to `Google Cloud`
+- Copy paste the whole content of your `service-account.json` to the `Keyfile JSON`
 
-Or you can try the CLI by running
+From the CLI is a bit trickier because the key isn't inside our docker compose stack, which is a good thing for security reasons, and some characters in the JSON need to be escaped.
+
+To add the connection from a key outside of your compose stack:
+- Your service account key contents needs to be escaped
+- The connection needs to be added
+
+```bash
+# Escaping the contents of the key - prints the escaped contents to the console
+cat ~/.gcp_keys/le-wagon-de-bootcamp.json | jq -c .
+```
+
+```bash
+# Add the connection to Airflow
+docker compose exec webserver poetry run airflow connections add "google_cloud_connection" \
+  --conn-type google_cloud_platform \
+  --conn-extra '{"keyfile_dict": "<contents_of_escaped_key>"}'
+# pay attention to single and double quotes
+```
+
+Putting it all together with the magic of bash sub-shells:
 
 ```bash
 docker compose exec webserver poetry run airflow connections add "google_cloud_connection" \
---add-correct-arguments-here
+  --conn-type google_cloud_platform \
+  --conn-extra '{"keyfile_dict": $(cat ~/.gcp_keys/le-wagon-de-bootcamp.json | jq -c .)}'
 ```
+
+<details>
+<summary markdown='span'>💡 Airflow is warning me it's not a JSON</summary>
+
+If you added the key from the CLI. Just a depreciation warning. We've added the key as a python object, not a JSON. If you wanted to add the connection as a JSON, you would have to use more jquery:
+
+```bash
+docker compose exec webserver poetry run airflow connections add "google_cloud_connection" \
+    --conn-type google_cloud_platform \
+    --conn-extra "$(jq -n --arg val "$(cat ~/.gcp_keys/le-wagon-de-bootcamp.json)" '{"keyfile_dict": $val}')"
+```
+
+There is no expectation for you to know how this command works. Feel free to throw it into your LLM of choice for an explanation.
+
+</details>
 
 </details>
 

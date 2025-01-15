@@ -60,7 +60,7 @@ docker ps
 ```
 
 Not seeing anything? That's normal!
-Your `hello-world` container is not running anymore: it exited as soon as it was done. Its job was simply to print a message.
+Your `hello-world` container is not running any more: it exited as soon as it was done. Its job was simply to print a message.
 
 But what about viewing all containers? The `docker ps` command has flags to change the output!
 
@@ -81,7 +81,7 @@ docker images
 You should your `hello-world` image. This command will also show other details such as:
 
 - Image ID
-- Image tag - used to convey information about the image, typically the version for pulled images like postgres. If no tag is specifed when an image is built it will default to _latest_
+- Image tag - used to convey information about the image, typically the version for pulled images like postgres. If no tag is specified when an image is built it will default to _latest_
 - Image size
 - When the image was created (built). This is different from when you pulled an image from a remote repository.
 

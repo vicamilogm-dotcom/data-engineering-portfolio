@@ -16,18 +16,18 @@ test_profiles_yml:
 test_dag_and_task_basic:
 	export AIRFLOW_HOME=${AIRFLOW_HOME}; \
 	export DBT_DIR=${DBT_DIR}; \
-	airflow db init; \
+	airflow db migrate; \
 	pytest -v --disable-warnings -m "not optional" tests/basic/test_dag_and_tasks_configs.py --color=yes
 
 test_dag_and_task_advanced:
 	export AIRFLOW_HOME=${AIRFLOW_HOME}; \
 	export DBT_DIR=${DBT_DIR}; \
-	airflow db init; \
+	airflow db migrate; \
 	pytest -v --disable-warnings -m "not optional" tests/advanced/test_dag_config.py tests/advanced/test_tasks_configs.py --color=yes
 
 test:
 	export AIRFLOW_HOME=${AIRFLOW_HOME}; \
 	export DBT_DIR=${DBT_DIR}; \
-	airflow db init; \
+	airflow db migrate; \
 	pytest -v --disable-warnings -m "not optional" tests 2>&1 > test_output.txt || echo "-- Some tests didn't pass, let's look at the output"; \
 	pytest -v --disable-warnings -m "not optional" tests --color=yes

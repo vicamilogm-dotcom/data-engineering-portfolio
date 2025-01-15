@@ -28,3 +28,7 @@
 #     api = proto_rpc_server.Api()
 #     response = api.get_rural_population_percentage(proto_rpc_server.api_pb2.RuralRequest(year=1964, country="France"), None)
 #     assert response.value == approx(34.102)
+
+
+def test():
+    assert True

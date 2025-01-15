@@ -1,0 +1,46 @@
+<img src="https://wagon-public-datasets.s3.amazonaws.com/data-engineering/W3D3-processing/pyspark/pyspark.jpeg" alt="drawing" width="400"/>
+
+# 🎯 Goal
+
+In industry it is common to use the DataBricks platform (similar in a way to GCP or AWS) to create, run, and manage Spark pipelines. In this challenge you'll upload a notebook onto DataBricks and use the platform to get a taste for what it's like.
+
+We also have a small comparison notebook for the differences between two common structured data manipulation packages in Python: the old faithful that many of you may know, **Pandas**, and the new(ish) disruptor, **Polars**.
+
+# 1️⃣ Set-up
+
+Go to https://www.databricks.com/try-databricks and set up an account.
+Don't choose a cloud provider, just use the free `Community Edition` (well hidden)
+
+<img src="https://wagon-public-datasets.s3.amazonaws.com/data-engineering/W3D3-processing/databrick-login.png">
+
+Databricks is a company that provides a cloud platform, allowing you to easily set up a PySpark cluster for free.
+
+Once you have create an account. Go to the `compute` folder in Databricks and click on `Create compute` in order to create a cluster. Pick a name and choose the default settings. You will create an instance with 15gb of memory and 2 Cores, allowing you to do some minimal parallel processing 😀. While this cluster is being created, have a look at the Polars notebook 👇
+
+<br>
+
+# 2️⃣ Polars
+
+❓ In the `polars/` subdirectory you can find a jupyter notebook file that contains a comparison of `Pandas` and `Polars`. Contrary to Pandas, Polars was designed with parallel processing in mind and will use multiple CPU cores on your machine.
+
+Polars has other features as well, like lazy evaluation and query optimization. Go through the notebook to learn more about this. Really try to understand these different features and read more about them if they are not clear yet.
+
+<br>
+
+# 3️⃣ PySpark
+
+Polars is able to process data that is larger than what fits in memory. However, this is a very new library and not something that is common in production settings. What is very common though in a production environment is `PySpark`.
+
+Where `Polars` is able to run huge datasets on a single machine, `PySpark` makes it possible to run transformations on multiple machines. Just like `Polars`, `PySpark` uses lazy evaluation to only return results once the data is "collected". `PySpark` also uses lazy evaluation to optimize transformations and improve performance.
+
+❓ Download the `pyspark/pyspark.ipynb` as a file
+
+<img src="https://wagon-public-datasets.s3.amazonaws.com/data-engineering/W3D3-processing/pyspark/download_file.png" alt="drawing" width="600"/>
+
+❓ Import it into Databricks Community.
+
+<img src="https://wagon-public-datasets.s3.amazonaws.com/data-engineering/W3D3-processing/pyspark/import-notebook.png" alt="drawing" width="600"/>
+
+❓ Follow the instructions in that notebook and work through it on DataBricks.
+
+<br>

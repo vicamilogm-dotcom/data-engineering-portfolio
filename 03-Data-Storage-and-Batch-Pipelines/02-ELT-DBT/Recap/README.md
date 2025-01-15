@@ -218,7 +218,7 @@ And pay close attention to the number of rows created for the mart layer table: 
 
 ❗ We created tables in our **raw_gz_data_devsample** dataset with the exact same name as our **raw_gz_data** dataset. You can change table names, but it will make your `sources.yml` more verbose if you use this method.
 
-You can apply this kind of idea to different parts of your DBT project. For example, maybe you want to materialize all of the staging and intermediate layers for both dev and prod targets to a single project, then materialize the **mart** layer of the **prod** target into a different GCP Project.
+You can apply this kind of idea to different parts of your DBT project. For example, maybe you want to materialize all of the staging and intermediate layers for both dev and prod targets to a single project, then materialize the **mart** layer of the **prod** target into a different GCP Project. This would require extending the permissions of your DBT service account to have access to more than one GCP Project.
 
 <br>
 

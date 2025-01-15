@@ -44,7 +44,9 @@ async def make_many_calls(api_url: str, number: int) -> List[Dict[str, Any]]:
     return pd.DataFrame(responses), duration_seconds
 
 
-def generate_statistics_async(number: int = 10):
+def generate_statistics_async(
+    number: int = 10, url: str = "http://localhost:8080/say-hi"
+):
     """
     The main function to run this file as a standalone program and output executed API call statistics
     """
@@ -55,3 +57,8 @@ def generate_statistics_async(number: int = 10):
     # Instead of simply calling the function we're interested in, we let the event loop run it for us
     # So instead of calling `make_many_calls(...)` let's use asyncio:
     # YOUR CODE HERE
+
+
+if __name__ == "__main__":
+    # Here we simply call `generate_statistics_async()` when this file is run as a program and not imported as a library
+    generate_statistics_async(10)

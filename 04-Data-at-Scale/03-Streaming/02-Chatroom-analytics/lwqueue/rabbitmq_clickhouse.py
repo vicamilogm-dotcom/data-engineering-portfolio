@@ -56,7 +56,7 @@ def clickhouse_callback(channel: str, method, properties, body):
 
     """
     parsed_body = json.loads(body)
-    message_data = {**parsed_body, "received_at": datetime.datetime.utcnow()}
+    message_data = {**parsed_body, "received_at": datetime.datetime.now(datetime.UTC)}
     pass  # YOUR CODE HERE
 
 

@@ -1,0 +1,31 @@
+services:
+  database:
+    image: postgres:14
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d f1db -U postgres || exit 1"]
+      interval: 15s
+      retries: 5
+    volumes:
+      - ./database/init/:/docker-entrypoint-initdb.d/
+    environment:
+      - POSTGRES_DB=f1db
+      - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+      - POSTGRES_USER=postgres
+    ports:
+      - 5433:5432
+
+  streamlit:
+    build:
+      context: .
+    restart: always
+    volumes:
+      - ./.streamlit:/app/.streamlit/
+      - ./f1dashboard:/app/f1dashboard/
+    command: poetry run streamlit run f1dashboard/basic.py
+    ports:
+      - 8501:8501
+    depends_on:
+      - database
+    stdin_open: true # eq. to -i in docker run (allows breakpoints)
+    tty: true # eq. to -t in docker run (allows breakpoints)

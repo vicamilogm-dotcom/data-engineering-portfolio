@@ -1,5 +1,3 @@
-version: '3'
-
 services:
   frontend:
     image: europe-west1-docker.pkg.dev/data-engineering-students/student-images/style-frontend

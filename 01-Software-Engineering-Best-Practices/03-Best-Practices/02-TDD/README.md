@@ -1,4 +1,4 @@
-# Test Driven Development
+# 🎯 Test Driven Development
 
 Test-driven development (aka **TDD**) is a software development process that relies on the repetition of a very short development cycle: red-green-refactor. The idea of this process is to turn a requirement into one or a couple of specific test cases, run those tests to make sure they are red, then implementing the code to turn those tests green. A third step is to refactor the code while keeping the tests green.
 
@@ -6,7 +6,9 @@ Test-driven development (aka **TDD**) is a software development process that rel
 
 The testing pattern encouraged is a four-phase one and well described in this [blog article by Thoughtbot](https://robots.thoughtbot.com/four-phase-test)
 
-## 0️⃣ Our challenge: Longest Word
+<br>
+
+# 0️⃣ Context - the challenge: Longest Word
 
 Let's practice TDD with a simple game that we will use until the end of the day. We will implement "The Longest Word", a game where given a list of nine letters, you have to find the longest possible English word formed by those letters.
 
@@ -53,17 +55,18 @@ In the TDD paradigm, one question we always ask is:
 
 Asking this question means you need to think about your code like a black box. It will take some parameters in entry and you will observe the output, comparing them to an expected result.
 
+<br>
 
-## Test n°1: Creating a valid Game board.
+# 1️⃣ Test 1: Creating a valid Game board.
 
-### Starting the project
+## 1.1. Starting the project
 
 Now that we have a better idea of the object we want to build, we can start writing a test. First of all, let's create a new Python project using poetry:
 
 ```bash
 cd ~/code/<user.github_nickname>
 poetry new longest-word && cd $_
-poetry add pytest "pylint@*"
+poetry add --group dev pytest pylint
 
 touch longest_word/game.py
 touch tests/test_game.py
@@ -71,25 +74,14 @@ touch tests/test_game.py
 code .
 ```
 
-- copy your `game.py` skeleton inside
-- setup VScode Python interpreter path to that created by poetry (`poetry env info --path` to see where it is)
+- Copy the skeleton for `game.py` provided above.
+- Setup VScode Python interpreter path to the interpreter created by poetry (`poetry env info --path` to see where it is)
 
-<details>
-<summary markdown='span'>💡 That poetry add "pylint@* looks odd?</summary>
+## 1.2. Testing Game().\_\_init\_\_
 
-By using:
+❓ **Try to write your first test**. Follow the 4 step process. Some steps can be empty.
 
-```bash
-poetry add "pylint@*"
-```
-
-We are forcing poetry to look at all the versions of `pylint` and not just the latest release to find one that will be compatable with the rest of our packages and python version. This is a handy thing to know if you are running into dependency issues that you can't resolve.
-
-</details>
-
-### Testing Game().__init__
-
-❓ **Try to write your first test**. Follow the 4 steps principles (some can be empty). Remember that we are only trying to write a test that is testing if the game board is valid! We will deal with player input and if the word is actually in a dictionary later 😉
+Remember that we are only trying to write a test that is checking if the game board is valid! We will deal with player input and if the word is actually in a dictionary later 😉
 
 ```python
 # tests/test_game.py
@@ -124,7 +116,6 @@ class TestGame:
                 assert letter in string.ascii_uppercase
 
 ```
-
 </details>
 
 
@@ -140,36 +131,49 @@ What next? Now you should **read the error message**, and try to **fix** it, and
   <summary markdown='span'>👀 Error message </summary>
 
 ```bash
-============================== test session starts ===============================
-platform linux -- Python 3.8.14, pytest-7.2.0, pluggy-1.0.0 -- /home/brunolajoie/.cache/pypoetry/virtualenvs/longest-word-IGw-ZBuq-py3.8/bin/python
+======================================== test session starts =========================================
+platform linux -- Python 3.12.8, pytest-8.3.4, pluggy-1.5.0 -- /home/lorcanrae/code/lorcanrae/longest-word/.venv/bin/python
 cachedir: .pytest_cache
-rootdir: /home/brunolajoie/code/brunolajoie/longest-word, configfile: pyproject.toml
+rootdir: /home/lorcanrae/code/lorcanrae/longest-word
+configfile: pyproject.toml
 collected 1 item
 
-tests/test_game.py::TestGame::test_game_initialization FAILED              [100%]
+tests/test_game.py::TestGame::test_game_initialization FAILED                                  [100%]
 
-==================================== FAILURES ====================================
-_______________________ TestGame.test_game_initialization ________________________
+============================================== FAILURES ==============================================
+_________________________________ TestGame.test_game_initialization __________________________________
 
-self = <tests.test_game.TestGame object at 0x7f0c169e4af0>
+self = <tests.test_game.TestGame object at 0x7b65ce02c2c0>
 
     def test_game_initialization(self):
-        new_game = Game()
-        grid = new_game.grid
->       assert isinstance(grid, list)
-E       AssertionError: assert <class 'NoneType'> == list
-E        +  where <class 'NoneType'> = type(None)
+            # setup
+            new_game = Game()
 
-tests/test_game.py:8: AssertionError
-============================ short test summary info =============================
-FAILED tests/test_game.py::TestGame::test_game_initialization - AssertionError: assert <class 'NoneType'> == list
-=============================== 1 failed in 0.03s ================================
+            # exercise
+            grid = new_game.grid
+
+            # verify
+>           assert isinstance(grid, list)
+E           assert False
+E            +  where False = isinstance(None, list)
+
+tests/test_game.py:13: AssertionError
+====================================== short test summary info =======================================
+FAILED tests/test_game.py::TestGame::test_game_initialization - assert False
+========================================= 1 failed in 0.04s ==========================================
 ```
 
 </details>
 
 
-OK so the error message is `AssertionError: assert <class 'NoneType'> == list`
+OK, so if we focus on the error:
+
+```bash
+>           assert isinstance(grid, list)
+E           assert False
+E            +  where False = isinstance(None, list)
+```
+From this we can determine that our `grid` is of type `None`, when it should be a `list`!
 
 ❓ **Try to fix this test**...and remember, you don't have to pass the test immediately! As soon as you have a new error message, it's already a PROGRESS 🎉🎉 !!!
 
@@ -199,7 +203,7 @@ class Game:
 
 <br>
 
-## Test n°2: Validiting player input with the gameboard
+# 2️⃣ Test 2: Validating player input with the game board
 
 Let's move to the second method of our `Game` class, using the same feedback loop
 
@@ -215,7 +219,7 @@ Let's move to the second method of our `Game` class, using the same feedback loo
 
 In this test we only want to test to see if the collection of letters that the player inputs exists in the game board! We will deal with the input word being a real word in the next challenge.
 
-Try to think of edge cases and write tests for both valid and invalid player inputs. Break it down and separate it out into a few sparate tests!
+Try to think of edge cases and write tests for both valid and invalid player inputs. Break it down and separate it out into a few separate tests!
 
 <details><summary markdown='span'>🎁 A possible solution
 </summary>
@@ -239,7 +243,7 @@ A possible implementation of the test would be:
         new_game = Game()
         test_grid = 'KWEUEAKRZ'
         test_word = 'EUREKA'
-        # exercice
+        # exercise
         new_game.grid = list(test_grid) # Force the grid to a test case
         # verify
         assert new_game.is_valid(test_word) is True
@@ -251,7 +255,7 @@ A possible implementation of the test would be:
         new_game = Game()
         test_grid = 'KWEUEAKRZ'
         test_word = 'SANDWICH'
-        # exerice
+        # exercise
         new_game.grid = list(test_grid) # Force the grid to a test case
         # verify
         assert new_game.is_valid(test_word) is False
@@ -292,10 +296,9 @@ A possible implementation is:
 
 <br>
 
+# 3️⃣ Style
 
-## Style
-
-Make sure to make `pylint` happy:
+Be sure to make `pylint` happy:
 
 ```bash
 poetry run pylint longest_word/game.py
@@ -304,9 +307,21 @@ poetry run pylint longest_word/game.py
 - `pylint` is the standard 'linter' for python, it checks the code without running.
 - Its suggestions are mostly good practices - you can try to follow the [documentation](https://pylint.pycqa.org/en/latest/) but most of the suggestions are pretty intuitive.
 
-You can disable those rules which you don't think should apply here, by adding the following lines at the top of each file for example:
+You can disable those rules which you don't want to apply by adding pylint configuration as comments to the top of each file. For example in `game.py`:
 
 ```python
 # pylint: disable=missing-docstring
 # pylint: disable=too-few-public-methods
 ```
+
+<br>
+
+# 🏁 Finishing up
+
+We've created some tests, and from those tests, some code that works!
+
+Now that we have some tests, we can automate those tests so they run every time a pull request is opened or a branch is merged into `main`.
+
+In the next challenge we'll set up **Continuous Integration** 🚀
+
+<br>

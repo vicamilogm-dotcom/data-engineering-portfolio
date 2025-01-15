@@ -33,9 +33,9 @@ title = soup.title.text
 print(title)  # Outputs: Web scraping - Wikipedia
 ```
 
-With a bit of context and documentation to reference, let's build our webscraper!
+With a bit of context and documentation to reference, let's build our web scraper!
 
-<br>
+<br>import
 
 # 1️⃣ Setting up the scraper function:
 

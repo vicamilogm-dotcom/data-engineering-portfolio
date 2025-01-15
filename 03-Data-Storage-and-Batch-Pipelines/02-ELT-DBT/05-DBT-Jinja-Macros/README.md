@@ -51,6 +51,6 @@ make test
 
 Congratulations, you've touched the surface of creating macros in your DBT project. This idea is extensible and works similar to python functions where you can have nested macros to perform more complex operations. For more information, check out DBT's documentation on Jinja and macros at [this link](https://docs.getdbt.com/docs/build/jinja-macros).
 
-Make sure to run `make test` and git add, commit, and push your code to GitHub to track your progress on Kitt!
+🧪 Make sure to run `make test` and git add, commit, and push your code to GitHub to track your progress on Kitt!
 
 <br>

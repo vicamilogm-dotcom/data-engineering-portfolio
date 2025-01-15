@@ -7,14 +7,15 @@ readme = "README.md"
 packages = [{include = "image_processing"}]
 
 [tool.poetry.dependencies]
-python = "^3.8"
-numpy = "<1.24"
-pillow = "^9.5.0"
-tensorflow = "<2.11"
+python = "^3.12"
+numpy = "<2.1.0"
+tensorflow = "^2.18.0"
+pillow = "^11.0.0"
 
 [tool.poetry.group.dev.dependencies]
-pytest = "^7.3.1"
-pytest-mock = "^3.11.1"
+pytest = "^8.3.4"
+pytest-mock = "^3.14.0"
+
 
 [build-system]
 requires = ["poetry-core"]

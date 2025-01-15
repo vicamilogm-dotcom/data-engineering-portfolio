@@ -12,7 +12,7 @@ def read_tweets(db: Session, skip: int = 0, limit: int = 100):
 
 def create_tweet(db: Session, tweet: schemas.TweetCreate):
     """Function should create a new tweet in the database"""
-    db_tweet = models.Tweet(**tweet.dict())
+    db_tweet = models.Tweet(**tweet.model_dump())
     db.add(db_tweet)
     db.commit()
     db.refresh(db_tweet)

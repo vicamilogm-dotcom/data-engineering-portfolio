@@ -2,6 +2,8 @@
 
 Below you'll find a bunch of pre-requisite and useful knowledge for the bootcamp.
 
+<br>
+
 # 1️⃣ Managing Python libraries with Poetry 📃
 
 Python3 is installed by default on your system. For our work, we install additional Python packages. Let's imagine that we have 2 projects going on, one depends on [Protobuf v4.21.1](https://pypi.org/project/protobuf/) and the other on an older version [Protobuf v3.15.8](https://pypi.org/project/protobuf/3.15.8/).
@@ -45,6 +47,7 @@ The combination of tools above works but it's not super easy is it? So we've sim
 - Run `poetry install`
 - Prefix commands with `poetry run ...`
 
+<br>
 
 # 2️⃣ Makefile
 
@@ -73,9 +76,12 @@ Tests are written with [Pytest](https://docs.pytest.org/en/7.1.x/). Each test sh
 
 - when it passes `tests/test_all.py::test_csv PASSED`
 - when there are errors, look at the end for the `short test summary info` then go back up for details
-```======================================================= short test summary info ========================================================
+```bash
+======================================================= short test summary info ========================================================
 FAILED tests/test_all.py::test_csv - AssertionError: file ratings.csv not found under data/
 ```
+
+<br>
 
 # 3️⃣ VSCode
 
@@ -126,6 +132,8 @@ You may have noticed that it works automatically if you open VScode exactly at t
 }
 ```
 
+<br>
+
 # 4️⃣ Linux
 
 ## glob patterns
@@ -155,7 +163,7 @@ Usual cases
 
 If you encounter an error like this
 
-```
+```bash
 find: './database/pg_multixact': Permission denied
 ```
 
@@ -163,6 +171,7 @@ this means you've created a directory owned by `root` (system administrator) and
 
 Go to the top of your git repository and run `make own-repo`.
 
+<br>
 
 # 5️⃣ Configuration through environment variables
 
@@ -218,7 +227,7 @@ It's therefore good practice to create a `.env` file next to the `docker-compose
 
 For instance, we'd create a `.env` file with contents
 
-```
+```bash
 POSTGRES_PASSWORD=abcd
 ```
 
@@ -226,17 +235,18 @@ which `docker-compose` will then be able to pick up.
 
 To read more about how Docker Compose works with environment variables, check [this article](https://docs.docker.com/compose/environment-variables/).
 
-To make your life easier, we've created `env-template` files, with contain the environment variables keys, but not the values. Copy these files into a `.env` (`cp env-template .env`) and fill out the right hand side (ie. the values).
+To make your life easier, we've created `.env.sample` files, with contain the environment variables keys, but not the values. Copy these files into a `.env` (`cp .env.sample .env`) and fill out the right hand side (ie. the values).
 
 For instance, we'd have
 
-`env-template`
-```
+```bash
+# `.env.sample`
 POSTGRES_PASSWORD=
 ```
 
 and we expect you to create a `.env` file filled out from the template.
-```
+```bash
+# `.env`
 POSTGRES_PASSWORD=abcd
 ```
 
@@ -244,6 +254,7 @@ POSTGRES_PASSWORD=abcd
 
 In the `common/lewagonde` Python library, we've added a function `def load_dot_env(dot_env_fp: str)` which takes the path to a `.env` file as input, and loads its values into environment variables for you. This mimics the behaviour of Docker Compose in your Python programs, if you need.
 
+<br>
 
 # 6️⃣ Manage your VM
 
@@ -323,6 +334,8 @@ If still doesn't fix it, it may be an backlog of badly closed port-forwarding th
   ssh -L xxx:localhost:xxx <vm_IP_address>
   ```
 
+<br>
+
 # 7️⃣ DEBUGGING 🐛
 
 Here are some options, from basic & quick to fancy & heavy:
@@ -354,7 +367,7 @@ my_service_name:
   tty: true        # eq. to docker run -t
 ```
 
-then
+Then:
 
 ```bash
 docker compose up

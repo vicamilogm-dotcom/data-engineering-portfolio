@@ -6,7 +6,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 import pathlib
 
-DATA_PATH = pathlib.Path(__file__).resolve().parent.parent / "03-Pandas" / "data"
+DATA_PATH = pathlib.Path(__file__).resolve().parent.parent / "02-Pandas" / "data"
 
 category_df = pd.read_csv(DATA_PATH / "category_distribution.csv")
 best_books_df = pd.read_csv(DATA_PATH / "best_performing_books.csv")

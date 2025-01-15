@@ -1,10 +1,9 @@
-version: '3'
 services:
   postgres:
     image: postgres:14
     healthcheck:
-      test: ["CMD", "pg_isready -d db -U airflow"]
-      interval: 5s
+      test: ["CMD-SHELL", "pg_isready -d db -U airflow || exit 1"]
+      interval: 15s
       retries: 5
     restart: always
     
@@ -15,18 +14,23 @@ services:
     depends_on:
       - postgres
     restart: on-failure
+    healthcheck:
+      test: ["CMD-SHELL", "poetry run airflow jobs check --job-type SchedulerJob --local || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     
 
   webserver:
-      build: .
-      command: poetry run scripts/entrypoint.sh
-      depends_on:
-        - postgres
-        - scheduler
-      restart: on-failure
-      healthcheck:
-        test: ["CMD", "-f", "/home/airflow/airflow-webserver.pid"]
-        interval: 30s
-        timeout: 30s
-        retries: 3
-      
+    build: .
+    command: poetry run scripts/entrypoint.sh
+    depends_on:
+      - postgres
+      - scheduler
+    restart: on-failure
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/health || exit 1"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+    
