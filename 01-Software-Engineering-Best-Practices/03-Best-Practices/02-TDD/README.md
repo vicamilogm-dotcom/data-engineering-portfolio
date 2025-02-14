@@ -19,9 +19,9 @@ Grid: OQUWRBAZE
 Longest word: BAROQUE
 ```
 
-The word [`baroque`](https://en.wiktionary.org/wiki/baroque) is valid as it exists in the English dictionary (even though its origin is French 🇫🇷 😋)
+The word [`baroque`](https://en.wiktionary.org/wiki/baroque) is valid as it exists in the English dictionary (even though its origin is French 🇫🇷 😋).
 
-Note that the word [`bower`](https://en.wiktionary.org/wiki/bower) is also valid. The goal here is **not** to write code which finds the longest word, but to analyze a human player attempt and judge if this word is valid or not against the given grid!
+Note that the word [`bower`](https://en.wiktionary.org/wiki/bower) is also valid. The goal here is **not** to write code which finds the longest word, but to analyze a human player's attempt and judge if his word is valid or not against the given grid!
 
 We need to **break down** the problem in tiny pieces...
 
@@ -31,7 +31,7 @@ We want to create a `Game` class in `game.py` that has the following blueprint:
 ```python
 class Game:
     def __init__(self) -> list:
-        """Attribute a random grid to size 9"""
+        """Attribute a random grid of size 9"""
         self.grid = None # TODO
         pass
 
@@ -40,7 +40,7 @@ class Game:
         pass # TODO
 ```
 
-So we as to play with it as follow
+In the end we should be able to play the game like this:
 
 ```python
 game = Game()
@@ -53,7 +53,7 @@ In the TDD paradigm, one question we always ask is:
 
 > How can I test my code above?
 
-Asking this question means you need to think about your code like a black box. It will take some parameters in entry and you will observe the output, comparing them to an expected result.
+Asking this question means you need to think about your code like a black box. It will take some parameters as its input and you will observe the output, comparing them to an expected result.
 
 <br>
 
@@ -75,13 +75,13 @@ code .
 ```
 
 - Copy the skeleton for `game.py` provided above.
-- Setup VScode Python interpreter path to the interpreter created by poetry (`poetry env info --path` to see where it is)
+- Setup the VS Code Python interpreter path to the interpreter created by poetry (`poetry env info --path` to see where it is).
 
 ## 1.2. Testing Game().\_\_init\_\_
 
 ❓ **Try to write your first test**. Follow the 4 step process. Some steps can be empty.
 
-Remember that we are only trying to write a test that is checking if the game board is valid! We will deal with player input and if the word is actually in a dictionary later 😉
+Remember that we are only trying to write a test that is checking if the game board is valid! We will deal with player input and if the word actually exists in the dictionary later 😉.
 
 ```python
 # tests/test_game.py
@@ -119,14 +119,14 @@ class TestGame:
 </details>
 
 
-❓ Now it's time to run it first to make sure those tests are **failing**:
+❓ Before we start coding, we should run the test to make sure it is **failing**:
 
 ```bash
 # Add the -v flag for a verbose output OR -vv flag to get the entire traceback!
 poetry run pytest -v
 ```
 
-What next? Now you should **read the error message**, and try to **fix** it, and only this one (don't anticipate). Let's do the first one together:
+What next? Now you should **read the error message**, and try to **fix** it. Only fix this very first test, don't anticipate. Let's do the first one together:
 <details>
   <summary markdown='span'>👀 Error message </summary>
 
@@ -173,9 +173,9 @@ OK, so if we focus on the error:
 E           assert False
 E            +  where False = isinstance(None, list)
 ```
-From this we can determine that our `grid` is of type `None`, when it should be a `list`!
+From this we can determine that our `grid` is of type `None`, while it should be a `list`!
 
-❓ **Try to fix this test**...and remember, you don't have to pass the test immediately! As soon as you have a new error message, it's already a PROGRESS 🎉🎉 !!!
+❓ **Try to fix this test** ... and remember, you don't have to pass the test immediately! As soon as you have a new error message, you're making PROGRESS 🎉🎉 !!!
 
 <img src="https://res.cloudinary.com/wagon/image/upload/v1560715000/new-error_pvqomj.jpg" width=500>
 
@@ -205,7 +205,7 @@ class Game:
 
 # 2️⃣ Test 2: Validating player input with the game board
 
-Let's move to the second method of our `Game` class, using the same feedback loop
+Let's move to the second method of our `Game` class, using the same feedback loop:
 
 - Carefully write a unit test
 - Run the test
@@ -217,9 +217,9 @@ Let's move to the second method of our `Game` class, using the same feedback loo
 
 ❓ **It's your turn to implement a test for this new `is_valid(self, word)` method**!
 
-In this test we only want to test to see if the collection of letters that the player inputs exists in the game board! We will deal with the input word being a real word in the next challenge.
+In this test we only want to test if the collection of letters that the player inputs exists in the game board! We will deal with the input word being a real word in the next challenge.
 
-Try to think of edge cases and write tests for both valid and invalid player inputs. Break it down and separate it out into a few separate tests!
+Try to think of edge cases and write tests for both valid and invalid player inputs. Break it down and separate it into a few separate tests!
 
 <details><summary markdown='span'>🎁 A possible solution
 </summary>
@@ -298,16 +298,16 @@ A possible implementation is:
 
 # 3️⃣ Style
 
-Be sure to make `pylint` happy:
+Make sure that `pylint` is happy:
 
 ```bash
 poetry run pylint longest_word/game.py
 ```
 
-- `pylint` is the standard 'linter' for python, it checks the code without running.
-- Its suggestions are mostly good practices - you can try to follow the [documentation](https://pylint.pycqa.org/en/latest/) but most of the suggestions are pretty intuitive.
+- `pylint` is the standard "linter" for python, it checks the code without running.
+- Its suggestions are mostly good practices - you can check the [documentation](https://pylint.pycqa.org/en/latest/) but most of the suggestions are pretty intuitive.
 
-You can disable those rules which you don't want to apply by adding pylint configuration as comments to the top of each file. For example in `game.py`:
+You can disable rules you don't want to apply by adding pylint configuration settings as comments to the top of each file. For example in `game.py`:
 
 ```python
 # pylint: disable=missing-docstring
@@ -323,5 +323,3 @@ We've created some tests, and from those tests, some code that works!
 Now that we have some tests, we can automate those tests so they run every time a pull request is opened or a branch is merged into `main`.
 
 In the next challenge we'll set up **Continuous Integration** 🚀
-
-<br>
