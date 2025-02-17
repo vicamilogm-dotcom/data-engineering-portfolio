@@ -497,6 +497,21 @@ We will need an extension to help us interact via kubectl -> gke
 gcloud components install gke-gcloud-auth-plugin
 ```
 
+<details>
+<summary markdown='span'>Alternative if that fails</summary>
+
+If the Google Cloud CLI was installed with a package manager, this simple command might not work.
+
+In that case, we have to install manually. Run this:
+
+```bash
+curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor --yes -o /usr/share/keyrings/cloud.google.gpg
+echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+sudo apt-get update && sudo apt-get install google-cloud-cli-gke-gcloud-auth-plugin
+```
+
+</details>
+
 ## 4.1. Creating the cluster
 
 First we want to create a new k8s cluster on gcloud use the command below 👇

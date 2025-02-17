@@ -15,7 +15,9 @@ We will be able to process over **1,000,000,000** cells of New York taxi data in
 
 # 0️⃣ Before we start
 
-The Python version on the cluster is controlled by the Dask helm chart, and they are quite low (3.8 or 3.9). It is possible to create our own Docker images and other Kubernetes configuration files to upgrade to 3.12, but o keep this as simple as possible, we're just going to downgrade our local python version to 3.8.14
+## Python version
+
+The Python version on the cluster is controlled by the Dask helm chart, and they are quite low (3.8 or 3.9). It is possible to create our own Docker images and other Kubernetes configuration files to upgrade to 3.12, but to keep this as simple as possible, we're just going to downgrade our local python version to 3.8.14
 
 To do this locally, make sure you're in the current challenge directory and run:
 
@@ -29,6 +31,31 @@ Locally set the python version in this challenge directory:
 # Will create a .python-version text file
 pyenv local 3.8.14
 ```
+
+## Install the GKE auth plugin
+
+Install the `gke-gcloud-auth-plugin` if not done yet. Normally you did this already in the Kubernetes unit, but you can safely run this a second time.
+
+<details>
+<summary markdown='span'>Installation instructions</summary>
+
+We need this extension to help us interact via kubectl -> gke
+
+```bash
+gcloud components install gke-gcloud-auth-plugin
+```
+
+If the Google Cloud CLI was installed with a package manager, this simple command might not work.
+
+In that case, we have to install manually. Run this:
+
+```bash
+curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor --yes -o /usr/share/keyrings/cloud.google.gpg
+echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+sudo apt-get update && sudo apt-get install google-cloud-cli-gke-gcloud-auth-plugin
+```
+
+</details>
 
 <br>
 
