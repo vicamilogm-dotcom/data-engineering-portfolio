@@ -190,7 +190,7 @@ We still need to create the `check.html` view:
 ```bash
 touch templates/check.html
 ```
-Let's add this code in `templates/home.html`:
+Let's add this code in `templates/check.html`:
 
 ```html
 <!-- templates/check.html -->
