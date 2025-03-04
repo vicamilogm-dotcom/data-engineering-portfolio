@@ -6,9 +6,9 @@ If you did not complete the challenge **Linux and Bash** on Setup Day, we strong
 
 # 🎯 Goal
 
-The goal of this exercise is to make some `GET` API calls via the python `requests` library
+The goal of this exercise is to make some `GET` API calls via the python `requests` library.
 
-We will be using the PokeApi to access information about pokemon. Here is the [documentation](https://pokeapi.co/docs/v2). We will begin with some basic calls and then move into functions which require multiple requests to get the proper information!
+We will be using the PokeApi to access information about pokemon. The PokeAPI documentation is at [this link](https://pokeapi.co/docs/v2). We will begin with some basic calls and then move into functions which require multiple requests to get the proper information!
 
 <br>
 
@@ -18,10 +18,9 @@ We will be using the PokeApi to access information about pokemon. Here is the [d
 1. Have a look at the documentation to get familiar with the different API endpoints. Let's say we wanted to look up a specific pokemon generation via an API call. We would find out how to do that here: https://pokeapi.co/docs/v2#games-section
 
 2. Next enter the call directly into the browser so for example look up generation 1 👇
-
-```
-https://pokeapi.co/api/v2/generation/1
-```
+    ```bash
+    https://pokeapi.co/api/v2/generation/1
+    ```
 
 To make the responding JSON object easier to interact with in a web browser we recommend adding an extension for [firefox](https://addons.mozilla.org/en-GB/firefox/addon/jsonview/) or for [chrome](https://chrome.google.com/webstore/detail/json-viewer/gbmdgpbipfallnflgajpaliibnhdgobh). If you use any other browser do a google search for your browser + json viewer and you should find something similar!
 
@@ -94,17 +93,17 @@ If not, try to read the message and understand why your function is not passing 
 ❓ Now code the other functions inside `lookup.py`
 
 1. Code `check_pokemon_move` which checks whether a pokemon can learn a move.
-🧪 Test
+🧪 Test with:
 ```bash
 pytest tests/test_lookup.py::test_check_pokemon_move
 ```
 2. Code `get_pokemon_types` which gets all the pokemon of a given type or of two types if an optional second type is given.
-🧪 Test
+🧪 Test with:
 ```bash
 pytest tests/test_lookup.py::test_get_pokemon_types
 ```
-3. Finally code the most complicated function `get_evolutions` which looks up the pokemon which either it has evolved from, to, or both!
-🧪 Test
+3. Finally code the most complicated function `get_evolutions` which looks up the pokemon which either it has evolved from, to, or both! This is a tricky one that requires either a number of nested `if` statements OR recursion.
+🧪 Test with:
 ```bash
 pytest tests/test_lookup.py::test_get_evolutions
 ```
@@ -120,3 +119,5 @@ make test
 ```
 
 If all the tests pass, make sure to commit, add, and push your code so you can track your progress on Kitt before moving to the next exercise!
+
+<br>

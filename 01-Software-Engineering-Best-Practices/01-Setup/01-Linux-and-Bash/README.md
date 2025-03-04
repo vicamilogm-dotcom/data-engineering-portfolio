@@ -80,14 +80,14 @@ And now if you run it:
 You should see that someone is connected!
 
 ❗️ **The command we just used, `chmod`, can do more than just make a file executable**. It also affects who can read, write, and execute files! Bookmark this [great article](https://www.computerhope.com/unix/uchmod.htm) for later if you want to learn a bit more about this concept.
-<img src='https://cdn.thegeekdiary.com/wp-content/uploads/2017/11/Files-permissions-and-ownership-basics-in-Linux.png' width=300>
+<img src="https://wagon-public-datasets.s3.amazonaws.com/data-engineering/W1D5/010102-file-permissions-and-ownership-in-linux.png" width=400>
 
 ❓ Lets move our script into `/usr/local` before we move on.
 
-You might notice you get permission denied when trying to move the files into the folder you can fix this with sudo (💡 a useful trick if you forget a sudo is running `sudo !!` runs the previous command but with `sudo` prepended).You need this because the root user is the only user that can edit the root directory (along with everything on the system). Running `sudo` allows you to imitate this user to run one command (a more in-depth look at [root](http://www.linfo.org/root.html)). This control over absolutely everything on the system is one of the most powerful things about linux. But you also must be careful not to overwrite key files as there is a lack of guard rails.
+You might notice you get permission denied when trying to move the files into the folder you can fix this with sudo (💡 a useful trick if you forget a sudo is running `sudo !!` runs the previous command but with `sudo` prepended).You need this because only the root user can edit the root directory (along with everything on the system). Running `sudo` allows you to imitate the root user to run one command (a more in-depth look at [root](http://www.linfo.org/root.html)). This control over absolutely everything on the system is one of the most powerful things about linux. But you also must be careful not to overwrite key files, as there is a lack of guard rails.
 
 <details>
-  <summary markdown='span'>💡 Why do /usr/local ?</summary>
+  <summary markdown='span'>💡 Why /usr/local</summary>
 
 If you want a quick explanation of most of the folders in the root directory (i.e. the highest folder in the system) this 2 min video explains the [linux filesystem](https://www.youtube.com/watch?v=42iQKuQodW4) at a high level.
 
@@ -154,7 +154,7 @@ To use the timer **here are the key commands from systemctl**:
 - `enable` (always start on reboot but does not start now without --now)
 - `disable` (stop it starting on reboot)
 
-So to get our to run permanently we would use
+So to get our to run permanently we would use:
 ```bash
 sudo systemctl enable --now <your_service>.timer
 ```
@@ -187,18 +187,22 @@ This [website](https://crontab.guru/#0_20_*_*_*) is great for checking your synt
 
 ```bash
 0 22 * * * systemctl start check_ssh.timer
-````
+```
 
 </details>
 
+<br>
+
+# 🏁 Finishing up
 
 Services and cron are two powerful tools in the linux arsenal, here we could have achieved our goal with either on their own but it is useful to know both in case only one is appropriate!
 
 🏁 We now have a cron which starts a timer running on our to check if anyone is connected and if not shut it down, stopping us spending too much money by accidentally leaving it on overnight!
 
+<br>
 
-<details>
-  <summary markdown='span'> 💡 Alternative crontab solution without services</summary>
+# Alternative crontab solution without services
+
 The above crontab solution uses the flow of:
 - Start a background `check_ssh.timer` on a cron schedule
 - The `check_ssh.timer` executes the `check_ssh.service` based on it's own schedule (e.g. every 120 seconds)
@@ -214,6 +218,5 @@ By using crontab, we can remove a few layers of abstraction to execute only the 
 ```
 
 Will execute the shell script every 15 minutes of every hour of every day (when the virtual machine is on).
-</details>
 
 <br>

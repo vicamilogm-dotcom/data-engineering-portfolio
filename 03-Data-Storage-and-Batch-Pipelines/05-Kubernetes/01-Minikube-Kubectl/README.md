@@ -269,6 +269,8 @@ This command will forward the service port we defined in `service.yaml` (port 50
 
 If you forward port 9000 to your host machine (MacBook, Windows...) and you should be able to access your running service!
 
+<br>
+
 # 7️⃣ Using Minikube dashboard 🖼️
 
 Minikube has an excellent UI interface to manage and visualize your clusters!

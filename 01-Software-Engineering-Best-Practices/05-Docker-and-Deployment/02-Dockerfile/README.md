@@ -54,7 +54,7 @@ Open this challenge in VSCode and head to the `Dockerfile-task-1` file. This wil
 
 1. Create a `WORKDIR` named: `app`
 
-1. Copy the complete current directory into the working directory `/server`
+1. Copy the complete current directory into the working directory `/app`
 
 1. Exclude unnecessary files with `.dockerignore`
     ```bash
