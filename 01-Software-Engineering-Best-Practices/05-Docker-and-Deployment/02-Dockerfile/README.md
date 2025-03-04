@@ -318,7 +318,7 @@ This idea is called the [Principle of Least Privilege](https://en.wikipedia.org/
         && useradd --uid 10000 -ms /bin/bash runner
 
     # ❗️ We want to work inside the user local folder now
-    WORKDIR /home/runner/server
+    WORKDIR /home/runner/app
 
     # ❗️ We swap from root to that user
     USER 10000
@@ -338,7 +338,7 @@ This idea is called the [Principle of Least Privilege](https://en.wikipedia.org/
 
 <br>
 
-# 🏁 Finish
+# 🏁 Finishing Up
 
 Congratulations on completing the challenge!
 
