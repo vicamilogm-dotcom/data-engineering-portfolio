@@ -45,7 +45,7 @@ testTask2: buildTask2
 	PYTHONDONTWRITEBYTECODE=1 poetry run pytest -v --color=yes -k TestTask2
 
 testTask3-1: buildTask3-1
-	PYTHONDONTWRITEBYTECODE=1 poetry run pytest -v --color=yes tests/test_task_3.py::TestTask3::test_dockerfile_task_3_1
+	PYTHONDONTWRITEBYTECODE=1 poetry run pytest -v --color=yes tests/test_task_3.py::TestTask3::test_dockerfile_task_3_1_keys_only
 
 testTask3-2: buildTask3-2
-	PYTHONDONTWRITEBYTECODE=1 poetry run pytest -v --color=yes tests/test_task_3.py::TestTask3::test_dockerfile_task_3_2
+	PYTHONDONTWRITEBYTECODE=1 poetry run pytest -v --color=yes tests/test_task_3.py::TestTask3::test_dockerfile_task_3_2_keys_only

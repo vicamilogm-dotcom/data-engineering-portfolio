@@ -17,7 +17,7 @@ class TestTask2:
                 "&& apt-get -y install --no-install-recommends software-properties-common "
                 "&& add-apt-repository ppa:deadsnakes/ppa "
                 "&& apt-get -y update "
-                "&& apt-get -y install --no-install-recommends python3.8 python3-pip "
+                "&& apt-get -y install --no-install-recommends python3.12 python3-pip "
                 "&& pip3 --no-cache-dir install fastapi==0.115.6 uvicorn==0.33.0 "
                 "&& apt-get clean "
                 "&& rm -rf /var/lib/apt/lists/*"

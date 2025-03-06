@@ -8,7 +8,7 @@ class TestTask3:
     @pytest.fixture
     def dockerfile_validation_1(self):
         return {
-            "FROM": "python:3.8.10",
+            "FROM": "python:3.12.8",
             "ARG": "DEBIAN_FRONTEND=noninteractive",
             "ENV": "PYTHONUNBUFFERED 1",
             "RUN": (
@@ -29,7 +29,7 @@ class TestTask3:
     @pytest.fixture
     def dockerfile_validation_2(self):
         return {
-            "FROM": "python:3.8.10-slim",
+            "FROM": "python:3.12.8-slim",
             "ARG": "DEBIAN_FRONTEND=noninteractive",
             "ENV": "PYTHONUNBUFFERED 1",
             "RUN": (
@@ -65,7 +65,7 @@ class TestTask3:
                 )
 
     def test_dockerfile_task_3_1_keys_only(self):
-        dockerfile_name = "dockerfile-task-1"
+        dockerfile_name = "dockerfile-task-3-1"
         dockerfile_parsed = dockerfile.parse_file(dockerfile_name)
 
         keys_to_check = [
@@ -101,7 +101,7 @@ class TestTask3:
                 )
 
     def test_dockerfile_task_3_2_keys_only(self):
-        dockerfile_name = "dockerfile-task-1"
+        dockerfile_name = "dockerfile-task-3-2"
         dockerfile_parsed = dockerfile.parse_file(dockerfile_name)
 
         keys_to_check = [

@@ -1,3 +1,5 @@
+# Stage 1 - compile binary
+
 FROM golang:1.19.4 AS builder
 
 WORKDIR /go/src/github.com/ogiles1999/ping/
@@ -9,6 +11,9 @@ RUN go mod init  \
 COPY . .
 
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -o /go/bin/main
+
+############################
+# Stage 2 - copy binary from Stage 1
 
 FROM scratch
 
