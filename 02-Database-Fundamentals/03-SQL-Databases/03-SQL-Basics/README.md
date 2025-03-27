@@ -35,7 +35,7 @@ The `adult` column is a boolean column. Meaning its values should only be TRUE, 
 **❓ Write a test that checks the unicity of the `id` column in the `movies_metadata` table.**
 - It fails if 2 records in this table share the same `id` (if it's indeed unique, then ID can be called a primary key).
 - The output of your query should be a table with 2 columns : `id`, `num_records`
-- 🧪 Store your code in `exercice-4-1.sql` and run `pytest tests/exercice-4_1.py` in your terminal to check your results.
+- 🧪 Store your code in `exercice-4-1.sql` and run `pytest tests/test_exercice-4_1.py` in your terminal to check your results.
 
 ❓ Can you give more context when it fails, by adding movies metadata to the previous query? It will help you visually compare pairs of rows that have the same ids, and help explain what caused some records to be duplicated!
 <details>
