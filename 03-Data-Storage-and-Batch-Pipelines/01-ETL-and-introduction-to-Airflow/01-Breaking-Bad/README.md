@@ -36,7 +36,7 @@ The main requirements to respect will be to:
 
 You could use a pre-built Airflow image to start your Dockerfile but we will keep it as light as possible and use a python image to start. It will also give you more opportunities to learn Airflow setup commands 😉
 
-1. Let's start by creating a `Dockerfile` and start from a `python:3.8.10-slim` image
+1. Let's start by creating a `Dockerfile` and start from a `python:3.12.8-slim` image
 
 1. Set the `DEBIAN_FRONTEND` argument to `noninteractive`
 
@@ -59,7 +59,7 @@ You could use a pre-built Airflow image to start your Dockerfile but we will kee
 
 ## 1.2. Setup the docker-compose.yml
 
-As noted above, you will create a light docker-compose with the minimal requirements, but do not hesitate to take a look to the official docker-compose.yml of Airflow [here](https://github.com/apache/airflow/blob/main/docs/apache-airflow/howto/docker-compose/docker-compose.yaml).
+As noted above, you will create a light docker-compose with the minimal requirements, but do not hesitate to take a look to the official docker-compose.yml of Airflow [here](https://github.com/apache/airflow/blob/main/airflow-core/docs/howto/docker-compose/docker-compose.yaml).
 
 ### Postgres service
 
@@ -216,7 +216,7 @@ You should see your two tasks. Turn the DAG on and see what happens! Both tasks 
 To give you a starting point, we've provided the function signatures for five functions. It is now your turn to implement them in the correct combination and order. You should not have to create any other python functions. Remember that helper or internal functions (and variables) are usually prefixed with an underscore - `_`.
 
 If you can't remember how the `requests` or `csv` packages work, check out the docs:
-- Python [csv](https://docs.python.org/3.8/library/csv.html)
+- Python [csv](https://docs.python.org/3.12/library/csv.html)
 - Python [requests](https://pypi.org/project/requests/)
 
 Do not hesitate to manually trigger the DAG to see what your code does.
