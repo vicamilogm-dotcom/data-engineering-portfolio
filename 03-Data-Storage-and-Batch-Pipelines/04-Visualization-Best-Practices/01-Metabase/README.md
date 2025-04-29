@@ -15,7 +15,7 @@ The goal of this challenge is to get a simple dashboard up by loading some F1 da
 Run the following command to download a `SQL` file and place it in your `database/init/` subdirectory:
 
 ```bash
-curl --output ./database/init/f1db.sql.init.gz https://storage.googleapis.com/lewagon-data-engineering-bootcamp-assets/datasets/f1/f1db.sql.gz
+curl --output ./database/init/f1db.sql.gz https://storage.googleapis.com/lewagon-data-engineering-bootcamp-assets/datasets/f1/f1db.sql.gz
 ```
 
 The SQL file is still in a zipped archive, unzip it using the `gzip` command from the terminal. Make sure it's named `f1db.sql.init` in the `database/init/` folder.
@@ -28,27 +28,31 @@ The `docker-compose.yml` file has been provided for you! Have a read through, ma
 
 ❓ Why does Metabase need a postgres database?
 
+❓ Why is their two postgres databases?
+
 Metabase needs a database for persistence of data for its metadata, the same reason why Airflow needs a database as well. Metabase needs to store its own configuration data, settings, user accounts, permissions, as well as saved queries and even the locations and types of visualisations you have!
 
-We'll also be loading our F1 Data into this postgres instance. In production, you would read from an externally hosted database or warehouse to keep the compute and memory load on the machine hosting Metabase low.
+It's considered bad practice to use metadata databases as data stores. This is a great example of the [separation of concerns](https://en.wikipedia.org/wiki/Separation_of_concerns). The sole purpose of the metadata database is to hold metadata. This allows you to connect to other data sources (postgres/BigQuery/ClickHouse/etc) for your analytics needs.
 
-## 2.1. Postgres init script
+## 2.1. Postgres initialisation
 
-When we start our postgres container for the first time it will use a combination of **environment variables** and SQL scripts located in `/docker-entrypoint-initdb.d/` (mounted to `database/init/` on our VM's file system) to create initial users, databases, and tables.
+We have set `POSTGRES_DB` and `POSTGRES_USER` for each postgres service so that for each postgres instance, the corresponding user and database will be created. Metabase will handle the creation of databases and tables in the metadata database, but we'll need an `init` script to handle the loading of the Formula 1 data.
 
-We have set our `POSTGRES_DB` and `POSTGRES_USER` in our `docker-compose.yml` so postgres' will create the corresponding user and database in the postgres instance - fantastic! It will create our Metabase metadata DB! But we still don't have a database to hold our Formula 1 data 😢
+Luckily we have already have one: `f1db.sql`. This (very long) SQL script contains all the commands to create tables and insert data for our Formula 1 database.
 
-If our `f1db.sql.init` file was named: `f1db.sql`, postgres will execute that script against the default user AND database, mixing our analytics data and service metadata together in the same database - that's a big no no!
+<details>
+<summary markdown='span'>💡 How do postgres init scripts work</summary>
 
-We have created a short init script: `01-init-f1.sh`, to create a database to hold our F1 data, and grant privilege to our user to read that data - check it out!
+When postgres initialises (or runs for the first time), it will execute SQL and shell scripts found in `/docker-entrypoint-initdb.d/` (mounted to `database/init/` on our VM's file system) in **alphabetical order**. You may see init scripts numbered to make the execution order explicit.
 
-❓ **So why are you telling me this?**
+Note that it will only execute **shell scripts** (`.sh`) and **SQL** (`.sql`) scripts. If you have files with different extensions, they will not be executed.
 
-When postgres initialises, it will execute the SQL and shell scripts in `/docker-entrypoint-initdb.d/` (mounted to `database/init/` on our VM's file system) in **alphabetical order**. This is use super useful to know if you're creating more than one database. Because our `f1db` file doesn't end with `.sql`, it won't be executed on initialisation.
+If you have multiple postgres instances in a container stack, it's common to have a separate folder with initialisation scripts to mount to each instance.
+</details>
 
 ## 2.2. Docker compose
 
-Make sure to create a `.env` file with a `POSTGRES_PASSWORD`, then to get Metabase up and running:
+Make sure to create a `.env` file with a `POSTGRES_PASSWORD` and `F1_DB_PASSWORD` from the `.env.sample`. Then to get Metabase up and running:
 
 ```bash
 docker compose up
@@ -56,11 +60,21 @@ docker compose up
 
 ## 2.3. Logging in and creating connection
 
-Log into Metabase
+Log into Metabase and load the Postgres database as a source using the environment variables that you included in the docker-compose file.
 
-Load the Postgres database as a source using the environment variables that you included in the docker-compose file, and the database you created with your init script.
+Verify that the data has been loaded. It should be under `Browse Data` ➡️ `Postgres`. You should see the `drivers` table, as well as many more.
 
-Verify that the data has been loaded. It should be under `Browse Data` ➡️ `Postgres`. You should amongst other see the `drivers` table.
+## 2.4. Stateful containers
+
+We are using **Docker volumes** here to maintain state in our databases. If you forgot to reload your `.env` before spinning up you container stack, you may get an error with the postgres initialisation.
+
+To do a full teardown, you'll need bring down your container stack, remove the docker managed volumes, then spin up the containers stack again.
+
+To view docker managed volumes:
+
+```bash
+docker volume list
+```
 
 <br>
 
@@ -89,6 +103,6 @@ Feel free to create some visualisations!
 
 🚀 In the next challenge you will use these tables to write a Streamlit application, so take some time to discover each table!
 
-There are no tests for this challenge, but make sure to git add, commit, and push your code to github!
+There are no tests for this challenge, but make sure to git add, commit, and push your code to Github!
 
 <br>

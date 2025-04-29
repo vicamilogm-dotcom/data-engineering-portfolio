@@ -1,48 +1,64 @@
 services:
-  db:
+  db_metabase:
     image: postgres
     container_name: postgresql_metabase
     restart: always
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -d metabase -U metabase || exit 1"]
-      interval: 15s
-      retries: 5
     environment:
       POSTGRES_DB: metabase
       POSTGRES_USER: metabase
       POSTGRES_PASSWORD: $POSTGRES_PASSWORD
-      DATA_DB_NAME: f1
     volumes:
-      - db_data:/var/lib/postgresql/data
-      - ./database/init:/docker-entrypoint-initdb.d
+      - db_metabase_data:/var/lib/postgresql/data
     ports:
       - 5433:5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d metabase -U metabase || exit 1"]
+      interval: 15s
+      retries: 5
+
+  db_f1:
+    image: postgres
+    container_name: postgresql_f1
+    restart: always
+    environment:
+      POSTGRES_DB: f1
+      POSTGRES_USER: f1user
+      POSTGRES_PASSWORD: $F1_DB_PASSWORD
+    volumes:
+      - db_f1_data:/var/lib/postgresql/data
+      - ./database/init:/docker-entrypoint-initdb.d
+    ports:
+      - 5434:5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d f1 -U f1user || exit 1"]
+      interval: 15s
+      retries: 5
 
   metabase:
     image: metabase/metabase
     container_name: metabase
     restart: always
-    healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:3000/api/health || exit 1"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 30s
     environment:
       MB_DB_TYPE: postgres
       MB_DB_DBNAME: metabase
       MB_DB_PORT: 5432
       MB_DB_USER: metabase
       MB_DB_PASS: $POSTGRES_PASSWORD
-      MB_DB_HOST: db
-      MB_DB_FILE: /metabase-data/metabase.db
+      MB_DB_HOST: db_metabase
     depends_on:
-      - db
-    volumes:
-      - dataviz_data:/metabase-data
+      - db_metabase
     ports:
       - 3001:3000
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/api/health || exit 1"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+    volumes:
+      - dataviz_data:/metabase-data
 
 volumes:
-  db_data:
+  db_metabase_data:
+  db_f1_data:
   dataviz_data:
