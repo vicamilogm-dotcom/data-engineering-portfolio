@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 set -x
 
-echo "Add connection"
-airflow connections add 'postgres_connection' \
+echo "Adding postgres warehouse connection"
+airflow connections add 'pg_warehouse_connection' \
                     --conn-type postgres \
-                    --conn-host "postgres" \
-                    --conn-schema "$POSTGRES_DB" \
-                    --conn-login "$POSTGRES_USER" \
-                    --conn-password "$POSTGRES_PASSWORD" \
+                    --conn-host "postgres_warehouse" \
+                    --conn-schema "$WAREHOUSE_DB" \
+                    --conn-login "$WAREHOUSE_USER" \
+                    --conn-password "$WAREHOUSE_PASSWORD" \
                     --conn-port "5432"

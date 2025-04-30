@@ -2,24 +2,23 @@
 
 In this challenge, you will focus on creating a more complex **ETL** pipeline. To allow you to focus on the Airflow side of things, we've provided the `Dockerfile` and `docker-compose.yml`. Make sure to read through them and understand how they're working.
 
-We'll have:
-For this pipeline, we'll have a few components and follow the *bronze, silver, gold* architecture:
+For this pipeline, there will be a few components and the pipeline follow the *bronze, silver, gold* (often called medallion) architecture:
 - An API to call for data in JSON format
 - A **data lake** (`data` directory) to store:
     - Raw JSON data in a **bronze** directory
     - Transformed JSON data in a **silver** directory
 - A **data warehouse** (`postgres db`) to store transformed data in a structured manner.
 
-The goal is to have a DAG running every day that will:
-- **Extract** - Downloads a Chuck Norris' joke, using this [API](https://api.chucknorris.io), saving them as [JSON's](https://en.wikipedia.org/wiki/JSON) into the **bronze layer** of your **data lake**
-- **Transform** - Translates it to Swedish, saving them again in the **silver layer** of your **data lake**
+The goal is to have a **DAG** running every day that will:
+- **Extract** - Downloads a single Chuck Norris' joke, using this [API](https://api.chucknorris.io), saving it as a [JSON](https://en.wikipedia.org/wiki/JSON) into the **bronze layer** of your **data lake**
+- **Transform** - Translates it to Swedish, saving them in the **silver layer** of your **data lake**
 - **Load** - Inserts them it into your **data warehouse**
 
-For sake of simplicity, in this challenge, the postgres "warehouse" will be the same postgres database used by Airflow as its metadata database, and is called `db`, as per docker-compose:
-```bash
-- POSTGRES_DB=db
-- POSTGRES_USER=airflow
-```
+To follow best practices we'll be using **two postgres** instances:
+- One is used by Airflow as the metadata database - `postgres_airflow`
+- One as our data warehouse - `postgres_warehouse`
+
+🙅 Mixing metadata and analytics data is a recipe for a bad time.
 
 In this challenge we're using local components so you can focus on how the different parts of Airflow work. Later in the bootcamp we will see how Airflow connects to external sources like Google Cloud Storage as a data-lake and BigQuery as a warehouse instead.
 
@@ -29,13 +28,17 @@ In this challenge we're using local components so you can focus on how the diffe
 
 The `Dockerfile` and `docker-compose.yml` are similar to the previous challenge, with one exception: the `entrypoint.sh` now contains an additional line (to reference an additional script: `init_connections.sh`) to create a connection between the Airflow service and the warehouse.
 
+The `Dockerfile` and `docker-compose.yml` are similar to the previous challenge with a few differences:
+- We now have an additional postgres service to separate our metadata and warehouse.
+- The `entrypoint.sh` now contains an additional line, which references an additional script: `init_connections.sh`. This script creates a connection between Airflow and the data warehouse:
+
 ```bash
-airflow connections add 'postgres_connection' \
+airflow connections add 'pg_warehouse_connection' \
                     --conn-type postgres \
-                    --conn-host "postgres" \
-                    --conn-schema "$POSTGRES_DB" \
-                    --conn-login "$POSTGRES_USER" \
-                    --conn-password "$POSTGRES_PASSWORD" \
+                    --conn-host "postgres_warehouse" \
+                    --conn-schema "$WAREHOUSE_DB" \
+                    --conn-login "$WAREHOUSE_USER" \
+                    --conn-password "$WAREHOUSE_PASSWORD" \
                     --conn-port "5432"
 ```
 
@@ -44,20 +47,22 @@ airflow connections add 'postgres_connection' \
 ```python
 PostgresOperator(
     sql=... # create warehouse table, insert translated jokes...
-    postgres_conn_id='postgres_connection'
+    postgres_conn_id="pg_warehouse_connection",
 )
 ```
 
-💡 We didn't need it in our previous challenge as we were not storing anything in a warehouse!
+💡 We didn't need it in our previous challenge because we were not storing anything in a warehouse!
 
 It will be helpful to create our bronze, and silver folder structure for our data now. Once the containers are spun up, Airflow will lock restrict permissions on the folders:
+
+Double check if you have the `bronze` and `silver` directories in the `data` folder. If not, create it now with:
 
 ```bash
 mkdir -p data/bronze
 mkdir -p data/silver
 ```
 
-Now, you just have to add your `POSTGRES_PASSWORD` in a new `.env` file, enable `direnv` then launch your containers:
+Now, you just have to add an `AIRFLOW_DB_PASSWORD` and `WAREHOUSE_PASSWORD` in a new `.env` file, enable `direnv` then launch your containers:
 
 ```bash
 docker compose up
@@ -65,20 +70,21 @@ docker compose up
 
 You should be able to:
 - Access the Airflow webserver on `localhost:8080`
-- Access the Airflow db via DBeaver on port `localhost:5433`
+- Access the Airflow DB via DBeaver on port `localhost:5433`
+- Access the Warehouse DB via DBeaver on port `localhost:5434`
 
 <br>
 
-# 2️⃣ DAG Instructions ↪
+# 2️⃣ DAG Instructions
 
 Like the previous challenge, we'll tackle this DAG in a similar way:
-- DAG configuration - the `with DAG(...) as dag:` configuration
-- Tasks - the definitions of all our tasks and the execution graph
-- Python functions - the python functions called by our tasks
+1. DAG configuration - the `with DAG(...) as dag:` configuration
+2. Tasks - the definitions of all our tasks and the execution graph
+3. Python functions - the python functions called by our tasks
 
 ## 2.1. DAG Configuration
 
-First, let's focus on creating the proper DAG configuration (no tasks or python functions needed for now).
+First, let's focus on creating the proper DAG configuration. No tasks or python functions needed for now.
 
 You need to create a DAG with the following requirements:
 - Should be named `local_etl`
@@ -114,14 +120,13 @@ You need four tasks:
 <details>
 <summary markdown='span'>💡 Hint</summary>
 
-Check out [airflow template variables](https://airflow.apache.org/docs/apache-airflow/stable/templates-ref.html) for a way to programmatically access Airflow variables at runtime. The values you need for this might already be provided
+Check out [airflow template variables](https://airflow.apache.org/docs/apache-airflow/stable/templates-ref.html) for a way to programmatically access Airflow variables at runtime. The values you need may already be provided in a runtime variable.
 </details>
 
 ### 2.2.3. `transform` task_id
 - As a [PythonOperator](https://airflow.apache.org/docs/apache-airflow/2.2.0/howto/operator/python.html)
 - That should trigger the `transform` function with the proper arguments (don't fill the python function yet)
 - The transformed joke should be saved to the **silver** directory under the name `silver/swedified_joke_{execution-date}.json` (for example: */app/airflow/data/silver/swedified_joke_20220521.json*).
-
 
 ### 2.2.4. `load` task_id
 - As a `PythonOperator`
@@ -171,33 +176,34 @@ You can click on "Log" to inspect logs
 
 ### Check logs from your Terminal
 
-You can access your logs from your terminal, but mixing logs of 3 services at once can be messy. Simply open 3 terminal, each with one of the commands:
+You can access your logs from your terminal, but mixing logs of 4 services at once can be messy. Simply open 4 terminal, each with one of the commands:
 
 ```bash
-docker compose logs -f postgres
+docker compose logs -f postgres_airflow
+docker compose logs -f postgres_warehouse
 docker compose logs -f scheduler
 docker compose logs -f webserver
 ```
 
 ### Check logs from logs folder
 
-You should be able to see the exact same information in your `logs` folder, which is precious to grep for "ERROR" lines etc...!
+You should be able to see the exact same information in your `logs` folder, which is precious to `grep` for `ERROR` lines!
 
 ## 3.2. Reset Airflow DB
 
-In case you want to replay your challenge history from scratch, you can reset your airflow metadata database as if the were never run before:
+In case you want to replay your challenge history from scratch, you can reset your Airflow metadata database as if the were never run before:
 
 ```bash
 docker compose exec webserver poetry run airflow db reset
 ```
 
-You can also `sudo rm -rf database` to obliterate it entirely, but that's not a great skill to master in real life 🫠
+You can also `sudo rm -rf database` to obliterate it entirely, but be extra careful with the path that, you don't want to delete your operation system 🫠
 
 <br>
 
 # 4️⃣ (Optional) Understand scheduler and webserver health checks
 
-Have a look at the **healthchecks** in webserver and scheduler services of the `docker-compose.yml`. Understand how they work and what they are doing.
+Have a look at the **healthchecks** in the webserver and scheduler services of the `docker-compose.yml`. Understand how they work and what they are doing.
 
 The endpoints are taken straight from Airflow's Health Status docs located at [this link](https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/logging-monitoring/check-health.html#).
 
@@ -225,16 +231,16 @@ It can be interesting to read our tests to learn how to write tests for your own
     - check line 185: your `sql_alchemy_conn` refers to that local sqlite!
     - compare it to that of your currently running app: `docker compose exec webserver poetry run airflow config get-value database sql_alchemy_conn`
 - Open our `test_tasks_config.py`
-  - line 18 we're using a DagBag to "parse" your dags from your local folder `./dags`. We'll then be able to tests your dag syntax without actually running anything (ex. line 39)
-  - Then we also want to make fake "runs" of you dag against the temporary sqlite. For that, we first have to redirect the postgres connection by loading another `tests/scripts/init_connections.sh` from Makefile context. This allows us to override the Postgres hook on your DAG with a `SqliteHook` in our test (line 19). We can then use `hook.run(...)` on anything we want and launch your dag via `dag.create_dagrun(...)`. The process of replacing a variable with a different one of the same name at test time is called **mocking**.
+  - line 18 we're using a DagBag to "parse" your dags from your local folder `./dags`. We'll then be able to tests your DAG syntax without actually running anything, for example: line 40.
+  - Then we also want to make fake "runs" of you dag against the temporary sqlite. For that, we first have to redirect the postgres connection by loading another `tests/scripts/init_connections.sh` from Makefile context. This allows us to override the Postgres hook on your DAG with a `SqliteHook` in our test (line 20). We can then use `hook.run(...)` on anything we want and launch your DAG via `dag.create_dagrun(...)`. The process of replacing a variable with a different one of the same name at test time is called **mocking**.
 
 <br>
 
 # 🏁 Finishing up
 
-Congratulations! You now have an orchestrated pipeline running in Airflow 🎉
+Congratulations! You now have an orchestrated pipeline with logical execution running in Airflow 🎉 That is a massive achievement!
 
-🧪 Run `make test` to create a `test_output.txt`, then git add, commit, and push your code so Kitt can track your progress!
+🧪 Run `make test` to create a `test_output.txt`, then git add, commit, and push your code to GitHub to track your progress on Kitt!
 
 Once you're done with the challenge, don't forget to teardown your compose stack so it's not continuously running in the background and using system resources! To bring your stack down use:
 

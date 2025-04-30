@@ -47,7 +47,7 @@ class TestTasksConfigs:
         #         swedified_joke VARCHAR NOT NULL
         #     );"""
         # )
-        assert task.conn_id == "postgres_connection"
+        assert task.conn_id == "pg_warehouse_connection"
 
         assert list(map(lambda task: task.task_id, task.upstream_list)) == []
         assert list(map(lambda task: task.task_id, task.downstream_list)) == ["extract"]
@@ -144,7 +144,7 @@ class TestTasksConfigs:
                 == f"{self.swedified_joke_file_prefix}2022010{day}.json"
             )
             assert ti.task.op_kwargs["hook"].__class__.__name__ == "PostgresHook"
-            assert ti.task.op_kwargs["hook"].postgres_conn_id == "postgres_connection"
+            assert ti.task.op_kwargs["hook"].postgres_conn_id == "pg_warehouse_connection"
 
         assert list(map(lambda task: task.task_id, task.upstream_list)) == ["transform"]
         assert list(map(lambda task: task.task_id, task.downstream_list)) == []
