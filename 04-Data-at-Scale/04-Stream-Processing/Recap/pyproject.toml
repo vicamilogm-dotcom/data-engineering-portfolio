@@ -1,17 +1,22 @@
 [tool.poetry]
-name = "lwrecap"
+name = "beam-recap"
 version = "0.1.0"
 description = ""
-authors = ["S. Saunier <seb@lewagon.org>"]
+authors = ["Lorcan Rae <lorcanrae@gmail.com>"]
+packages = [{include = "app"}]
 
 [tool.poetry.dependencies]
-python = "~3.12.8"
-lewagonde = { path = "../../../common/lewagonde/", develop = true }
-fastapi = "^0.78.0"
+python = "~3.12.7" # required for GCP DataFlow workers - should not impact students working locally
+pandas = "^2.2.3"
+apache-beam = {extras = ["gcp"], version = "^2.61.0"}
+numpy = ">=1.14.3,<2.2.0"
 
 [tool.poetry.group.dev.dependencies]
-pytest = "^7.4.3"
+pytest = "^8.3.4"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+markers = ["optional: not required, nor saved in test_output.txt"]

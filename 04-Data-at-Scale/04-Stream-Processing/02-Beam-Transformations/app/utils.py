@@ -1,50 +1,52 @@
 import datetime
-from typing import List, Tuple
-import pandas as pd
+from typing import List, Tuple, Dict, Iterable
+
+from apache_beam.transforms.core import CombineFn
+import apache_beam as beam
 
 
 def str2timestamp(str_datetime, fmt="%Y-%m-%d %H:%M:%S.%f"):
-    """Converts a datetime string into a unix timestamp(number of seconds 1/1/1970 00:00:00)"""
-    dt = datetime.datetime.strptime(str_datetime, fmt)
-    epoch = datetime.datetime.utcfromtimestamp(0)
-    return int((dt - epoch).total_seconds())
+    """Converts a datetime string into a unix timestamp (number of seconds from 1/1/1970 00:00:00 excluding leap seconds)"""
+    dt = datetime.datetime.strptime(str_datetime, fmt).replace(
+        tzinfo=datetime.timezone.utc
+    )
+    return int(dt.timestamp())
 
 
-def strtime_window_rounded(str_datetime, window=15, fmt="%Y-%m-%d %H:%M:%S.%f"):
+class ExtractWindowTimestampKey(beam.DoFn):
+    def process(self, element, window=beam.DoFn.WindowParam):
+        """
+        Takes an unkeyed element and attaches the window's start timestamp as the key.
+
+        Output: (window_start_timestamp (str), element (list))
+        """
+        window_start_str = window.start.to_utc_datetime().strftime(
+            "%Y-%m-%d %H:%M:%S.%f"
+        )
+        yield (window_start_str, element)
+
+
+def aggregate_sensors(timestamp: str, sensor_values: List[Tuple[str,]]) -> Dict:
     """
-    Converts a datetime to rounded datetime with a frequency window in sec
+    Aggregates sensor readings grouped by timestamp.
+
+    Args:
+        timestamp_values | str: timestamp
+        sensor_values | List[Tuple[str,]]: iterable of [sensor, value,] pairs
+            eg: [['AtmP', '996', '1000',], ['Temp', 6], ['AtmP, 1000], ...]
+
+    Returns:
+        dict: {'Timestamp': ..., 'AtmP': ..., 'Temp': ..., ...}
+            - Key order not important
     """
-    timestamp = str2timestamp(str_datetime, fmt)
-    timestamp_rounded = (timestamp // window + 1) * window
-    datetime_rounded = datetime.datetime.utcfromtimestamp(timestamp_rounded)
-    return datetime_rounded.strftime(fmt)
 
+    # Create a dictionary of {sensor: List[sensor values]} pairs:
+    # {sensor1: [sensor1_val1, sensor1_val2], sensor2: [sensor2_val1, sensor2_val2], ...}
+    pass  # YOUR CODE HERE
 
-def aggregate_sensors(timestamp: str, sensor_values: List[List[Tuple]]):
-    """
-    Transform:
-    Tuple(timestample, List(sensor values))
+    # Create a dictionary of {sensor: Float(mean sensor value)} pairs:
+    # {sensor1: sensor1_mean_val, sensor2: sensor2_mean_val, ...}
+    pass  # YOUR CODE HERE
 
-    into
-
-    Dict('Timestamp': str, 'AtmP': float32, 'Temp': float32, 'Airtight': float32, 'H20C': float32)
-
-    Refer to the notebook in the previous challenge for how you could achieve this.
-
-    e.g. in:
-    ('2022-11-25 09:00:15.000000', [
-        ['AtmP', 996.0840610169381],
-        ['AtmP', 1032.610169381134],
-        ['Airtight', 1248.5965933454158],
-        ...)
-
-    e.g out:
-    {
-        'Timestamp': '2022-11-25 09:00:15.000000',
-        'AtmP': 991.1477661132812,
-        'Temp': 9.778665542602539,
-        'Airtight': 1248.5965933454158,
-        'H20C': 12.37144075123452
-    }
-    """
+    # Add the timestamp to the output before returning
     pass  # YOUR CODE HERE

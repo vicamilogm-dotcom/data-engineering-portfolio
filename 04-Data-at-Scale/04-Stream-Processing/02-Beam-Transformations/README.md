@@ -28,6 +28,8 @@ head data/sensors_latency.csv
 - The `value` recorded
 - The `timeStamp` corresponding to the time of the record
 
+We will be referring to each **row** in the CSV as an **element**.
+
 💪 Let's build our ETL pipeline with Apache Beam to transform and load this data in BigQuery.
 
 <br>
@@ -46,7 +48,7 @@ In this challenge, we use the paradigm of Map/Reduce with Apache Beam and we'll 
 - `data`: is the part of the pipeline where data will be loaded
 - `windowing`: takes as input `data` and prepares the data to be grouped
 - `grouping`: takes as input `windowing`, groups the data by key and transforms the result
-- `out`: writes the output of the pipeline
+- `out`: writes the output of the pipeline to disk as a CSV and optionally to BigQuery
 
 <br>
 
@@ -106,47 +108,78 @@ make test_first_read
 
 <br>
 
-# 5️⃣ Create a key for each element
+# 5️⃣ Sorting Data into Windows
 
-Inside the `windowing` transformation, let's create a `(key, value)` tuple so it will be possible to group the elements by keys later.
+Inside the `windowing` transformation, we're going to make use of **Beams** built in windowing methods to prepare our data for aggregation.
 
 ❓ What could be a good way to group the data for this type of data?
 <details>
   <summary markdown='span'>💡 Hints</summary>
 
 For TimeStamped data, a good strategy of grouping is to create intervals to gather data from the same time window!
-
 </details>
 
-👉 Let's code the process by applying a Map method that we name `Map Time Rounded Key per Element` to map a List to a Tuple like this one at each line
+To achieve this we'll need three steps in this transformation:
+1. We need to assign each element (or row) timestamp metadata based on the **timestamp**
+2. Place each element into a **Fixed Window**, with an interval that reads from the `run` keyword argument
+3. Extract the **starting timestamp** from the window and add it as a key to each element to prepare for aggregation in the next step.
+
+Let's break it down.
+
+## 5.1. Assign each element timestamp metadata
+
+We need to apply timestamp metadata to each record so that **Beam** will know which window to assign it to in the next step. There is a minor consideration, our **timestamp** is currently a **string**, and as per the docs at this [link here 🔗](https://beam.apache.org/documentation/transforms/python/elementwise/withtimestamps/), the timestamp needs to be in [epoch time](https://en.wikipedia.org/wiki/Unix_time) (or Unix time) as a datetime object.
+
+We've provided a few helper functions and classes in `utils.py`. The first one, `str2timestamp`, converts a timestamp **string** into [epoch time](https://en.wikipedia.org/wiki/Unix_time) (or Unix time).
+
+👉 Your job is to apply timestamp metadata to each record. For every step after this, we will no longer need the timestamp associated with each individual element. After this transformation, each element should look like:
 
 ```bash
-# PCollection in
+# Element in
 ['AtmP', '996.0840610169381', '2022-11-25 09:00:00.334685']
 ...
 
-# PCollection out
-('2022-11-25 09:00:15.000000', ['AtmP', 996.0840610169381])
+# Element out
+['AtmP', '996.0840610169381']
 ...
 ```
 
-- **key:** rounded value of the timestamp - you can use the `strtime_window_rounded()` function provided in `app/utils.py`
-- **value:** sensor name and sensor value
+## 5.2. Assign each element into a window
 
-❗️ We have manually created the time intervals by rounding the timestamp. Beam is actually able to create time windows with TimeStamped elements. We'll do that in the next challenge.
+We've applied timestamp metadata for each element, now we need to assign each element to a **fixed interval window**. Because each element now has timestamp metadata, we don't need to manually do this, if we apply the correct Beam Methods, Beam will handle it for us!
 
+Have a look at the docs this [link here 🔗](https://beam.apache.org/documentation/programming-guide/#using-fixed-time-windows) to get you started.
 
-You can execute your code with this command:
+## 5.3. Assign a key to each element
+
+Now we just need to assign a key to each of our elements so that we can aggregate them (by key) in the next step!
+
+Can you think of a good key to aggregate on?
+
+<details>
+  <summary markdown='span'>💡 Hints</summary>
+We're grouping elements together based on time interval in a window. Creating a key based on the window start time makes sense.
+</details>
+
+But we don't have the timestamp in our element any more! We can access the window metadata with a `DoFn`, a user defined function. We've provided the class `ExtractWindowTimestampKey` that will extract the windows starting time and yield an element that looks like:
+
+```bash
+('2022-11-25 09:00:15.000000', ['AtmP', 996.0840610169381])
+```
+
+👉 Your job is to apply this `DoFn` as the third step in the windowing transform.
+
+When you think you have the correct transform. Run your current pipeline with:
+
 ```bash
 python app/beam_sample.py \
     --input data/sensors_latency.csv \
     --output data/output_intermediate_windowing.txt
 ```
 
-👉 Have a look at `data/output_intermediate_windowing.txt`, the intermediary output generated by implementing windowing transformations.
+Have a look at `data/output_intermediate_windowing.txt`, the intermediary output generated by implementing windowing transformations.
 
 💡 Each line is a tuple. The first element is `timestamps` in 15 second intervals. The second element is a list containing the sensor name and value.
-
 
 🧪 **Test your code**
 ```bash
@@ -158,11 +191,7 @@ With these tuples we are now ready to group!
 
 # 6️⃣ Group/Aggregate the data
 
-In the previous step, we already created a key for each element. Now, we just need to group & reduce these elements together by taking their mean within each 15-min time interval.
-
-❓ Try to implement the `grouping` transform section to achieve the output below, using Apache Beam's:
-- [`GroupByKey`](https://beam.apache.org/documentation/transforms/python/aggregation/groupbykey/)
-- [`MapTuple`](https://beam.apache.org/documentation/transforms/python/elementwise/map/#example-5-maptuple-for-key-value-pairs)
+In the previous step, we already created a key for each element. To aggregate we need to group and reduce these elements together by taking their mean within each 15-second time interval. The input and output data should look a bit like:
 
 ```bash
 # PCollection in
@@ -179,16 +208,13 @@ In the previous step, we already created a key for each element. Now, we just ne
 {'Timestamp': '2022-11-25 09:00:30.000000', 'AtmP': 993.7766113281240, 'Temp': 10.66554260253947, ...}
 ```
 
-💡 We advise you to work in two steps: print (or save) the output of the GroupByKey first, and only then work on aggregating the resulting group!
+❓ Try to implement the `grouping` transform section to achieve the output below, using Apache Beams:
+- [`GroupByKey`](https://beam.apache.org/documentation/transforms/python/aggregation/groupbykey/)
+- [`MapTuple`](https://beam.apache.org/documentation/transforms/python/elementwise/map/#example-5-maptuple-for-key-value-pairs)
 
-💡 We advise you to isolate the pure-python aggregation function logic in a separate `utils.aggregate_sensors` function!
-
-<details>
-  <summary markdown='span'>💡 Hints</summary>
-
-You've already done something very similar in the first challenge of this unit!
-
-</details>
+💡 Here are some tips to help approach this section of the challenge:
+- Work in two steps: print (or save) the output of the first `GroupByKey`, and then work on aggregating the output.
+- Complete and use the `aggregate_sensors` function in `utils.py`. Unlike in the previous challenge, we won't be using pandas to manage the transformation, it's hugely inefficient because pandas wasn't designed for distributed processing (similar to UDF's in Spark)! So you'll have to use good old fashioned algorithms and native python data structures!
 
 You can execute your code with this command:
 ```bash
@@ -201,10 +227,6 @@ python app/beam_sample.py \
 ```bash
 make test_beam_output
 ```
-
-## 🧙‍♂️ (Optional) Pardo instead of MapTuple
-
-Feel free to use a `beam.ParDo` instead of `MapTuple` to fine-tune your Beam skills
 
 <br>
 

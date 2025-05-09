@@ -62,7 +62,7 @@ Now that we have seen how to subscribe to a message in the UI, let's code it in 
 
 # 2️⃣ Creating a subscriber 🤓
 
-❓ **Fill in the .env** with the variables: **PROJECT_ID** and **SUBSCRIPTION_NAME**
+❓ **Fill in the .env** with the variables: **PROJECT_ID**, **TOPIC_NAME**, and **SUBSCRIPTION_NAME**
 
 ❓ Now head to the file `subscriber_basics.py` and implement the **run** function by following the comments inside the function.
 
@@ -128,20 +128,21 @@ First head to subscriber `app/subscriber_beam.py` and go to the `run` function!
 
 The structure of the pipeline:
 
-- **data:** pull data from the Pub/Sub Topic
-- **windowing:** round off the timestamp to make intervals
-- **grouping:** aggregate the records per sensor per interval
-- **out:** write the data to BigQuery
+- 🛠️ **data:** pull data from the Pub/Sub Topic
+- ✅ **windowing:** round off the timestamp to make intervals
+- ✅ **grouping:** aggregate the records per sensor per interval
+- 🛠️ **out:** write the data to BigQuery
 
-We have already implemented the main structure with the file example earlier, now we have to adapt it to streaming mode.
+We have already implemented the main structure with the file example earlier, we just have to adapt the reading, writing, and execution of the pipeline to streaming mode.
+
+❗ There are minor changes to the arguments being passed and the function signature of `run`. Make sure to read it and understand how it is working.
 
 ❓ For the data part of the pipeline, where do you think we can source the data from?
 
 <details>
 <summary markdown='span'>💡 Answer</summary>
 
-Directly from Pub/Sub with **Apache Beam**!
-
+Directly from **Pub/Sub** with **Apache Beam**!
 </details>
 
 ## 4.1. Data
@@ -182,12 +183,12 @@ For that we need a windowing and grouping pipeline.
 
 In the previous challenge, we already implemented these two parts.
 
-❓ Add the code from the previous exercise into the **window** and **group sections**. Let's keep the same implementation and try to execute the pipeline with the following command:
+❓ Add the code from the previous exercise into the **windowing** and **grouping** sections. Keep the same implementation and execute the pipeline with the following command:
 
-```python
+```bash
 python app/subscriber_beam.py --id $PROJECT_ID --subscription-name $SUBSCRIPTION_NAME
 ```
-
+<!--
 😅 You should get the following error:
 
 ```bash
@@ -217,19 +218,25 @@ We'll have to make some modifications to our windowing section. Our workflow is:
 
 We are now ready to test if this works. But first let's **make sure to empty the queue.**
 
-❓ Run your updated **subscriber** along with the publisher
+❓ Run your updated **subscriber** along with the publisher -->
 
 In the terminal which is running the subscriber, make sure that every 15 seconds approximately a new line is printed with the grouped data per sensor in a dictionary. Like below 👇
 
 <img src="https://wagon-public-datasets.s3.amazonaws.com/data-engineering/W3D4/data-streaming-2.png" width=700>
 
-Now We are ready to load the data to BigQuery!
+It does not matter if the dictionary keys are in a different order.
+
+💡 All that hard work creating the **windows** in the previous challenge has paid off when transitioning from a batch pipeline to a streaming pipeline!
+
+Because we're now working with an **unbounded** data stream, it is impossible to collect all the elements since new elements are constantly being added, and therefore impossible to aggregate them. The default windowing behaviour is to assign all elements of a PCollection to a single, global window. If you didn't create the windows and put each element into a window, the pipeline would break 😢 To work with **unbounded** data streams, you *must* define a non-global windowing strategy to trigger the grouping.
+
+Now We are ready to load the data to BigQuery! 🚀
 
 ## 4.3. Load to BigQuery
 
-❓ First let's create a new table `iot_beam_stream` in your BigQuery dataset with the right schema:
+❓ First let's create a new table, `iot_beam_stream`, in your BigQuery dataset with the right schema:
 
-Under schema click on Edit as text and paste the following schema:
+Under schema click on **Edit as text** and paste the following schema:
 
 ```bash
 Timestamp:TIMESTAMP, Airtight:FLOAT, AtmP:FLOAT, H2OC:FLOAT, Temp:FLOAT
@@ -284,8 +291,10 @@ The output should look similar to:
 
 ```bash
 Building beam-stream (0.1.0)
+Building sdist
   - Building sdist
   - Built beam_stream-0.1.0.tar.gz
+Building wheel
   - Building wheel
   - Built beam_stream-0.1.0-py3-none-any.whl
 ```
@@ -339,15 +348,15 @@ python app/subscriber_beam.py \
     --runner DataflowRunner \
     --project $PROJECT_ID \
     --streaming \
-    --temp_location gs://$BUCKET_NAME/temp \
-    --staging_location gs://$BUCKET_NAME/staging \
+    --temp_location $BUCKET_NAME/temp \
+    --staging_location $BUCKET_NAME/staging \
     --extra_package dist/beam_stream-0.1.0-py3-none-any.whl \
     --region europe-west1
 ```
 
 <!-- Note that of 2025/01/09 the DataFlow workers use Python 3.12.7, that is why the version in the `pyproject.toml` is lower -->
 
-Give DataFlow a few minutes to spin up and create the workers.
+Give DataFlow a few minutes to spin up and create the worker(s).
 
 If you try to deploy your beam pipeline to GCP Dataflow and get an error, you may need to enable the Dataflow API on your GCP project. Read the error carefully and see if there is a link to enable the Dataflow API.
 </details>
@@ -373,7 +382,7 @@ After a while, refresh BigQuery and you should see new records in your table! �
 
 ## 5.4. Teardown 🔨
 
-To avoid any unwanted costs, make sure you teardown your pipeline once you've completed the challenge! By default a beam pipeline is deployed on a n1-standard-2 Compute Engine instance.
+To avoid any unwanted costs, make sure you teardown your pipeline once you've completed the challenge! By default a beam pipeline is deployed on a **n1-standard-2** Compute Engine instance, and that instance is running 24 hours a day, 7 days a week.
 
 Make sure to first stop your `publisher.py` script.
 
@@ -405,7 +414,13 @@ Alternatively you can stop a Dataflow job through the GCP Console:
 
 Congratulations! 🎉 You have build a complete real-time Data Streaming ETL pipeline.
 
-Don't forget to git add, commit, and push your code to GitHub so you can track your progress on Kitt!
+🧪 There is a dummy test for this challenge if you made it this far, execute it with:
+
+```bash
+make test
+```
+
+And don't forget to git add, commit, and push your code to GitHub so you can track your progress on Kitt!
 
 <br>
 

@@ -1,52 +1,67 @@
 import argparse
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
-import apache_beam.transforms.window as window
-import pandas as pd
+from apache_beam.transforms.window import FixedWindows
+from apache_beam.transforms import window, trigger
 
-from app.utils import str2timestamp, strtime_window_rounded, aggregate_sensors
-
-
-
-
-
-
+from app.utils import (
+    str2timestamp,
+    aggregate_sensors,
+    ExtractWindowTimestampKey,
+)
 
 
-def run(subscription_name: str, output_table: str, interval=15.0, pipeline_args=None):
-    with beam.Pipeline(
-        options=PipelineOptions(
-            pipeline_args,
-            streaming=True,  # This time we are streaming ! PCollection are now "unbounded"
-            save_main_session=True,
-        )
-    ) as pipeline:
-        # pipeline steps to pull the data from pub/sub
+def run(
+    subscription_name: str,
+    output_table: str,
+    interval: int = 15,
+    pipeline_args=None,
+):
+    options = PipelineOptions(
+        pipeline_args,
+        streaming=True,
+        save_main_session=True,
+    )
+    with beam.Pipeline(options=options) as pipeline:
         data = (
             pipeline
-            pass  # YOUR CODE HERE
+            
         )
 
-        # pipeline steps to window the data
+        # Assign Beam event timestamps and apply fixed-time windowing
         windowing = (
             data
-            pass  # YOUR CODE HERE
+            # DELETE_BEGIN
+            | "Attach Timestamps"
+            >> beam.Map(
+                lambda row: beam.window.TimestampedValue(
+                    [row[0], row[1]], str2timestamp(row[2])
+                )
+            )
+            | "Apply Windows"
+            >> beam.WindowInto(
+                FixedWindows(interval),
+                # trigger=trigger.Repeatedly(trigger.AfterProcessingTime(1 * 15)),
+                # allowed_lateness=1800,
+                # accumulation_mode=trigger.AccumulationMode.DISCARDING,
+            )
+            | "Attach Timestamp key" >> beam.ParDo(ExtractWindowTimestampKey())
+            # DELETE_END
         )
 
-        
-
-        # pipeline steps to group and aggregate the data
-        group = (
+        # Group by key (window timestamp), then aggregate
+        grouping = (
             windowing
-            pass  # YOUR CODE HERE
+            
         )
 
-        group | "Print debug" >> beam.Map(lambda x: print(x))
+        # Print debug - feel free to comment out
+        _ = grouping | "Print debug" >> beam.Map(lambda element: print(element))
 
-        # pipeline steps to write to big query
-        (
-            group
-            pass  # YOUR CODE HERE
+        # Stream to BigQuery
+        _ = (
+            grouping
+            
         )
 
 
