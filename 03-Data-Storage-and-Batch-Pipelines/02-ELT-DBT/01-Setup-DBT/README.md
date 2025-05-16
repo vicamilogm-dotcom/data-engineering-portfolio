@@ -226,7 +226,7 @@ We're defining the default behaviour of our models. Models defined in `models/ex
 <details>
 <summary markdown='span'>💡 What does the `+` symbol mean again?</summary>
 
-In DBT configuration files, the `+` symbol, like in `+materialized` or `+schema`, applies the configuration to that layer of models and **inherits down** to all nested sub-directories. DBT recommends using the `+` prefix for model configurations in your `dbt_project.yml`. It helps clearly indicate the intention for models and their materialization.
+In the `dbt_project.yml` file, the `+` symbol, like in `+materialized` or `+schema`, is to avoid collision between resource paths (e.g. a folder in `models`) and a config name. Imagine you had a model folder named `tags`: `tags` is also a config you could use in `dbt_project.yml`. By writing `+tags` DBT would know you're referring to the config, not to the model folder. DBT recommends using the `+` prefix for model configurations in your `dbt_project.yml`. It helps clearly indicate that it's a config and not a resource path.
 
 The `+` prefix means something different in the context of terminal commands. In the following example:
 
@@ -380,7 +380,7 @@ And make sure to add, commit, and push your code up to github so your progress i
 If you want to run all your models, or run all your tests, there is no need to specify the model with the `-m xxxx` or `--select xxxx` parameter:
 - `dbt run` runs all your DBT models
 - `dbt test` runs all tests defined for the project
-- `dbt build` runs `dbt test`, then `dbt run`
+- `dbt build` runs `dbt run` for every model, followed by `dbt test` for that model (if a test fails, DBT stops downstream execution of dependent models)
 
 ### Debugging with Compiled SQL in the BigQuery SQL Editor
 
