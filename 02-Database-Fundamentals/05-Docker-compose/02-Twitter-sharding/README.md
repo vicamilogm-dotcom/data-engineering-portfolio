@@ -260,14 +260,16 @@ SELECT * FROM eu_tweets
 **default location**
 
 What if you posted something where location is set to "asia"?
-Currently, the sharding will break. If data doesn't fit in either partition, we need some default partition for the overflow to go.
 
-```sql
--- This will redirect all other "locations" to this table
-CREATE TABLE default_tweets
-    PARTITION OF tweets
-    DEFAULT;
-```
+Did that work? No, we don't have an API that writes to an "asia" location. How would you solve it?
+
+<details>
+<summary markdown="span">🎁 Answer</summary>
+
+By creating an API for other locations!
+
+You could still write to the master DB with a specific location with an `INSERT` statement straight into the master Postgres DB. But that wouldn't be very useful to end users!
+</details>
 
 **Materialized import of foreign data**
 
