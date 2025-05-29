@@ -18,7 +18,7 @@ Run the following command to download a `SQL` file and place it in your `databas
 curl --output ./database/init/f1db.sql.gz https://storage.googleapis.com/lewagon-data-engineering-bootcamp-assets/datasets/f1/f1db.sql.gz
 ```
 
-The SQL file is still in a zipped archive, unzip it using the `gzip` command from the terminal. Make sure it's named `f1db.sql.init` in the `database/init/` folder.
+The SQL file is still in a zipped archive, unzip it using the `gzip` command from the terminal. Make sure it's named `f1db.sql` in the `database/init/` folder.
 
 <br>
 
@@ -26,13 +26,13 @@ The SQL file is still in a zipped archive, unzip it using the `gzip` command fro
 
 The `docker-compose.yml` file has been provided for you! Have a read through, make sure that you understand the different services and the environment variables.
 
-❓ Why does Metabase need a postgres database?
+❓ Why does Metabase need a database?
 
-❓ Why is their two postgres databases?
+❓ Why is there two postgres databases?
 
-Metabase needs a database for persistence of data for its metadata, the same reason why Airflow needs a database as well. Metabase needs to store its own configuration data, settings, user accounts, permissions, as well as saved queries and even the locations and types of visualisations you have!
+The same reason Airflow needs a database! Metabase needs a database for its own metadata, to store things like configurations, instance settings, user accounts, permissions, as well as saved queries, and locations and types of visualisation.
 
-It's considered bad practice to use metadata databases as data stores. This is a great example of the [separation of concerns](https://en.wikipedia.org/wiki/Separation_of_concerns). The sole purpose of the metadata database is to hold metadata. This allows you to connect to other data sources (postgres/BigQuery/ClickHouse/etc) for your analytics needs.
+It's considered bad practice to use metadata databases as data stores. This is a great example of the [separation of concerns 🔗](https://en.wikipedia.org/wiki/Separation_of_concerns). The sole purpose of metadata database is to hold Metabase metadata. This allows you to connect to other (and multiple) data sources (postgres/BigQuery/ClickHouse/etc) for your analytics needs.
 
 ## 2.1. Postgres initialisation
 
@@ -62,7 +62,9 @@ docker compose up
 
 Log into Metabase and load the Postgres database as a source using the environment variables that you included in the docker-compose file.
 
-Verify that the data has been loaded. It should be under `Browse Data` ➡️ `Postgres`. You should see the `drivers` table, as well as many more.
+💡 All of the information to connect to Postgres containing your F1 data is in your `docker-compose.yml` and `.env`. Think about what network, service, and port Metabase is accessing the F1 data on.
+
+Verify that the data has been loaded. It should be under **Browse** -> **Databases** -> **F1 Database** (or whatever you named the connection). You should see the `drivers` table as well as many more.
 
 ## 2.4. Stateful containers
 
@@ -73,8 +75,25 @@ To do a full teardown, you'll need bring down your container stack, remove the d
 To view docker managed volumes:
 
 ```bash
-docker volume list
+docker volume ls
 ```
+
+<details>
+<summary markdown='span'>💡 I need to delete my volumes!</summary>
+
+You can remove all volumes defined in a `docker-compose.yml` on a `docker compose down` with:
+
+```bash
+docker compose down --volumes
+```
+
+Or you can remove an individual volume with:
+
+```bash
+docker volume rm <name_of_the_volume>
+```
+Tab is your friend here.
+</details>
 
 <br>
 
