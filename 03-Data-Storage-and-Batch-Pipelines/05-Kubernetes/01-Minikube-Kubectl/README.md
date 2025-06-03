@@ -213,10 +213,10 @@ spec:
     spec:
       containers:
         - name: fastapi-container
-            image: app:latest
-            imagePullPolicy: Never
-            ports:
-              - containerPort: 8000 # Same as service target port
+          image: app:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8000 # Same as service target port
 ```
 
 In the first part of the configuration, we specify that the configuration we are applying is for a Deployment resource that we call `fastapi-deployment`.
