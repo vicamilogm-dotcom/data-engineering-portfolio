@@ -157,7 +157,7 @@ Now that we have all the data locally and the tables created in our warehouse, w
 
 1. Checkout the `pipeline/upload_data.py`. You should see the `main` function has a loop that iterates over the schema.
 
-2. Complete the loop to upload the data in each CSV in `./data/processed_cml/` to the correct table!
+2. Complete the loop to upload the data in each CSV in `./data/processed_xml/` to the correct table!
 
 3. When you think you have it working, run the script and check the data has been uploaded!
 
