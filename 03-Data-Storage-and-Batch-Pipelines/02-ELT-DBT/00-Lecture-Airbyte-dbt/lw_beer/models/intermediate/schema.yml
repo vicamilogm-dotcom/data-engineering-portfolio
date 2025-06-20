@@ -1,0 +1,12 @@
+version: 2
+
+models:
+  - name: beers_country
+    description: Joining transactions and beers tables
+    data_tests:
+      - unique:
+          column_name: "CONCAT(product_code, date_and_time_of_unloading)"
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - product_code
+            - data_and_time_of_unloading

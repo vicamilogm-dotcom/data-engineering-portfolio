@@ -1,0 +1,13 @@
+lw_beer:
+  outputs:
+    dev:
+      dataset: lw_beer
+      job_execution_timeout_seconds: 300
+      job_retries: 1
+      location: EU
+      method: oauth
+      priority: interactive
+      project: your_gcp_project_id # UPDATE TO YOUR PROJECT ID, optionally put it in ~/.dbt/profiles.yml
+      threads: 1
+      type: bigquery
+  target: dev

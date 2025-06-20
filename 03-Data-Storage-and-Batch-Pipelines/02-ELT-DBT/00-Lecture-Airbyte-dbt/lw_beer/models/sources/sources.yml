@@ -1,0 +1,6 @@
+sources:
+  - name: sheets
+    schema: lw_beer_raw # schema == dataset for BigQuery
+    tables:
+      - name: Product_range
+      - name: Transactions

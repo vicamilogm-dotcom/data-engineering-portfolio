@@ -1,0 +1,13 @@
+version: 2
+
+models:
+  - name: beers_by_country
+    description: Cumulative by country of origin
+    columns:
+      - name: country_of_origin
+        description: primary key
+        data_tests:
+          - unique
+          - not_null
+      - name: total_amount
+        description: number of units purchased by country
