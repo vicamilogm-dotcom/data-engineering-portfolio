@@ -3,6 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+
     restart: always
     ports:
       - 8080:8000
@@ -12,17 +13,22 @@ services:
       timeout: 10s
       retries: 5
       start_period: 30s
+
     volumes:
-      # - api:/app/api
+      # - api-volume:/app/api
       # /app for WORKDIR in Dockerfile
       # .dockerignore does not work with bind mounts and volumes, only `docker build`
+      # The . context is relative to where you run `docker compose up`, NOT the build context on line 4
       # Be precise with what you want in a container
       - ./api:/app/api
     command: ["uvicorn", "api.fast:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
     environment:
+    # user:password@server_address:port/db_name
       - DB_URL=postgresql+psycopg2://postgres:$POSTGRES_PASSWORD@db:5432/postgres
+
     networks:
       - backend
+
     depends_on:
       - db
 
@@ -34,7 +40,7 @@ services:
       - backend
 
 # volumes:
-#   api:
+#   api-volume:
 
 networks:
   # Network name is arbitrary

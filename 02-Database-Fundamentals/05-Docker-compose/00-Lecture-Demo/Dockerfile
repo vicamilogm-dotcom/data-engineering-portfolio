@@ -6,20 +6,15 @@ ENV PYTHONUNBUFFERED=1
 ENV WRITEPYTHONBYTECODE=1
 
 WORKDIR /app
-
+# Every Dockerfile directive is now relative to '/app' inside the image
+# e.g. COPY can be interpreted as: COPY ./ /app/./
 COPY ./  ./
 
-RUN apt-get update \
-    && apt-get -y upgrade \
-    && pip install --no-cache-dir poetry \
-    && poetry install \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+RUN pip install --no-cache-dir poetry \
+    && poetry install
 
 EXPOSE 8000
 
 ENTRYPOINT [ "poetry", "run" ]
 
 CMD ["uvicorn", "api.fast:app", "--host", "0.0.0.0", "--port", "8000"]
-# For hot reloading with a bind mount
-# CMD ["uvicorn", "api.fast:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]

@@ -14,19 +14,20 @@ with DAG(
     "lewagon_example",
     description="A simple DAG for Le Wagon",
     schedule_interval="@daily",
-    start_date=pendulum.datetime(2025, 6, 15, tz="UTC"),  # Update to something recent
+    start_date=pendulum.datetime(2025, 6, 15, tz="UTC"),  # change to something recent
 ) as dag:
     # Define tasks - order is arbitrary
-
-    run_this_last = EmptyOperator(
-        task_id="run_this_last",
-    )
 
     run_this_first = BashOperator(
         task_id="run_this_first",
         bash_command="echo 1",
     )
 
+    run_this_last = EmptyOperator(
+        task_id="run_this_last",
+    )
+
+    programatic_tasks = []
     for i in range(5):
         task = PythonOperator(
             task_id=f"sleep_for_{i}",
@@ -35,9 +36,8 @@ with DAG(
                 "time_to_sleep": i,
             },
         )
-
-        run_this_first >> task
+        programatic_tasks.append(task)
+        # run_this_first >> task
 
     # Define execution graph
-
-    run_this_first >> run_this_last
+    run_this_first >> programatic_tasks >> run_this_last

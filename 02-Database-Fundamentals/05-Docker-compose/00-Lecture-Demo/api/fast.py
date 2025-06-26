@@ -26,5 +26,5 @@ def read_root():
     engine = create_engine(SQLALCHEMY_DATABASE_URL, echo=True)
     query = text("SELECT 1")
     with engine.connect() as conn:
-        result = conn.execute(query).fetchall()
+        result = conn.execute(query).fetchone()[0]
     return {"DB": str(result)}

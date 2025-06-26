@@ -14,13 +14,15 @@ def list_tables():
 
 with DAG(
     "hook_example",
-    start_date=pendulum.datetime(2025, 6, 15, tz="UTC"),  # Update to something recent
+    start_date=pendulum.datetime(2025, 6, 15, tz="UTC"), # change to something recent
     schedule_interval="@daily",
     catchup=False,
 ) as dag:
+    # Task definition
     list_tables_task = PythonOperator(
         task_id="list_tables",
         python_callable=list_tables,
     )
 
+    # Execution graph
     list_tables_task
