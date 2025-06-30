@@ -22,18 +22,18 @@ Open two separate VSCode windows (you can use `code path/to/challenge_directory`
 ├── 01-Software-Engineering-Best-Practices # Module level
 │   ├── 01-Setup                           # Unit level
 │   │   ├── 00-Test-Setup                  # Challenge level
-            ├── app
-            │   ├── __init__.py
-            │   └── main.py                # YOUR CODE HERE
-            └── tests
-            │   ├── __init__.py
-            │   └── test_your_function.py  # OUR TEST CODE HERE
-            ├── .venv                      # your virtual-env for this challenge, created automatically by poetry
-            ├── .envrc                     # direnv call to activate your poetry venv as soon as you cd into the foler
-            ├── makefile                   # Contains `make test` and `make install` commands for you
-            ├── poetry.lock                # Created by you when running `make install`
-            ├── pyproject.toml             # We already wrote this for you so that poetry install will create all you need
-            ├── README.md                  # Kitt-displayed readme
+│   │   │   ├── app
+│   │   │   │   ├── __init__.py
+│   │   │   │   └── main.py                # YOUR CODE HERE
+│   │   │   ├── tests
+│   │   │   │   ├── __init__.py
+│   │   │   │   └── test_your_function.py  # OUR TEST CODE HERE
+│   │   │   ├── .venv                      # your virtual-env for this challenge, created automatically by poetry
+│   │   │   ├── .envrc                     # direnv call to activate your poetry venv as soon as you cd into the foler
+│   │   │   ├── makefile                   # Contains `make test` and `make install` commands for you
+│   │   │   ├── poetry.lock                # Created by you when running `make install`
+│   │   │   ├── pyproject.toml             # We already wrote this for you so that poetry install will create all you need
+│   │   │   └── README.md                  # Kitt-displayed readme
 ...
 ...
 ...
