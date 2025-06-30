@@ -1,4 +1,7 @@
-lw_beer:
+# dbt should work with this file in the dbt project root (same level as dbt_project.yml)
+# Alternatively move it to ~/.dbt/
+
+lw_beer_profile:
   outputs:
     dev:
       dataset: lw_beer
@@ -7,7 +10,17 @@ lw_beer:
       location: EU
       method: oauth
       priority: interactive
-      project: your_gcp_project_id # UPDATE TO YOUR PROJECT ID, optionally put it in ~/.dbt/profiles.yml
+      project: your_project_id # Don't forget to update with your project_id
+      threads: 1
+      type: bigquery
+    prod:
+      dataset: lw_beer_prod
+      job_execution_timeout_seconds: 300
+      job_retries: 1
+      location: EU
+      method: oauth
+      priority: interactive
+      project: your_project_id # Don't forget to update with your project_id
       threads: 1
       type: bigquery
   target: dev

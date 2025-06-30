@@ -1,11 +1,13 @@
 
-# ELT and DBT lecture
+# ELT and dbt lecture
 
-## Setup an Airbyte instance
+- Lecture starter can be found in `030200-Lecture-Airbyte-dbt`.
 
-The legacy [Airbyte oss](https://github.com/airbytehq/airbyte) 🔗 docker compose setup using `./run-ab-platform.sh` demo'ed in the lecture has been [deprecated](https://github.com/airbytehq/airbyte/discussions/40599) 🔗
+## Airbyte
 
-The [new setup](https://docs.airbyte.com/using-airbyte/getting-started/oss-quickstart) 🔗 uses the dedicated `abctl` tool leveraging kubernetes.
+### Setup an Airbyte instance
+
+The [new setup](https://docs.airbyte.com/using-airbyte/getting-started/oss-quickstart) 🔗 uses the dedicated `abctl` tool leveraging kubernetes. No knowledge of kubernetes is required to use the tool.
 
 Here are the steps to install on the VM of the [data engineering setup 🔗](https://github.com/lewagon/data-engineering-setup)
 
@@ -34,7 +36,7 @@ Here are the steps to install on the VM of the [data engineering setup 🔗](htt
     abctl local uninstall
     ```
 
-## Airbyte Data Source
+### Airbyte Data Source
 
 Google sheet used in the lecture is available at this [link here 🔗](https://docs.google.com/spreadsheets/d/1zaNFq_18ZkWqVXyivDBFLdQAugVr8MFQwEA_1Br3iuk/edit?gid=2001955841#gid=2001955841)
 
@@ -42,7 +44,14 @@ Google sheet used in the lecture is available at this [link here 🔗](https://d
 - Ideally make it private
 - Share the sheet with the Service Account that you create for your **connector**
 
-## Setup an empty DBT project
+### To save time
+
+- The Airbyte can take ~10 minutes to start (pull images, provision volume claims, spin up the cluster). Recommend starting the Airbyte instance before the lecture.
+- Create one (or both) of the service accounts that you need for Airbyte before the lecture.
+
+## dbt
+
+### Create a new DBT project
 
 ``` bash
 poetry init
@@ -68,5 +77,5 @@ VSCode:
 - [Power User for DBT](https://marketplace.visualstudio.com/items?itemName=innoverio.vscode-dbt-power-user) 🔗
 
 Packages:
-- [dbt_date](https://hub.getdbt.com/calogica/dbt_date/latest/) 🔗 allows to handle dates without having to deal with datawarehouse-specific syntax
+- [dbt_date](https://hub.getdbt.com/calogica/dbt_date/latest/) 🔗 allows to handle dates without having to deal with data warehouse-specific syntax
 - [dbt_expectations](https://hub.getdbt.com/calogica/dbt_expectations/latest/) 🔗
