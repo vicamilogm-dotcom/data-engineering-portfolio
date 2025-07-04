@@ -1,4 +1,5 @@
 from airflow.decorators import task, dag
+from airflow.operators.bash import BashOperator
 
 import pendulum
 import logging
@@ -25,8 +26,10 @@ def my_dag():
     push_task = push_data()
     pull_task = pull_data(push_task)
 
+    bash_task = BashOperator(task_id="bash_task", bash_command='echo "not taskflow"')
+
     # Graph
-    push_task >> pull_task
+    push_task >> pull_task >> bash_task
 
 
 dag = my_dag()

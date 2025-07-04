@@ -13,9 +13,18 @@ def branch_func():
     return "stop"
 
 
+# def branch_func():
+#     random_number = random.random()
+#     if random_number >= 0.66:
+#         return ["continue", "stop"]
+#     elif random_number >= 0.33:
+#         return "continue"
+#     return "stop"
+
+
 with DAG(
     "branching_dag",
-    start_date=pendulum.today("UTC").add(days=-6),
+    start_date=pendulum.today("UTC").add(days=-10),
     schedule_interval="@daily",
 ) as dag:
     # Tasks

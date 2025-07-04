@@ -16,6 +16,16 @@ def pull_data(**kwargs):
     logging.info(value)
 
 
+# def show_task_instance(**kwargs):
+#     """
+#     Optionally look at all the injected variables
+#     Create a PythonOperator and order before the `push_task` in the graph
+#     """
+#     import pprint
+
+#     pprint.pprint(kwargs)
+
+
 with DAG(
     "passing_data_legacy",
     start_date=pendulum.today("UTC").add(days=-2),
@@ -23,13 +33,9 @@ with DAG(
     catchup=False,
 ) as dag:
     # Tasks
-    push_task = PythonOperator(
-        task_id="push", python_callable=push_data, provide_context=True
-    )
+    push_task = PythonOperator(task_id="push", python_callable=push_data)
 
-    pull_task = PythonOperator(
-        task_id="pull", python_callable=pull_data, provide_context=True
-    )
+    pull_task = PythonOperator(task_id="pull", python_callable=pull_data)
 
     # Graph
     push_task >> pull_task

@@ -20,4 +20,8 @@ with DAG(
     for i in range(3):
         tasks.append(create_task(i))
 
+    # for i in range(3):
+    #     my_task = create_task(i)
+    #     do_nothing_task >> my_task
+
     do_nothing_task >> tasks
