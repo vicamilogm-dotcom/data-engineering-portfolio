@@ -15,6 +15,37 @@ For this challenge you'll use a very basic API that's been created using FastAPI
 
 <br>
 
+# 0️⃣ Installing Dive
+
+We'll start with install the `dive` utility that allows us to inspect Docker images.
+
+Install on Ubuntu with `apt` by executing the following in your terminal:
+
+```bash
+DIVE_VERSION=$(curl -sL "https://api.github.com/repos/wagoodman/dive/releases/latest" | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
+curl -fOL "https://github.com/wagoodman/dive/releases/download/v${DIVE_VERSION}/dive_${DIVE_VERSION}_linux_amd64.deb"
+sudo apt install ./dive_${DIVE_VERSION}_linux_amd64.deb
+```
+
+Check your install with:
+
+```bash
+which dive
+
+# should return something similar to:
+# /usr/bin/dive
+```
+
+And you can now use it with:
+
+```bash
+dive <your_image_name:tag>
+```
+
+But before we can do that, we need to build some images! 🚀
+
+<br>
+
 # 1️⃣ Layers
 
 This section illustrates the concept of layers. We will write a bad Dockerfile on purpose to highlight the internal structure of an image.
@@ -94,7 +125,7 @@ Open this challenge in VSCode and head to the `Dockerfile-task-1` file. This wil
 
 1. Inspect the size and the layers using [dive](https://github.com/wagoodman/dive)
     ```bash
-    docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock wagoodman/dive:latest base-image-fastapi-ubuntu-fat:test
+    dive base-image-fastapi-ubuntu-fat:test
     ```
 
 1. Inspect the layers, check the image size, and check folders that are taking up a large amount of space that can be removed.
@@ -186,12 +217,12 @@ This tasks illustrates the concept of caching and unwanted dependencies installe
 
 1. Inspect the images size and layers with `dive`
     ```bash
-    docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock wagoodman/dive:latest base-image-fastapi-ubuntu:test
+    dive base-image-fastapi-ubuntu:test
     ```
 
 1. Inspect the layers, check the image size, and check for wasted space.
 
-1. Push the image to the remote hub
+1. Push the image to your GCP Artifact Repository.
     <details>
     <summary markdown='span'>💡 Hint</summary>
     Be careful, the image name differs from task 1
@@ -242,7 +273,7 @@ This task elaborates on the concept of a base image and how it can be used in re
 1. Run the container to make sure it’s functional. It should start the fastapi server listening on localhost, port 8000. Head to [localhost:8000](http://localhost:3000). You should see `Hello World`.
 1. Inspect the images size and layers with `dive`:
     ```bash
-    docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock wagoodman/dive:latest <your_image_name:tag>
+    dive <your_image_name:tag>
     ```
 1. Inspect the layers, check the image size, and check for wasted space.
 
@@ -260,9 +291,10 @@ There are can be multiple different types of base images depending on the applic
 1. Run the container to make sure it’s functional
 1. Inspect the size and layers using `dive`:
     ```bash
-    docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock wagoodman/dive:latest <your_image_name:tag>
+    dive <your_image_name:tag>
     ```
 1. Inspect the layers, check the image size, check for wasted space.
+1. Push the image to GCP Artifact Repository.
 
 That has massively shrunk our image size down from the previous iteration, but it might still be higher than the image we build using just Ubuntu. There will always be trade offs in software development, by using a pre-made python base image and poetry we can greatly reduce the development cycle and increase the portability of our code from local to container environment.
 
@@ -314,16 +346,16 @@ This idea is called the [Principle of Least Privilege](https://en.wikipedia.org/
     ```Dockerfile
     RUN ...
         ...
-        # ❗️ We create a user called `"runner"`, with id `10000`
+        # ❗️ Create a user called `"runner"`, with id `10000`
         && useradd --uid 10000 -ms /bin/bash runner
 
     # ❗️ We want to work inside the user local folder now
     WORKDIR /home/runner/app
 
-    # ❗️ We swap from root to that user
+    # ❗️ Swap from root to that user
     USER 10000
 
-    # ❗️ We make sure that the user's files are on the path
+    # ❗️ Make sure that the user's files are on the path
     ENV PATH="${PATH}:/home/runner/.local/bin"
 
     COPY ./  ./

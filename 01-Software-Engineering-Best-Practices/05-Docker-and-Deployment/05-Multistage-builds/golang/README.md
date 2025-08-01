@@ -11,13 +11,13 @@ In this example is a program written in `Golang`, a compiled language that is po
 First, run:
 
 ```bash
-docker build -f Dockerfile-single-stage -t single-stage .
+docker build -f Dockerfile-single-stage -t single-stage-go .
 ```
 
 This image builds an API which runs on port 8080. We can run it with:
 
 ```bash
-docker run -p 8080:8080 single-stage
+docker run -p 8080:8080 single-stage-go
 ```
 
 ❗ You might have to manually forward port 8080 from your Virtual Machine to your local computer on VSCode. Gin, the package used to build API's in Go, doesn't log to stdout that the API is active so VSCode may not automatically port forward.
@@ -25,7 +25,7 @@ docker run -p 8080:8080 single-stage
 Let's explore the image with dive!
 
 ```bash
-docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock wagoodman/dive:latest single-stage
+dive single-stage
 ```
 
 That image size is large! It includes the Golang `tool-chain`, the necessary tools required to compile `.go` files into an executable binary.
@@ -39,7 +39,7 @@ Now let's see what benefits we get with a multistage build!
 Build your multi-stage image:
 
 ```bash
-docker build -f Dockerfile-multi-stage -t multi-stage .
+docker build -f Dockerfile-multi-stage -t multi-stage-go .
 ```
 
 Run it and access it on port 8080.
@@ -53,7 +53,7 @@ docker run -p 8080:8080 multi-stage
 Once you've verified that it works the same was as the single-stage container, dive in and explore the image!
 
 ```bash
-docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock wagoodman/dive:latest multi-stage
+dive multi-stage-go
 ```
 
 Have a look at the image size and compare the differences!

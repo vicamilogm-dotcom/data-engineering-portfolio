@@ -14,7 +14,7 @@ def check_pokemon_move(name: str = "bulbasaur", move: str = "swords-dance") -> b
 
 
 def get_pokemon_types(
-    type_one: str = "flying", type_two: Optional[Union[None, str]] = None
+    type_one: str = "flying", type_two: Optional[str] = None
 ) -> List[Optional[str]]:
     """
     Get all pokemon of a given type `type_one`. Return a list of pokemon names.

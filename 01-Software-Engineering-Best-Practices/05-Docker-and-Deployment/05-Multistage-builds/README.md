@@ -33,7 +33,7 @@ docker run -p 8000:8000 fastapi-single
 Let's explore the image with dive!
 
 ```bash
-docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock wagoodman/dive:latest fastapi-single
+dive fastapi-single
 ```
 
 That image size is ~250 MB, a massive improvement over the >1 GB image that you first created from the day.
@@ -172,7 +172,7 @@ A visual representation of how this multi-stage Dockerfile is working:
 Once you've verified that the multi-stage container works the same was as the single-stage container, dive in and explore the image!
 
 ```bash
-docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock wagoodman/dive:latest fastapi-multi
+dive fastapi-multi
 ```
 
 Have a look at the image size and compare the differences!

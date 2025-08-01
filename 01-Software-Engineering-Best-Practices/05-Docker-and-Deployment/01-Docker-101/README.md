@@ -214,7 +214,7 @@ So you have stopped and removed your postgres container but how about the postgr
 Do you remember how to list docker images?
 
 <details>
-<summary markdown='span'>View solution</summary>
+<summary markdown='span'>🎁 Solution (after trying yourself!)</summary>
 
 ```bash
 docker images
@@ -225,7 +225,7 @@ docker images
 Try to remove the `postgres` image using [`docker rmi`](https://docs.docker.com/engine/reference/commandline/rmi/) and double check it worked.
 
 <details>
-<summary markdown='span'>View solution</summary>
+<summary markdown='span'>🎁 Solution (after trying yourself!)</summary>
 
 ```bash
 docker rmi postgres

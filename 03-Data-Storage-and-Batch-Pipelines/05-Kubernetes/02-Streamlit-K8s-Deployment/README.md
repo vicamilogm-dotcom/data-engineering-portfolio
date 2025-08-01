@@ -30,18 +30,14 @@ Compared with 1 `docker-compose.yml`, K8s will require us to explode configurati
   - volumes
   - volumes claims
 
-- And for deployment on GKE we'll have to modify 4 existing `.yaml`'s with GCP specific parameters:
-  - Streamlit deployment cloud
-  - Postgres deployment (statefulset) cloud
-  - volumes cloud
-  - volumes cloud claim
-
 🔍 Through this we will see a number of important concepts in k8s such as:
 - Secrets
 - Volumes
 - Communication between services
 - Scaling
 - Fault tolerance
+
+❗ We'll start developing our Kubernetes app locally, creating configuration files in the `k8s/local/` directory. When we are ready for deployment to our cluster in the cloud, we'll create our configuration files in the `k8s/cloud/` directory. This way we can easily keep the configuration for the different environments separate.
 
 Let's do it! 🏎️
 
@@ -80,24 +76,24 @@ kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   2m12s
 
 ## 2.1. Service
 
-The first step for our Postgres is to define the service.
+The first step for Postgres is to define the service.
 
 ❓ Create a `postgres-service.yaml`. Then populate it with the template using `k8sService` like in the image below.
 
-<img src="https://wagon-public-datasets.s3.amazonaws.com/data-engineering/W1D5/service-autocomplete.png" width=400>
+<img src="https://wagon-public-datasets.s3.amazonaws.com/data-engineering/W1D5/service-autocomplete.png" width=600>
 
 You should get this template:
 
-<img src="https://wagon-public-datasets.s3.amazonaws.com/data-engineering/W1D5/service-template.png" width=400>
+<img src="https://wagon-public-datasets.s3.amazonaws.com/data-engineering/W1D5/service-template.png" width=600>
 
 ❓ **Now populate the template to create a clusterIP**. You can hover over all of the keys and you will get an explanation of what they do! 💡
 
-<img src="https://wagon-public-datasets.s3.amazonaws.com/data-engineering/W1D5/cluster-ip.png" height=400 width=400>
+<img src="https://wagon-public-datasets.s3.amazonaws.com/data-engineering/W1D5/cluster-ip.png" height=600 width=600>
 
 - For now you can replace `MYAPP` with `postgres`.
 - The type is already `ClusterIP` which is ideal for us, as we don't need to expose Postgres outside of k8s, just to our Streamlit app.
 - Then delete the keys mentioning `sessionAffinity` and `nodePort`.
-- Finally set the `port` and `targetPort`. Port can be what you like, but `targetPort` needs to be `5432` to target the port Postgres runs on.
+- Finally set the `port` and `targetPort`. Port can be what you like, but `targetPort` needs to be `5432` to target the default port Postgres runs on.
 
 
 
@@ -115,10 +111,10 @@ spec:
     app: postgres
   type: ClusterIP
   ports:
-  - name: postgres
-    protocol: TCP
-    port: 5432
-    targetPort: 5432
+    - name: postgres
+      protocol: TCP
+      port: 5432
+      targetPort: 5432
 ```
 
 </details>
@@ -150,7 +146,7 @@ spec:
 
 Next - the part more commonly done by developers, which is making the claim.
 
-❓ **So now make the file `postgres-pvc.yaml` and use the template `k8sPersistentVolumeClaim`.**
+❓ **Now create the file `postgres-pvc.yaml` and use the template `k8sPersistentVolumeClaim`.**
 
 You can delete the `storageClassName` key and update the metadata so that the name matches `postgres-volume-claim` and the app label is `postgres`.
 
@@ -167,7 +163,7 @@ metadata:
     app: postgres
 spec:
   accessModes:
-  - ReadWriteOnce
+    - ReadWriteOnce
   resources:
     requests:
       storage: 2Gi
@@ -180,7 +176,7 @@ We now have a volume for our Postgres to store its data! 🙌
 
 We need secrets to store environment variables such as the Postgres user and password of your local Postgres services.
 
-❓ Create another file `postgres-secret.yaml`.
+❓ Create another file: `postgres-secret.yaml`
 You can use the `k8sSecret` template. Then set the name to `postgres-secrets`.
 
 Now we need to fill the secrets here. The keys can be what you want as the environment variables, while the values have to be the **base64 encoding of the data**. For example for `POSTGRES_PASSWORD` set to `password`, the end result is:
@@ -266,7 +262,7 @@ env:
         name: postgres-secrets
 ```
 
-Here the `name` refers to the name we set in `postgres-secret.yaml`. Along with the `key`, which is what the environment variable should be called inside the container! It might be a lot of code compared to compose but **a lot of it is boilerplate you can use over and over again! ♻️**
+Here the `name` refers to the name we set in `postgres-secret.yaml`. Along with the `key`, which is what the environment variable should be called inside the container! It might be a lot of code compared to _Docker Compose_ but **a lot of it is boilerplate you can use over and over again! ♻️**
 
 Then we have our ports section exposing 5432 on our container:
 
@@ -297,7 +293,7 @@ Then inside our container definition we use `volumeMounts` to describe where the
 Now we have all our files lets apply them to our cluster! 👇
 
 ```bash
-kubectl apply -f .
+kubectl apply -f k8s/local
 ```
 
 Then lets check if our pod is running with 👇
@@ -319,16 +315,16 @@ kubectl exec -it postgres-statefulset-0 -- psql --user=<your user>
 CREATE DATABASE f1;
 ```
 
-Now lets get our F1 data in there! First lets redownload the data and get the `.sql` file.
+Now lets get our F1 data in there! **In a separate terminal**, re-download the data and get the `.sql` file.
 
 ```bash
-curl --output f1db.sql.gz https://storage.googleapis.com/lewagon-data-engineering-bootcamp-assets/datasets/f1/f1db.sql.gz && gunzip f1db.sql.gz
+curl --output data/f1db.sql.gz https://storage.googleapis.com/lewagon-data-engineering-bootcamp-assets/datasets/f1/f1db.sql.gz && gunzip data/f1db.sql.gz
 ```
 
 Now we can copy our file into our running pod with 👇
 
 ```bash
-kubectl cp f1db.sql postgres-statefulset-0:f1db.sql
+kubectl cp data/f1db.sql postgres-statefulset-0:f1db.sql
 ```
 
 Finally we can use `exec` to execute the SQL script and load our new database!
@@ -347,7 +343,7 @@ Now we are ready to plug in Streamlit! 🧑‍🎨
 
 ❓ Now try create your own `streamlit-service.yaml` and populate it with a `LoadBalancer` service, with name `streamlit-service` and selector `app: streamlit`. What port should you it target ?
 
-<img src="https://wagon-public-datasets.s3.amazonaws.com/data-engineering/W1D5/load-balancer.png" width=400>
+<img src="https://wagon-public-datasets.s3.amazonaws.com/data-engineering/W1D5/load-balancer.png" width=600>
 
 <details>
   <summary markdown='span'>💡 Hints on ports</summary>
@@ -411,8 +407,9 @@ Now we are ready to put it into the container!
 
 ## 3.3. Deployment
 
-❓ First, build the streamlit Dockerfile **inside minikube** (🚨 not in your VM docker deamon)
-You should see it with `docker images` along with a dozen other k8s containers...
+❓ First, build the Streamlit Dockerfile **inside minikube** - 🚨 not in your VM docker daemon
+
+After you build the Streamlit image, you should see it with `docker images` along with a bunch of other k8s containers.
 
 <details>
 <summary markdown='span'>💡 How to change docker context</summary>
@@ -447,16 +444,16 @@ spec:
 
     spec:
       containers:
-      - name: streamlit-container
-        image: # Add your streamlit image name:tag
-        imagePullPolicy: Never
-        volumeMounts:
-          - mountPath: # Add the absolute path in your container in which to add secrets
-            name: streamlit-secrets
-            readOnly: true
-        ports:
-        - containerPort: 8501
-        args: # Add the ["command", "you", "want", "to", "run"] to start the advanced.py dashboard
+        - name: streamlit-container
+          image: # Add your streamlit image name:tag
+          imagePullPolicy: Never
+          volumeMounts:
+            - mountPath: # Add the absolute path in your container in which to add secrets
+              name: streamlit-secrets
+              readOnly: true
+          ports:
+            - containerPort: 8501
+          args: # Add the ["command", "you", "want", "to", "run"] to start the advanced.py dashboard
 
       # 👇 We add the secrets into the container by treating them as a volume
       volumes:
@@ -466,7 +463,7 @@ spec:
       restartPolicy: Always
 ```
 
-❓ `montPath` : You can see how we have added the secrets into the container by treating them as a volume. Try to mount them where they belong
+❓ `mountPath` : You can see how we have added the secrets into the container by treating them as a volume. Try to mount them where they belong. For reference, take a look at the challenge **030402-Streamlit** in the Visualisation unit.
 
 ❓ `args` command in k8s is what's *added* to the Dockerfile ENTRYPOINT. (❗the equivalent in compose would be `command`. But k8s `command` overrides the entrypoint 🤯)
 
@@ -489,9 +486,17 @@ kubectl port-forward services/<service_name> <VM_localhost_port>:<k8s_service_po
 
 # 4️⃣ Google Kubernetes Engine 🌎
 
+### 🚨🚨 Cost Alert 🚨🚨
+
+We'll be creating a kubernetes cluster on GCP using Google Kubernetes Engine (GKE). This is similar to creating multiple VM's that will be running 24/7.
+
+❗ **If you start this section of the challenge but do not finish it, it is incredibly important that you tear down the GKE cluster!** ❗
+
+Refer to section **5️⃣ Teardown** of this challenge for instructions on how to teardown and delete a GKE Cluster.
+
 ## 4.0 Setup
 
-We will need an extension to help us interact via kubectl -> gke
+We will need an extension to help us interact with clusters created on Google Kubernetes Engine with `kubectl`. Install with:
 
 ```bash
 gcloud components install gke-gcloud-auth-plugin
@@ -509,12 +514,11 @@ curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor 
 echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
 sudo apt-get update && sudo apt-get install google-cloud-cli-gke-gcloud-auth-plugin
 ```
-
 </details>
 
 ## 4.1. Creating the cluster
 
-First we want to create a new k8s cluster on gcloud use the command below 👇
+First we want to create a new k8s cluster on GKE using the following gcloud command:
 
 ```bash
 gcloud container clusters create "streamlit-f1" \
@@ -525,13 +529,35 @@ gcloud container clusters create "streamlit-f1" \
   --num-nodes "1" --node-locations "europe-west1-b","europe-west1-c"
 ```
 
+❓ How many **total nodes** are in this **cluster**?
+
+<details>
+<summary markdown='span'>🎁 Answer</summary>
+2 nodes in total. 1 node in each of the two locations: **europe-west1-b** and **europe-west1-c**
+</details>
+
+
 This will take a while 😅 so we can continue and edit some of our files while it provisions!
 
-## 4.2. Postgres
+## 4.2. Copy existing config files
+
+For deploying our app on GKE, we'll have to modify 4 existing `.yaml`'s with GCP specific parameters:
+- Streamlit deployment
+- Postgres deployment (statefulset)
+- volume
+- volume claim
+
+You could edit the files in `k8s/local`, but that doesn't make sense 😅
+
+❓ Copy all the files you have in `k8s/local` to `k8s/cloud`
+
+Having separate directories for separated deployment environments is considered best practices.
+
+## 4.3. Postgres
 
 We need to change our volume config file from local [`PersistentVolume`](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) to [`StorageClass`](https://kubernetes.io/docs/concepts/storage/storage-classes/) for the cloud.
 
-❓ **Replace your `postgres-pv.yaml` with the code below 👇**
+❓ **Replace your `k8s/cloud/postgres-pv.yaml` with the code below 👇**
 
 ```yaml
 kind: StorageClass
@@ -544,32 +570,53 @@ parameters:
   replication-type: regional-pd
 allowedTopologies:
   - matchLabelExpressions:
-      - key: failure-domain.beta.kubernetes.io/zone
+      - key: topology.kubernetes.io/zone
         values:
           - europe-west1-b
           - europe-west1-c
 ```
 
 🤯 This is one of the biggest areas of change when moving to the cloud.
-- We are now describing the type of storage we want to take, based on a standardized API called "storage.k8s.io/v1"
+- We are now describing the type of storage we want to take, based on a standardized API called `storage.k8s.io/v1`
 - GCP is going to be reading our API call to provide the storage as we want it to be
 
 🔍 Read the doc for [`StorageClass`](https://kubernetes.io/docs/concepts/storage/storage-classes/), it's well explained!
 
-❓ **Then, just update your volume claim in a new `postgres-pvc.yaml`** by upgrading from `2Gi` to `200Gi` to meet minimum requirement set by Google.
+❓ **Replace your volume claim in `k8s/cloud/postgres-pvc.yaml`** with the following:
 
-❓ **Finally, create a new `postgres-statefulset-cloud.yaml`** by simply adding an extra `PGDATA` envrioment variable to the postrgres `container`
+```yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-volume-claim
+spec:
+  storageClassName: postgres-volume
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 200Gi
+```
+
+The key changes are:
+- Increasing the storage claim from 2 Gi to 200 Gi, the minimum required for a volume claim on GKE
+- Removed the `default` namespace metadata
+- Added a key `storageClassName` with the value `postgres-volume`.
+
+
+❓ **Finally, modify your `k8s/cloud/postgres-statefulset.yaml`** by adding an extra environment variable with the name `PGDATA` to the **postgres** container spec:
+
 ```yml
 - name: PGDATA
   value: /var/lib/postgresql/data/pgdata
 ```
-GKE does not like us to directly put data into the root of the mount!
+GKE does not like us directly writing data into the root of the mount!
 
-## 4.3. Streamlit
+## 4.4. Streamlit
 
 For streamlit, we can no longer use our local image. We need to build and push the container to an online registry, but to save time you can use ours.
 
-❓ Simply replace these keys in your `streamlit-deployment.yaml`.
+❓ Replace these keys in your `k8s/cloud/streamlit-deployment.yaml`:
 
 ```yaml
 image: europe-west1-docker.pkg.dev/data-engineering-students/student-images/streamlit-f1:0.1
@@ -578,9 +625,9 @@ imagePullPolicy: "IfNotPresent"
 
 Hopefully our cluster is done provisioning now!
 
-## 4.4. Putting it all together
+## 4.5. Putting it all together
 
-❓ Lets make your local `kubectl` target your GCP new cluster (`minikube` was automatically kubectl target to minikube under the hood):
+❓ Lets make `kubectl` target your new cluster on GKE. `kubectl` was defaulting to `minikube` as its target:
 
 ```bash
 gcloud container clusters get-credentials streamlit-f1 --region europe-west1
@@ -591,7 +638,7 @@ kubectl config current-context
 ❓ Let's now apply all our config files at once by:
 
 ```bash
-kubectl apply -f .
+kubectl apply -f k8s/cloud
 ```
 
 If everything go correctly you should see the pods running with:
@@ -613,7 +660,7 @@ kubectl get services
 🚀 We're in production 🚀
 
 
-## 4.5. Simulating Disaster
+## 4.6. Simulating Disaster
 
 Keep your app open. Then lets find out where the database is currently running!
 
@@ -627,15 +674,15 @@ Then take note of the `NODE`
 kubectl cordon NODE
 ```
 
-Will prevent anymore pods being provisioned on this node. Then delete the pod!
+Will prevent any more pods being provisioned on this node. Then delete the pod!
 
 ```bash
 kubectl delete pod postgres-statefulset-0
 ```
 
-Then checkout your app it should fail to connect to the database temporarily but keep refreshing and checking `kubectl get pods -l app=postgres -o wide`.
+Then checkout your app. It should fail to connect to the database temporarily but keep refreshing and checking `kubectl get pods -l app=postgres -o wide`.
 
-It will reprovision itself *on the other node* everything intact. For a complete failure like this it is incredibly impressive how fast k8s can fix everything (usually it can be seamless as most crashes you can see coming with load increasing)!
+It will reprovision itself *on the other node* with everything intact. For a complete failure like this, it is incredibly impressive how fast k8s can fix everything. Usually it can be seamless as most crashes you can see coming with an increasing load!
 
 <br>
 
@@ -646,7 +693,7 @@ Let's clean up so we don't spend too much money 💸
 To delete your cluster deployed on GKE 👇
 
 ```bash
-kubectl delete -f . \
+kubectl delete -f k8s/cloud \
 && gcloud container clusters delete streamlit-f1 --region=europe-west1
 ```
 
