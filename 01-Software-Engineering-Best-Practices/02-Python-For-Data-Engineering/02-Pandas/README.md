@@ -27,7 +27,7 @@ Install the kaggle cli 👇
 pipx install kaggle
 ```
 
-Then follow the [instructions](https://github.com/Kaggle/kaggle-api) in the API credentials section to allow the cli to work!
+Then follow the [instructions](https://github.com/Kaggle/kaggle-api/blob/main/docs/README.md#api-credentials) in the API credentials section to allow the cli to work!
 
 We'll use this tabular [Goodreads dataset](https://www.kaggle.com/datasets/mohamedbakhet/amazon-books-reviews) for this challenge.
 
