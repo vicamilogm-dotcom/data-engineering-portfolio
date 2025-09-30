@@ -53,7 +53,7 @@ You can load the data into a Spark DataFrame in `notebooks/test.ipynb`. When cre
 
 # 2️⃣ Check schema
 
-The first function you need to implement is `check_schema` in `taxi_spark/functions/schema.py`. This function should check that the schema of the dataframe is correct. If it is not correct it should raise an error. For this exercise you can assume that the schema you get from `2009-01` is valid.
+The first function you need to implement is `enforce_schema` in `taxi_spark/functions/schema.py`. This function should check that the schema of the dataframe is correct. If it is not correct it should raise an error. For this exercise you can assume that the schema you get from `2009-01` is valid.
 
 🧪 Once you have created the function you can check it with:
 
