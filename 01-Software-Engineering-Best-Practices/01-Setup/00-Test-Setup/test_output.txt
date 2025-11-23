@@ -1,0 +1,10 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.8, pytest-8.3.4, pluggy-1.5.0 -- /home/vicamilogm/code/vicamilogm-dotcom/data-engineering-challenges/01-Software-Engineering-Best-Practices/01-Setup/00-Test-Setup/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /home/vicamilogm/code/vicamilogm-dotcom/data-engineering-challenges/01-Software-Engineering-Best-Practices/01-Setup/00-Test-Setup
+configfile: pyproject.toml
+collecting ... collected 2 items / 1 deselected / 1 selected
+
+tests/test_your_function.py::test_something PASSED                       [100%]
+
+======================= 1 passed, 1 deselected in 0.02s ========================
