@@ -2,7 +2,7 @@ import click
 import subprocess
 
 
-# 👇 AJUSTA ESTOS VALORES A TU VM REAL
+
 VM_NAME = "lewagon-data-eng-vm-victorg"     
 VM_ZONE = "us-central1-c"                
 VM_USER = "vicamilogm"                       
