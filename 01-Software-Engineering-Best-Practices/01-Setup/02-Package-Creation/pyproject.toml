@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "vicamilogm-dotcom-de-toolkit"
+version = "0.1.0"
+description = "Toolkit para gestionar mi VM de data engineering"
+authors = ["Victor Grajales <vicamilogm@gmail.com>"]
+readme = "README.md"
+packages = [{ include = "vicamilogm_dotcom_de_toolkit", from = "src" }]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+click = "^8.1.7"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+deng = "vicamilogm_dotcom_de_toolkit.main:cli"
