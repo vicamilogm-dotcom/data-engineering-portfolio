@@ -1,12 +1,13 @@
-from scraper.scrape import scrape_hn
-from datetime import datetime
+import datetime as dt
+
+from .scrape import scrape_hn
 
 
-def main():
-    """
-    Call the scrape_hn() function to fetch data for the current date and save to stories.csv
-    """
-    pass  # YOUR CODE HERE
+def main() -> None:
+    """Scrape today's stories and save them to stories.csv."""
+    today_str = dt.date.today().strftime("%Y-%m-%d")
+    df = scrape_hn(today_str)
+    df.to_csv("stories.csv", index=False)
 
 
 if __name__ == "__main__":

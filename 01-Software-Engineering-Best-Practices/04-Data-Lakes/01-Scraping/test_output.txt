@@ -1,0 +1,11 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.8, pytest-8.3.4, pluggy-1.5.0 -- /home/vicamilogm/code/vicamilogm-dotcom/data-engineering-challenges/01-Software-Engineering-Best-Practices/04-Data-Lakes/01-Scraping/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /home/vicamilogm/code/vicamilogm-dotcom/data-engineering-challenges/01-Software-Engineering-Best-Practices/04-Data-Lakes/01-Scraping
+configfile: pyproject.toml
+plugins: requests-mock-1.12.1
+collecting ... collected 1 item
+
+tests/test_scrape.py::test_scrape_hn PASSED                              [100%]
+
+========================= 1 passed, 1 warning in 0.68s =========================
