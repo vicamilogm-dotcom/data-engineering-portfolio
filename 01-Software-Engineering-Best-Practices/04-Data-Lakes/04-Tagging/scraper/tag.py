@@ -9,7 +9,7 @@ def catalog_file(blob_path: str):
     """
     Crea (o recupera) un Entry en Data Catalog para el archivo dado
     y le agrega un Tag con metadata de origen.
-    
+
     :param blob_path: ruta del archivo dentro del bucket, por ejemplo:
                       "raw/hackernews/stories/2025/12/02/stories.csv"
     """
@@ -21,13 +21,13 @@ def catalog_file(blob_path: str):
     bucket_name = os.environ["LAKE_BUCKET"]
     location = os.environ.get("LAKE_LOCATION", "us")
 
+    # IDs creados con gcloud
     entry_group_id = "hn_day"
     tag_template_id = "hn_day_template"
 
     # 3) Parsear la fecha desde el blob_path
     # Esperamos algo tipo: raw/hackernews/stories/YYYY/MM/DD/stories.csv
     parts = blob_path.split("/")
-    run_date = None
     try:
         # Tomamos los últimos 4 elementos: YYYY / MM / DD / archivo
         year, month, day = map(int, parts[-4:-1])
@@ -80,15 +80,17 @@ def catalog_file(blob_path: str):
     tag.template = tag_template_name
 
     # Campo source_system (STRING)
+    tag.fields["source_system"] = datacatalog_v1.TagField()
     tag.fields["source_system"].string_value = "hackernews"
 
     # Campo source_date (TIMESTAMP)
     ts = timestamp_pb2.Timestamp()
     ts.FromDatetime(datetime.combine(run_date, datetime.min.time()))
+    tag.fields["source_date"] = datacatalog_v1.TagField()
     tag.fields["source_date"].timestamp_value = ts
 
     # 8) Adjuntar Tag al Entry
     client.create_tag(parent=entry.name, tag=tag)
 
     # Opcional: retornar el entry por si lo quieres usar en otro lado
-    retur
+    return entry
