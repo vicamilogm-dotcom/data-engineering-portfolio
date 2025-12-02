@@ -1,0 +1,13 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.8, pytest-8.3.4, pluggy-1.5.0 -- /home/vicamilogm/code/vicamilogm-dotcom/data-engineering-challenges/01-Software-Engineering-Best-Practices/04-Data-Lakes/03-Great-expectations/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /home/vicamilogm/code/vicamilogm-dotcom/data-engineering-challenges/01-Software-Engineering-Best-Practices/04-Data-Lakes/03-Great-expectations
+configfile: pyproject.toml
+plugins: anyio-4.7.0, requests-mock-1.12.1
+collecting ... collected 3 items
+
+tests/test_expectations.py::TestScraperExpectations::test_execution_of_expectations_all_passed PASSED [ 33%]
+tests/test_expectations.py::TestScraperExpectations::test_execution_of_expectations_failed_rank PASSED [ 66%]
+tests/test_expectations.py::TestScraperExpectations::test_execution_of_expectations_failed_site PASSED [100%]
+
+============================== 3 passed in 4.66s ===============================
