@@ -1,1 +1,35 @@
 
+FROM ubuntu:20.04
+
+# Evitar prompts interactivos de apt
+ARG DEBIAN_FRONTEND=noninteractive
+
+# Logs sin buffer (útil para ver logs en tiempo real)
+ENV PYTHONUNBUFFERED=1
+
+# ✅ TODO en UNA sola capa:
+#  - update + instalación deps
+#  - agregar PPA de deadsnakes
+#  - instalar python 3.12 + pip
+#  - instalar fastapi/uvicorn CON no-cache
+#  - limpiar listas de apt para reducir tamaño
+RUN apt-get -y update \
+    && apt-get -y install --no-install-recommends software-properties-common curl \
+    && add-apt-repository ppa:deadsnakes/ppa \
+    && apt-get -y update \
+    && apt-get install -y --no-install-recommends python3.12 python3-pip \
+    && pip3 install --no-cache-dir fastapi==0.115.6 uvicorn==0.33.0 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Carpeta de trabajo
+WORKDIR /app
+
+# Copiar el proyecto dentro del contenedor
+COPY . /app
+
+# Puerto donde escucha uvicorn
+EXPOSE 8000
+
+# Comando de arranque de FastAPI
+ENTRYPOINT ["uvicorn"]
+CMD ["app.main:app", "--host", "0.0.0.0", "--port", "8000"]

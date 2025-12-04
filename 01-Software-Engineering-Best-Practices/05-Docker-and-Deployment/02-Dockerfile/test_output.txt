@@ -1,0 +1,18 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.8, pytest-8.3.4, pluggy-1.5.0 -- /home/vicamilogm/code/vicamilogm-dotcom/data-engineering-challenges/01-Software-Engineering-Best-Practices/05-Docker-and-Deployment/02-Dockerfile/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /home/vicamilogm/code/vicamilogm-dotcom/data-engineering-challenges/01-Software-Engineering-Best-Practices/05-Docker-and-Deployment/02-Dockerfile
+configfile: pyproject.toml
+plugins: anyio-4.7.0
+collecting ... collected 8 items
+
+tests/test_task_1.py::TestTask1::test_dockerfile_task_1_strict SKIPPED   [ 12%]
+tests/test_task_1.py::TestTask1::test_dockerfile_task_1_keys_only PASSED [ 25%]
+tests/test_task_2.py::TestTask2::test_dockerfile_task_2 SKIPPED (Can...) [ 37%]
+tests/test_task_2.py::TestTask2::test_dockerfile_task_2_keys_only PASSED [ 50%]
+tests/test_task_3.py::TestTask3::test_dockerfile_task_3_1 SKIPPED (C...) [ 62%]
+tests/test_task_3.py::TestTask3::test_dockerfile_task_3_1_keys_only PASSED [ 75%]
+tests/test_task_3.py::TestTask3::test_dockerfile_task_3_2 SKIPPED (C...) [ 87%]
+tests/test_task_3.py::TestTask3::test_dockerfile_task_3_2_keys_only PASSED [100%]
+
+========================= 4 passed, 4 skipped in 0.07s =========================

@@ -1,1 +1,45 @@
+FROM ubuntu:20.04
 
+# Evitar prompts interactivos de apt
+ARG DEBIAN_FRONTEND=noninteractive
+
+# Logs sin buffer
+ENV PYTHONUNBUFFERED=1
+
+# ---------- Instalar Python 3.12 desde deadsnakes (en varias capas "malas") ----------
+
+# Upgrade package list
+RUN apt-get -y update
+
+# install required dependencies
+RUN apt-get -y install software-properties-common curl
+
+# Add PPA to system's source list
+RUN add-apt-repository ppa:deadsnakes/ppa
+
+# Upgrade package list to take into account new PPA
+RUN apt-get -y update
+
+# install python 3.12
+RUN apt-get install -y python3.12
+
+# install pip
+RUN apt-get install -y python3-pip
+
+# instalar fastapi y uvicorn (usamos pip3 para simplificar)
+RUN pip3 install fastapi==0.115.6 uvicorn==0.33.0
+
+# ---------- App ----------
+
+# Carpeta de trabajo dentro del contenedor
+WORKDIR /app
+
+# Copiar el código dentro del contenedor
+COPY . /app
+
+# Exponer puerto donde corre uvicorn
+EXPOSE 8000
+
+# Arrancar FastAPI
+ENTRYPOINT ["uvicorn"]
+CMD ["app.main:app", "--host", "0.0.0.0", "--port", "8000"]

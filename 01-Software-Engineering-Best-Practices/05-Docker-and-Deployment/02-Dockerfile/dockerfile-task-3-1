@@ -1,1 +1,27 @@
 
+FROM python:3.12.8
+
+# Evitar prompts interactivos (aunque aquí casi no se usan)
+ARG DEBIAN_FRONTEND=noninteractive
+
+# Logs sin buffer
+ENV PYTHONUNBUFFERED=1
+
+# Carpeta de trabajo dentro del contenedor
+WORKDIR /app
+
+# Copiamos todo el proyecto (incluye pyproject.toml y poetry.lock)
+COPY . /app
+
+# Instalamos poetry y luego las dependencias definidas en pyproject.toml
+RUN pip install --no-cache-dir poetry \
+    && poetry install --only main
+
+# Exponemos el puerto donde correrá uvicorn
+EXPOSE 8000
+
+# Ejecutar siempre usando poetry
+ENTRYPOINT ["poetry", "run"]
+
+# Comando para arrancar FastAPI
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

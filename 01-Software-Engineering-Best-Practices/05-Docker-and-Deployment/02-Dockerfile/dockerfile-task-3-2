@@ -1,1 +1,25 @@
 
+FROM python:3.12.8-slim
+
+ARG DEBIAN_FRONTEND=noninteractive
+ENV PYTHONUNBUFFERED=1
+
+# Si hiciera falta, aquí se instalan libs del sistema.
+# En este caso la app es simple, así que solo dejamos el patrón y limpiamos.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends curl \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Copiamos todo el proyecto
+COPY . /app
+
+# Instalamos poetry y las dependencias de la app
+RUN pip install --no-cache-dir poetry \
+    && poetry install --only main
+
+EXPOSE 8000
+
+ENTRYPOINT ["poetry", "run"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
