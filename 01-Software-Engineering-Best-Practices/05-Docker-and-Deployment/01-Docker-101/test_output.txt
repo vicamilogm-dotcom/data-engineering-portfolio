@@ -1,0 +1,10 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.8, pytest-9.0.1, pluggy-1.6.0 -- /home/vicamilogm/code/vicamilogm-dotcom/data-engineering-challenges/01-Software-Engineering-Best-Practices/05-Docker-and-Deployment/01-Docker-101/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /home/vicamilogm/code/vicamilogm-dotcom/data-engineering-challenges/01-Software-Engineering-Best-Practices/05-Docker-and-Deployment/01-Docker-101
+configfile: pyproject.toml
+collecting ... collected 1 item
+
+tests/test_pass.py::test_pass PASSED                                     [100%]
+
+============================== 1 passed in 0.02s ===============================
