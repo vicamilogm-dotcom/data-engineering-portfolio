@@ -1,32 +1,26 @@
-FROM python:3.12.8-slim
+FROM python:3.12-slim
 
-#Do not use env as this would persist after the build and would impact your containers, children images
-ARG DEBIAN_FRONTEND=noninteractive
+WORKDIR /app
 
-# force the stdout and stderr streams to be unbuffered.
-ENV PYTHONUNBUFFERED=1
+# Instalar dependencias del sistema (útil para compilar algunas libs)
+RUN apt-get update && apt-get install -y build-essential && rm -rf /var/lib/apt/lists/*
 
-RUN apt-get -y update \
-    && apt-get -y upgrade \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* \
-    && useradd --uid 10000 -ms /bin/bash runner
+# Copiar archivos de Poetry / dependencias
+COPY pyproject.toml poetry.lock* ./
 
-WORKDIR /home/runner/app
+# Instalar Poetry y dependencias del proyecto (sin entorno virtual)
+RUN pip install --upgrade pip && pip install "poetry==2.2.1" \
+    && poetry config virtualenvs.create false \
+    && poetry install --no-interaction --no-ansi
 
-USER 10000
+# Copiar el resto del código
+COPY . .
 
-ENV PATH="${PATH}:/home/runner/.local/bin"
+# Puerto por defecto (para local)
+ENV PORT=8000
 
-COPY ./  ./
-
-RUN pip install --upgrade pip \
-    && pip install --no-cache-dir poetry \
-    && poetry install --only main
-
+# Exponer el puerto (informativo)
 EXPOSE 8000
 
-ENTRYPOINT [ "poetry", "run" ]
-
-# YOUR CODE HERE
-# CMD uvicorn app.main:app --host 0.0.0.0 --port 8000
+# Comando de arranque usando la variable de entorno PORT
+CMD uvicorn app.main:app --host 0.0.0.0 --port $PORT
