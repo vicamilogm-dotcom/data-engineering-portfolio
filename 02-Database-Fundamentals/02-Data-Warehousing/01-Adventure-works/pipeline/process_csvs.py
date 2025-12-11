@@ -37,7 +37,7 @@ def process_file(csv_file):
             if is_first:
                 if "+|" in line:
                     is_pipes = True
-                if line.startswith("\uFEFF"):
+                if line.startswith("\ufeff"):
                     line = line[1:]
                     is_needed = True
 
