@@ -1,0 +1,10 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.8, pytest-9.0.2, pluggy-1.6.0 -- /home/vicamilogm/code/vicamilogm-dotcom/data-engineering-challenges/02-Database-Fundamentals/03-SQL-Databases/01-Setup/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /home/vicamilogm/code/vicamilogm-dotcom/data-engineering-challenges/02-Database-Fundamentals/03-SQL-Databases/01-Setup
+configfile: pyproject.toml
+collecting ... collected 1 item
+
+tests/test_db.py::test_correct_tables PASSED                             [100%]
+
+========================= 1 passed, 1 warning in 0.70s =========================
