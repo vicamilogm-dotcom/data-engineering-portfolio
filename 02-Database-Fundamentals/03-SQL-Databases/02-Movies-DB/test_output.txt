@@ -1,0 +1,13 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.8, pytest-8.3.4, pluggy-1.5.0 -- /home/vicamilogm/code/vicamilogm-dotcom/data-engineering-challenges/02-Database-Fundamentals/03-SQL-Databases/02-Movies-DB/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /home/vicamilogm/code/vicamilogm-dotcom/data-engineering-challenges/02-Database-Fundamentals/03-SQL-Databases/02-Movies-DB
+configfile: pyproject.toml
+collecting ... collected 4 items
+
+tests/test_2.py::test_correct_tables PASSED                              [ 25%]
+tests/test_2.py::test_correct_column_names_and_types PASSED              [ 50%]
+tests/test_3.py::test_correct_tables PASSED                              [ 75%]
+tests/test_3.py::test_correct_column_name_and_types PASSED               [100%]
+
+======================== 4 passed, 4 warnings in 2.87s =========================
