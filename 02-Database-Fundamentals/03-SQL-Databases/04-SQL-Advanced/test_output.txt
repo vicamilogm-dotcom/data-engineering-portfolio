@@ -1,0 +1,17 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.8, pytest-8.3.4, pluggy-1.5.0 -- /home/vicamilogm/code/vicamilogm-dotcom/data-engineering-challenges/02-Database-Fundamentals/03-SQL-Databases/04-SQL-Advanced/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /home/vicamilogm/code/vicamilogm-dotcom/data-engineering-challenges/02-Database-Fundamentals/03-SQL-Databases/04-SQL-Advanced
+configfile: pyproject.toml
+collecting ... collected 8 items
+
+tests/test_exercise_1.py::test_correct_columns PASSED                    [ 12%]
+tests/test_exercise_1.py::test_correct_filters PASSED                    [ 25%]
+tests/test_exercise_2.py::test_correct_columns_and_size PASSED           [ 37%]
+tests/test_exercise_2.py::test_correct_metric_calculation PASSED         [ 50%]
+tests/test_exercise_3.py::test_correct_columns_and_size PASSED           [ 62%]
+tests/test_exercise_3.py::test_correct_yoy_values PASSED                 [ 75%]
+tests/test_exercise_4.py::test_correct_columns_and_size PASSED           [ 87%]
+tests/test_exercise_4.py::test_correct_metric_calculation PASSED         [100%]
+
+========================= 8 passed, 1 warning in 0.88s =========================
