@@ -1,0 +1,11 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.8, pytest-8.3.4, pluggy-1.5.0 -- /home/vicamilogm/code/vicamilogm-dotcom/data-engineering-challenges/02-Database-Fundamentals/03-SQL-Databases/03-SQL-Basics/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /home/vicamilogm/code/vicamilogm-dotcom/data-engineering-challenges/02-Database-Fundamentals/03-SQL-Databases/03-SQL-Basics
+configfile: pyproject.toml
+collecting ... collected 2 items
+
+tests/test_exercice_4_1.py::test_duplicate_movies_metadata PASSED        [ 50%]
+tests/test_exercice_5.py::test_referential_integrity PASSED              [100%]
+
+========================= 2 passed, 1 warning in 2.60s =========================
