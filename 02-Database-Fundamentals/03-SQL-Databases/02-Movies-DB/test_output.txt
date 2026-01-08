@@ -10,4 +10,4 @@ tests/test_2.py::test_correct_column_names_and_types PASSED              [ 50%]
 tests/test_3.py::test_correct_tables PASSED                              [ 75%]
 tests/test_3.py::test_correct_column_name_and_types PASSED               [100%]
 
-======================== 4 passed, 4 warnings in 2.87s =========================
+======================== 4 passed, 4 warnings in 3.92s =========================

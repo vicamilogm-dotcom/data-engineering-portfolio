@@ -1,1 +1,1 @@
--- YOUR CODE HERE
+\copy ratings(user_id, movie_id, rating, timestamp) FROM '/home/vicamilogm/code/vicamilogm-dotcom/data-engineering-challenges/02-Database-Fundamentals/03-SQL-Databases/02-Movies-DB/data/ratings.csv' WITH (FORMAT csv, HEADER true);
