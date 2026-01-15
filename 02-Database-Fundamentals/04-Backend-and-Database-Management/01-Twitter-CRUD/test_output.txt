@@ -1,0 +1,20 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.8, pytest-8.3.4, pluggy-1.5.0 -- /home/vicamilogm/code/vicamilogm-dotcom/data-engineering-challenges/02-Database-Fundamentals/04-Backend-and-Database-Management/01-Twitter-CRUD/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /home/vicamilogm/code/vicamilogm-dotcom/data-engineering-challenges/02-Database-Fundamentals/04-Backend-and-Database-Management/01-Twitter-CRUD
+configfile: pyproject.toml
+plugins: anyio-4.7.0
+collecting ... collected 10 items
+
+tests/test_db.py::test_read_root PASSED                                  [ 10%]
+tests/test_db.py::test_create_user PASSED                                [ 20%]
+tests/test_db.py::test_read_users PASSED                                 [ 30%]
+tests/test_db.py::test_read_user PASSED                                  [ 40%]
+tests/test_db.py::test_create_tweet PASSED                               [ 50%]
+tests/test_db.py::test_read_tweets PASSED                                [ 60%]
+tests/test_db.py::test_read_user_tweets PASSED                           [ 70%]
+tests/test_db.py::test_create_like PASSED                                [ 80%]
+tests/test_db.py::test_read_users_likes PASSED                           [ 90%]
+tests/test_db.py::test_read_users_likedtweets PASSED                     [100%]
+
+============================== 10 passed in 2.15s ==============================

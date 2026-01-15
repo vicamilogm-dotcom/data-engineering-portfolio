@@ -1,45 +1,47 @@
 from pydantic import BaseModel, ConfigDict
 
-# User section
 
-
+# -------------------
+# Users
+# -------------------
 class UserBase(BaseModel):
-    pass  # YOUR CODE HERE
+    email: str
 
 
 class UserCreate(UserBase):
-    pass  # YOUR CODE HERE
+    password: str
 
 
 class User(UserBase):
-    pass  # YOUR CODE HERE
+    id: int
+    model_config = ConfigDict(from_attributes=True)
 
 
-# Tweet section
-
-
+# -------------------
+# Tweets
+# -------------------
 class TweetBase(BaseModel):
-    pass  # YOUR CODE HERE
+    text: str
 
 
 class TweetCreate(TweetBase):
-    pass  # YOUR CODE HERE
+    pass
 
 
 class Tweet(TweetBase):
-    pass  # YOUR CODE HERE
+    id: int
+    owner_id: int
+    model_config = ConfigDict(from_attributes=True)
 
 
-# Like section
+# -------------------
+# Likes
+# -------------------
+class LikeCreate(BaseModel):
+    tweet_id: int
 
 
-class LikeBase(BaseModel):
-    pass  # YOUR CODE HERE
-
-
-class LikeCreate(LikeBase):
-    pass  # YOUR CODE HERE
-
-
-class Like(LikeBase):
-    pass  # YOUR CODE HERE
+class Like(BaseModel):
+    user_id: int
+    tweet_id: int
+    model_config = ConfigDict(from_attributes=True)

@@ -1,43 +1,57 @@
 from sqlalchemy import Column, ForeignKey, Integer, String
-from sqlalchemy.orm import relationship, declarative_base
+from sqlalchemy.orm import declarative_base, relationship
 
 Base = declarative_base()
 
 
 class User(Base):
-    """Class to represent the users table"""
+    __tablename__ = "users"
 
-    # Table name
-    pass  # YOUR CODE HERE
+    id = Column(Integer, primary_key=True, index=True)
+    email = Column(String, nullable=False, unique=True, index=True)
+    hashed_password = Column(String, nullable=False)
 
-    # Columns
-    pass  # YOUR CODE HERE
+    # ✅ 1 user -> many tweets
+    tweets = relationship(
+        "Tweet",
+        back_populates="owner",
+        cascade="all, delete-orphan",
+        order_by="Tweet.id",
+    )
 
-    # Relationships
-    pass  # YOUR CODE HERE
-
-
-class Tweet():  # YOUR CODE HERE: Please add "Base" inheritence to this class when you start working on this class, to allow `alembic revision --autogenerate` to take into account this model
-    """Class to represent the tweets table"""
-
-    # Table name
-    pass  # YOUR CODE HERE
-
-    # Columns
-    pass  # YOUR CODE HERE
-
-    # Relationships
-    pass  # YOUR CODE HERE
+    # ✅ 1 user -> many likes
+    likes = relationship(
+        "Like",
+        back_populates="user",
+        cascade="all, delete-orphan",
+    )
 
 
-class Like():  # YOUR CODE HERE: Please add "Base" inheritence to this class when you start working on Like to allow running `alembic revision --autogenerate` to take into account this model
-    """Class to represent the likes table"""
+class Tweet(Base):
+    __tablename__ = "tweets"
 
-    # Table name
-    pass  # YOUR CODE HERE
+    id = Column(Integer, primary_key=True, index=True)
+    text = Column(String, nullable=False)
+    owner_id = Column(Integer, ForeignKey("users.id"), nullable=False)
 
-    # Columns
-    pass  # YOUR CODE HERE
+    # ✅ many tweets -> 1 owner
+    owner = relationship("User", back_populates="tweets")
 
-    # Relationships
-    pass  # YOUR CODE HERE
+    # ✅ 1 tweet -> many likes
+    likes = relationship(
+        "Like",
+        back_populates="tweet",
+        cascade="all, delete-orphan",
+    )
+
+
+class Like(Base):
+    __tablename__ = "likes"
+
+    # ✅ composite PK (user_id + tweet_id)
+    user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
+    tweet_id = Column(Integer, ForeignKey("tweets.id"), primary_key=True)
+
+    # ✅ relations
+    user = relationship("User", back_populates="likes")
+    tweet = relationship("Tweet", back_populates="likes")
