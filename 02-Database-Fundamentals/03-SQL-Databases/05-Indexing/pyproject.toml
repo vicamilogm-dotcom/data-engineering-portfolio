@@ -11,6 +11,7 @@ lewagonde = { path = "../../../common/lewagonde/", develop = true }
 pyarrow = "^18.1.0"
 ipykernel = "^6.29.5"
 jupyter = "^1.1.1"
+pandas = "^2.3.3"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.4"

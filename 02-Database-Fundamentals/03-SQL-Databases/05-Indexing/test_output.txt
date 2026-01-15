@@ -1,0 +1,19 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.8, pytest-8.3.4, pluggy-1.5.0 -- /home/vicamilogm/code/vicamilogm-dotcom/data-engineering-challenges/02-Database-Fundamentals/03-SQL-Databases/05-Indexing/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /home/vicamilogm/code/vicamilogm-dotcom/data-engineering-challenges/02-Database-Fundamentals/03-SQL-Databases/05-Indexing
+configfile: pyproject.toml
+plugins: anyio-4.7.0
+collecting ... collected 9 items
+
+tests/test_all.py::test_csv_raw PASSED                                   [ 11%]
+tests/test_all.py::test_csv_cleaned PASSED                               [ 22%]
+tests/test_all.py::test_table_creation PASSED                            [ 33%]
+tests/test_all.py::test_data_loaded PASSED                               [ 44%]
+tests/test_all.py::test_search_chair PASSED                              [ 55%]
+tests/test_all.py::test_btree_index PASSED                               [ 66%]
+tests/test_all.py::test_add_text_col PASSED                              [ 77%]
+tests/test_all.py::test_fulltext PASSED                                  [ 88%]
+tests/test_all.py::test_search_chair_indexed PASSED                      [100%]
+
+======================== 9 passed, 7 warnings in 6.89s =========================

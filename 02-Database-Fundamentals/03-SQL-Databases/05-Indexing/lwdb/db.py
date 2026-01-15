@@ -20,7 +20,14 @@ def query_perf(
     dot_env_fp = os.path.join(parent_dir, ".env")
     lewagonde.load_dot_env(dot_env_fp)
 
-    con = pg.connect(database="ikea")
+    con = pg.connect(
+    dbname=os.environ.get("PGDATABASE", "ikea").strip(),
+    user=os.environ.get("PGUSER", os.environ.get("USER", "")).strip(),
+    password=os.environ.get("POSTGRES_PASSWORD", "").strip(),
+    host=os.environ.get("PGHOST", "0.0.0.0").strip(),
+    port=os.environ.get("PGPORT", "5432").strip(),
+    )
+
 
     try:
         t0 = time.time()
