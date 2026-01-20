@@ -1,1 +1,17 @@
 
+services:
+  webapi:
+    container_name: fastapi
+    image: europe-west1-docker.pkg.dev/data-engineering-students/student-images/base-image-fastapi:dev
+    restart: on-failure
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./api-no-database:/app/api
+    command: uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge

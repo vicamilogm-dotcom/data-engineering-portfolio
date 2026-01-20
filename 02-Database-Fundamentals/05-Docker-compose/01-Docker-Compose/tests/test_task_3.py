@@ -1,5 +1,6 @@
 import requests
 
+
 def test_setup_webserver():
     try:
         res = requests.get("http://localhost:8000/")

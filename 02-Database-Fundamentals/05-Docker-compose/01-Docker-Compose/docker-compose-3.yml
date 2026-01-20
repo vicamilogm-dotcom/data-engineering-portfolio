@@ -1,1 +1,42 @@
+services:
+  webapi:
+    container_name: fastapi
+    image: europe-west1-docker.pkg.dev/data-engineering-students/student-images/base-image-fastapi:dev
+    restart: on-failure
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./api:/app/api
+    command: uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload
+    depends_on:
+      database:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+    networks:
+      - backend
 
+  database:
+    image: postgres:14.2
+    container_name: postgres
+    restart: on-failure
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      APP_DB_USER: ${APP_DB_USER}
+      APP_DB_PASS: ${APP_DB_PASS}
+      APP_DB_NAME: ${APP_DB_NAME}
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./scripts:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
