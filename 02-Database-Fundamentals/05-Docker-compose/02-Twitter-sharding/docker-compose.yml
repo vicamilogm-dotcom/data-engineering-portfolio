@@ -1,1 +1,88 @@
+version: '3.9'
 
+services:
+  eu_webapi:
+    container_name: eu_api
+    build:
+      context: .
+      dockerfile: dockerfile-fastapi
+    restart: on-failure
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./tweets_api:/app/tweets_api
+    environment:
+      - POSTGRES_DATABASE_URL=postgresql+psycopg2://europe:${DB_EU_PASSWORD}@eu_database:5432/eutweets
+      - TWEETS_TABLE=eu_tweets
+    command: ["uvicorn", "tweets_api.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+    networks:
+      - europe
+    depends_on:
+      - eu_database
+
+  eu_database:
+    image: postgres:14.2
+    restart: on-failure
+    healthcheck:
+      test: ["CMD", "pg_isready" , "-U" ,"postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - ./scripts/:/docker-entrypoint-initdb.d/
+    ports:
+      - "5400:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - APP_DB_USER=europe
+      - APP_DB_PASS=${DB_EU_PASSWORD}
+      - APP_DB_NAME=eutweets
+    networks:
+      - europe
+
+  us_webapi:
+    container_name: us_api
+    build:
+      context: .
+      dockerfile: dockerfile-fastapi
+    restart: on-failure
+    ports:
+      - "8001:8000"
+    volumes:
+      - ./tweets_api:/app/tweets_api
+    environment:
+      - POSTGRES_DATABASE_URL=postgresql+psycopg2://usa:${DB_US_PASSWORD}@us_database:5432/ustweets
+      - TWEETS_TABLE=us_tweets
+    command: ["uvicorn", "tweets_api.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+    networks:
+      - usa
+    depends_on:
+      - us_database
+
+  us_database:
+    image: postgres:14.2
+    restart: on-failure
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - ./scripts/:/docker-entrypoint-initdb.d/
+    ports:
+      - "5401:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - APP_DB_USER=usa
+      - APP_DB_PASS=${DB_US_PASSWORD}
+      - APP_DB_NAME=ustweets
+    networks:
+      - usa
+
+networks:
+  europe:
+    driver: bridge
+  usa:
+    driver: bridge
