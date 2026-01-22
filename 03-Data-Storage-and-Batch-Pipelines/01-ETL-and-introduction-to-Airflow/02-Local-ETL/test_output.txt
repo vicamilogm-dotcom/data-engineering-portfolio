@@ -1,0 +1,22 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.8, pytest-8.3.4, pluggy-1.5.0 -- /home/vicamilogm/code/vicamilogm-dotcom/data-engineering-challenges/03-Data-Storage-and-Batch-Pipelines/01-ETL-and-introduction-to-Airflow/02-Local-ETL/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /home/vicamilogm/code/vicamilogm-dotcom/data-engineering-challenges/03-Data-Storage-and-Batch-Pipelines/01-ETL-and-introduction-to-Airflow/02-Local-ETL
+configfile: pyproject.toml
+plugins: anyio-4.7.0, mock-3.14.0
+collecting ... collected 12 items
+
+tests/test_dag_config.py::TestDagConfig::test_dag_config PASSED          [  8%]
+tests/test_python_functions.py::test_read_from_json PASSED               [ 16%]
+tests/test_python_functions.py::test_translate_joke_to_swedish PASSED    [ 25%]
+tests/test_python_functions.py::test_write_jokes_to_json PASSED          [ 33%]
+tests/test_python_functions.py::test_double_single_quote PASSED          [ 41%]
+tests/test_python_functions.py::test_transform PASSED                    [ 50%]
+tests/test_python_functions.py::test_load_to_database PASSED             [ 58%]
+tests/test_tasks_configs.py::TestTasksConfigs::test_tasks PASSED         [ 66%]
+tests/test_tasks_configs.py::TestTasksConfigs::test_create_swedified_jokes_task PASSED [ 75%]
+tests/test_tasks_configs.py::TestTasksConfigs::test_extract_task PASSED  [ 83%]
+tests/test_tasks_configs.py::TestTasksConfigs::test_transform_task PASSED [ 91%]
+tests/test_tasks_configs.py::TestTasksConfigs::test_load_task PASSED     [100%]
+
+======================= 12 passed, 12 warnings in 2.65s ========================
