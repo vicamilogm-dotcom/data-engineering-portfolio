@@ -1,0 +1,14 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.8, pytest-8.3.4, pluggy-1.5.0 -- /home/vicamilogm/code/vicamilogm-dotcom/data-engineering-challenges/03-Data-Storage-and-Batch-Pipelines/02-ELT-DBT/01-Setup-DBT/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /home/vicamilogm/code/vicamilogm-dotcom/data-engineering-challenges/03-Data-Storage-and-Batch-Pipelines/02-ELT-DBT/01-Setup-DBT
+configfile: pyproject.toml
+collecting ... collected 5 items
+
+tests/test_dbt_profile.py::test_dbt_profile_location PASSED              [ 20%]
+tests/test_dbt_profile.py::test_dbt_profile_name PASSED                  [ 40%]
+tests/test_dbt_profile.py::test_dbt_correct_keys PASSED                  [ 60%]
+tests/test_dbt_profile.py::test_dbt_profile_dataset PASSED               [ 80%]
+tests/test_dbt_profile.py::test_dbt_profile_other_keys PASSED            [100%]
+
+============================== 5 passed in 0.73s ===============================
