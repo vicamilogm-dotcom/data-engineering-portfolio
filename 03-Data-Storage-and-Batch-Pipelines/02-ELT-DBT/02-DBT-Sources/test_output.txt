@@ -1,0 +1,12 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.8, pytest-8.3.4, pluggy-1.5.0 -- /home/vicamilogm/code/vicamilogm-dotcom/data-engineering-challenges/03-Data-Storage-and-Batch-Pipelines/02-ELT-DBT/02-DBT-Sources/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /home/vicamilogm/code/vicamilogm-dotcom/data-engineering-challenges/03-Data-Storage-and-Batch-Pipelines/02-ELT-DBT/02-DBT-Sources
+configfile: pyproject.toml
+collecting ... collected 3 items
+
+tests/test_stg_raw_product_ship.py::test_stg_raw_product_structure PASSED [ 33%]
+tests/test_stg_raw_product_ship.py::test_stg_raw_ship_structure PASSED   [ 66%]
+tests/test_stg_raw_sales.py::test_stg_raw_sales_structure PASSED         [100%]
+
+======================== 3 passed, 3 warnings in 4.56s =========================
