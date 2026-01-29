@@ -1,0 +1,13 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.8, pytest-8.3.4, pluggy-1.5.0 -- /home/vicamilogm/code/vicamilogm-dotcom/data-engineering-challenges/03-Data-Storage-and-Batch-Pipelines/02-ELT-DBT/03-DBT-Intermediate-and-Mart-Models/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /home/vicamilogm/code/vicamilogm-dotcom/data-engineering-challenges/03-Data-Storage-and-Batch-Pipelines/02-ELT-DBT/03-DBT-Intermediate-and-Mart-Models
+configfile: pyproject.toml
+collecting ... collected 4 items
+
+tests/test_int_models.py::test_int_sales_margin_structure PASSED         [ 25%]
+tests/test_int_models.py::test_int_orders_margin_structure PASSED        [ 50%]
+tests/test_int_models.py::test_int_orders__structure PASSED              [ 75%]
+tests/test_mart_models.py::test_finance_days_structure PASSED            [100%]
+
+======================== 4 passed, 4 warnings in 8.21s =========================

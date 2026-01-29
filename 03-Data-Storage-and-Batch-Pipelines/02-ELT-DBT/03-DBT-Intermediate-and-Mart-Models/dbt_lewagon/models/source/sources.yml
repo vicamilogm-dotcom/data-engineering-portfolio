@@ -1,0 +1,51 @@
+version: 2
+
+sources:
+  - name: raw
+    schema: raw_gz_data
+    description: "Dataset raw de Greenweez con ventas, productos y logística."
+    tables:
+      - name: sales
+        identifier: raw_gz_sales
+        description: "Ventas: 1 fila por producto dentro de cada orden."
+        columns:
+          - name: date_date
+            description: "Fecha de la orden."
+          - name: orders_id
+            description: "Identificador de la orden (FK hacia ship)."
+          - name: pdt_id
+            description: "Identificador del producto (FK hacia product)."
+          - name: revenue
+            description: "Precio pagado por el cliente por el producto."
+          - name: quantity
+            description: "Cantidad del producto comprada en esa orden."
+
+      - name: product
+        identifier: raw_gz_product
+        description: "Catálogo de productos con el costo unitario para Greenweez."
+        columns:
+          - name: products_id
+            description: "Identificador del producto (PK)."
+            tests:
+              - not_null
+              - unique
+          - name: purchSE_PRICE
+            description: "Costo unitario para Greenweez de obtener 1 unidad del producto."
+
+      - name: ship
+        identifier: raw_gz_ship
+        description: "Logística por orden: fees cobrados al cliente y costos internos."
+        columns:
+          - name: orders_id
+            description: "Identificador de la orden (PK)."
+            tests:
+              - not_null
+              - unique
+          - name: shipping_fee
+            description: "Fee de envío cobrado al cliente."
+          - name: shipping_fee_1
+            description: "Fee de envío (segunda columna para validación/comparación)."
+          - name: logCost
+            description: "Costo de preparación del paquete (Greenweez)."
+          - name: ship_cost
+            description: "Costo de envío pagado al proveedor logístico."
