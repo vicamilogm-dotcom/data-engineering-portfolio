@@ -1,3 +1,4 @@
+version: '3'
 services:
   database:
     image: postgres:14
@@ -10,8 +11,8 @@ services:
       - ./database/init/:/docker-entrypoint-initdb.d/
     environment:
       - POSTGRES_DB=f1db
-      - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
-      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}  # Usar la variable de entorno del archivo .env
+      - POSTGRES_USER=${APP_DB_USER}           # Usar la variable de entorno del archivo .env
     ports:
       - 5433:5432
 
@@ -27,5 +28,11 @@ services:
       - 8501:8501
     depends_on:
       - database
-    stdin_open: true # eq. to -i in docker run (allows breakpoints)
-    tty: true # eq. to -t in docker run (allows breakpoints)
+    stdin_open: true  # eq. to -i in docker run (allows breakpoints)
+    tty: true  # eq. to -t in docker run (allows breakpoints)
+    environment:
+      - PGHOST=database
+      - PGPORT=5432
+      - PGUSER=${PGUSER}            # Usar la variable de entorno del archivo .env
+      - PGPASSWORD=${PGPASSWORD}    # Usar la variable de entorno del archivo .env
+      - PGDATABASE=${PGDATABASE}    # Usar la variable de entorno del archivo .env

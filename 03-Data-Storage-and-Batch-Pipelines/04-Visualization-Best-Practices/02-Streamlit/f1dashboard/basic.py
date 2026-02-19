@@ -5,9 +5,11 @@ from sqlalchemy import create_engine
 from sqlalchemy.engine.url import URL
 from timeit import default_timer as timer
 
-
+# Establecer conexión con PostgreSQL usando las credenciales de Streamlit
 conn_string = URL.create(**st.secrets["postgres"])
 conn = create_engine(conn_string, echo=False)
+
+# Lista de tablas disponibles en la base de datos
 TABLES = [
     "races",
     "circuits",
@@ -24,133 +26,133 @@ TABLES = [
     "status",
 ]
 
-
-pass  # YOUR CODE HERE
+# Función para cargar datos desde la base de datos
+@st.cache_data
 def load_data(table_name):
     """
-    Loads the races data from the F1 database.
-    Implement the right caching decorator.
+    Carga los datos de una tabla seleccionada desde la base de datos.
+    Args:
+        table_name (str): Nombre de la tabla a cargar.
     Returns:
-        pd.DataFrame: The race dataset
+        pd.DataFrame: Datos cargados desde la base de datos.
     """
-    data = pd.read_sql_query(f"select * from {table_name}", conn)
-
+    data = pd.read_sql_query(f"SELECT * FROM {table_name}", conn)
     return data
 
-
+# Crear la página principal de la aplicación Streamlit
 def create_main_page():
     """
-    Creates the following Streamlit headers:
-    - A title
-    - A subheader
-    - A title in the sidebar
-    - A markdown section in the sidebar
-    - A widget in the sidebar to select a table from the `TABLES` list,
-    and then return the selected table (instead of the hard-coded "races" value)
+    Crea la interfaz principal de la página de Streamlit:
+    - Un título
+    - Un subencabezado
+    - Un widget para seleccionar una tabla desde el sidebar
     """
     st.title("Formula 1 Dashboard")
-    st.info(
-        """
-    Delete me once completed
-    """
-    )
-    selected_table = "races"
-
-    pass  # YOUR CODE HERE
+    st.info("Selecciona una tabla desde el panel lateral.")
+    
+    selected_table = st.sidebar.selectbox("Selecciona una tabla", TABLES)
     return selected_table
 
-
+# Mostrar estadísticas resumen sobre los datos cargados
 def summary_statistics(data):
     """
-    Creates a subheader and writes the summary statistics for the data
+    Muestra estadísticas resumidas de los datos cargados.
+    Args:
+        data (pd.DataFrame): Datos cargados desde la base de datos.
     """
-    st.subheader("Summary statistics")
-    st.info("Use the describe method to get the summary statistics")
-    pass  # YOUR CODE HERE
+    st.subheader("Estadísticas Resumen")
+    st.write(data.describe())
 
-
+# Obtener los 5 mejores pilotos con más puntos
 @st.cache_data
 def top_drivers():
-    """timeit
-    Get the top 5 drivers with the most points.
-    You can get the name from the drivers table and
-    combine it with the points from the driver_standings table.
-    Returns:
-        pd.DataFrame: The top 5 drivers with the columns:
-                      - driver_name
-                      - total_points
     """
-    st.info("Write a query to get the top 5 drivers and visualize the results.")
-    pass  # YOUR CODE HERE
+    Consulta la base de datos para obtener los 5 mejores pilotos con más puntos.
+    Returns:
+        pd.DataFrame: Los 5 mejores pilotos y sus puntos totales.
+    """
+    query = """
+    SELECT drivers.driver_name, SUM(driver_standings.points) AS total_points
+    FROM driver_standings
+    JOIN drivers ON driver_standings.driver_id = drivers.driver_id
+    GROUP BY drivers.driver_name
+    ORDER BY total_points DESC
+    LIMIT 5;
+    """
+    top_drivers_data = pd.read_sql_query(query, conn)
+    return top_drivers_data
 
-
+# Obtener los puntos de Lewis Hamilton a lo largo de los años
 @st.cache_data
 def lewis_over_the_years():
     """
-    Get the points from Lewis Hamilton between 2007 and 2018.
-    Use the following table to get the data:
-        - drivers
-        - driver_standings
-        - races
-
+    Obtiene los puntos de Lewis Hamilton entre 2007 y 2018.
     Returns:
-        pd.DataFrame: The points from Lewis Hamilton over the years, with the columns:
-                        - year
-                        - total_points
+        pd.DataFrame: Los puntos de Lewis Hamilton a lo largo de los años.
     """
-    st.info(
-        "Write a query to get the points of Lewis Hamilton over the years and visualize the results."
-    )
-    pass  # YOUR CODE HERE
+    query = """
+    SELECT races.year, driver_standings.points
+    FROM driver_standings
+    JOIN races ON driver_standings.race_id = races.race_id
+    WHERE driver_standings.driver_id = (SELECT driver_id FROM drivers WHERE driver_name = 'Lewis Hamilton')
+    AND races.year BETWEEN 2007 AND 2018;
+    """
+    lewis_data = pd.read_sql_query(query, conn)
+    return lewis_data
 
-
+# Guardar los datos cargados en el estado de la sesión
 def session_state(data):
     """
-    Initialize the session state
-    using data as the key and value as the
-    initialization value.
-
-    Put data in the session state after having
-    initialized it.
-
+    Guarda los datos en el estado de la sesión para que estén disponibles en todas las páginas de la app.
     Args:
-        data (pd.DataFrame): The formula 1 dataset
+        data (pd.DataFrame): Datos a guardar en el estado de la sesión.
     """
+    if 'data' not in st.session_state:
+        st.session_state.data = data
 
-    # Initialization of session state, assign a random value
-    # to the session state
-    pass  # YOUR CODE HERE
-
-    # Update the session state using the dataframe
-    pass  # YOUR CODE HERE
-
-
+# Código principal para la ejecución de la app
 if __name__ == "__main__":
     selected_table = create_main_page()
 
-    # used to time the loading of the data
+    # Medir el tiempo para cargar los datos
     start = timer()
     data = load_data(selected_table)
     end = timer()
-    st.sidebar.info(f"{round(end-start,4)} seconds to load the data")
+    st.sidebar.info(f"{round(end-start,4)} segundos para cargar los datos")
 
+    # Mostrar los datos en la app
     st.dataframe(data)
 
+    # Mostrar las estadísticas resumidas
     summary_statistics(data)
+
+    # Guardar los datos en el estado de la sesión
     session_state(data)
 
-    st.subheader("Top 5 Drivers")
+    # Mostrar los 5 mejores pilotos
+    st.subheader("Top 5 Pilotos")
     top_driver_data = top_drivers()
     st.write(top_driver_data)
-    st.warning("Use the Altair library to create a bar chart with the top drivers")
-    # create a bar chart with the top drivers
-    pass  # YOUR CODE HERE
 
-    st.subheader("Lewis Hamilton over the years")
+    st.warning("Usa la biblioteca Altair para crear un gráfico de barras con los mejores pilotos.")
+    # Crear un gráfico de barras con los mejores pilotos
+    chart = alt.Chart(top_driver_data).mark_bar().encode(
+        x='driver_name',
+        y='total_points'
+    )
+    st.altair_chart(chart, use_container_width=True)
+
+    # Mostrar los puntos de Lewis Hamilton a lo largo de los años
+    st.subheader("Lewis Hamilton a lo largo de los años")
     lewis_years = lewis_over_the_years()
 
-    # Convert the year column to datetime
+    # Convertir la columna de años a tipo datetime
     lewis_years["year"] = pd.to_datetime(lewis_years["year"], format="%Y")
 
-    st.warning("Create a line chart with the lewis_years, use the Altair library")
-    pass  # YOUR CODE HERE
+    st.warning("Crea un gráfico de líneas con los puntos de Lewis Hamilton a lo largo de los años usando la biblioteca Altair.")
+    # Crear un gráfico de líneas con los puntos de Lewis Hamilton
+    line_chart = alt.Chart(lewis_years).mark_line().encode(
+        x='year:T',
+        y='points:Q'
+    )
+    st.altair_chart(line_chart, use_container_width=True)
