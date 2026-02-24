@@ -1,5 +1,5 @@
 ============================= test session starts ==============================
-platform linux -- Python 3.12.8, pytest-9.0.2, pluggy-1.6.0 -- /home/vicamilogm/code/vicamilogm-dotcom/data-engineering-challenges/03-Data-Storage-and-Batch-Pipelines/05-Kubernetes/01-Minikube-Kubectl/.venv/bin/python
+platform linux -- Python 3.12.8, pytest-9.0.2, pluggy-1.6.0 -- /home/vicamilogm/.pyenv/versions/3.12.8/bin/python3.12
 cachedir: .pytest_cache
 rootdir: /home/vicamilogm/code/vicamilogm-dotcom/data-engineering-challenges/03-Data-Storage-and-Batch-Pipelines/05-Kubernetes/01-Minikube-Kubectl
 configfile: pyproject.toml
@@ -7,4 +7,4 @@ collecting ... collected 1 item
 
 tests/test_your_function.py::test_pass PASSED                            [100%]
 
-============================== 1 passed in 0.18s ===============================
+============================== 1 passed in 0.04s ===============================

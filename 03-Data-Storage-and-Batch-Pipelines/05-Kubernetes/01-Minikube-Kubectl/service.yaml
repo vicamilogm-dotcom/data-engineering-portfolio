@@ -7,8 +7,7 @@ spec:
   ports:
     - protocol: TCP
       name: service-port
-      targetPort: 8000
-      port: 5000
+      targetPort: 8000  # El puerto donde FastAPI está expuesto
+      port: 5000        # El puerto que se usará externamente
   selector:
     app: fastapi
-    
