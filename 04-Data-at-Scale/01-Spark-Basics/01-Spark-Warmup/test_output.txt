@@ -1,0 +1,66 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.8, pytest-9.0.2, pluggy-1.6.0 -- /home/vicamilogm/.pyenv/versions/3.12.8/bin/python3.12
+cachedir: .pytest_cache
+rootdir: /home/vicamilogm/code/vicamilogm-dotcom/data-engineering-challenges/04-Data-at-Scale/01-Spark-Basics/01-Spark-Warmup
+configfile: pyproject.toml
+collecting ... collected 0 items / 5 errors
+
+==================================== ERRORS ====================================
+_________________ ERROR collecting tests/test_customer_clv.py __________________
+ImportError while importing test module '/home/vicamilogm/code/vicamilogm-dotcom/data-engineering-challenges/04-Data-at-Scale/01-Spark-Basics/01-Spark-Warmup/tests/test_customer_clv.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/home/vicamilogm/.pyenv/versions/3.12.8/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_customer_clv.py:1: in <module>
+    from nbresult import ChallengeResultTestCase
+E   ModuleNotFoundError: No module named 'nbresult'
+_________________ ERROR collecting tests/test_delivery_time.py _________________
+ImportError while importing test module '/home/vicamilogm/code/vicamilogm-dotcom/data-engineering-challenges/04-Data-at-Scale/01-Spark-Basics/01-Spark-Warmup/tests/test_delivery_time.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/home/vicamilogm/.pyenv/versions/3.12.8/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_delivery_time.py:1: in <module>
+    from nbresult import ChallengeResultTestCase
+E   ModuleNotFoundError: No module named 'nbresult'
+____________ ERROR collecting tests/test_high_cancel_categories.py _____________
+ImportError while importing test module '/home/vicamilogm/code/vicamilogm-dotcom/data-engineering-challenges/04-Data-at-Scale/01-Spark-Basics/01-Spark-Warmup/tests/test_high_cancel_categories.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/home/vicamilogm/.pyenv/versions/3.12.8/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_high_cancel_categories.py:1: in <module>
+    from nbresult import ChallengeResultTestCase
+E   ModuleNotFoundError: No module named 'nbresult'
+______________ ERROR collecting tests/test_order_status_count.py _______________
+ImportError while importing test module '/home/vicamilogm/code/vicamilogm-dotcom/data-engineering-challenges/04-Data-at-Scale/01-Spark-Basics/01-Spark-Warmup/tests/test_order_status_count.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/home/vicamilogm/.pyenv/versions/3.12.8/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_order_status_count.py:1: in <module>
+    from nbresult import ChallengeResultTestCase
+E   ModuleNotFoundError: No module named 'nbresult'
+________________ ERROR collecting tests/test_seller_revenue.py _________________
+ImportError while importing test module '/home/vicamilogm/code/vicamilogm-dotcom/data-engineering-challenges/04-Data-at-Scale/01-Spark-Basics/01-Spark-Warmup/tests/test_seller_revenue.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/home/vicamilogm/.pyenv/versions/3.12.8/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_seller_revenue.py:1: in <module>
+    from nbresult import ChallengeResultTestCase
+E   ModuleNotFoundError: No module named 'nbresult'
+=========================== short test summary info ============================
+ERROR tests/test_customer_clv.py
+ERROR tests/test_delivery_time.py
+ERROR tests/test_high_cancel_categories.py
+ERROR tests/test_order_status_count.py
+ERROR tests/test_seller_revenue.py
+!!!!!!!!!!!!!!!!!!! Interrupted: 5 errors during collection !!!!!!!!!!!!!!!!!!!!
+============================== 5 errors in 0.26s ===============================
