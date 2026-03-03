@@ -63,4 +63,4 @@ ERROR tests/test_high_cancel_categories.py
 ERROR tests/test_order_status_count.py
 ERROR tests/test_seller_revenue.py
 !!!!!!!!!!!!!!!!!!! Interrupted: 5 errors during collection !!!!!!!!!!!!!!!!!!!!
-============================== 5 errors in 0.26s ===============================
+============================== 5 errors in 0.25s ===============================
