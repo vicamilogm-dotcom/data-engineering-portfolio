@@ -1,0 +1,12 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.8, pytest-8.3.4, pluggy-1.5.0 -- /home/vicamilogm/code/vicamilogm-dotcom/data-engineering-challenges/04-Data-at-Scale/01-Spark-Basics/03-Map-Reduce/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /home/vicamilogm/code/vicamilogm-dotcom/data-engineering-challenges/04-Data-at-Scale/01-Spark-Basics/03-Map-Reduce
+configfile: pyproject.toml
+collecting ... collected 3 items
+
+tests/test_all.py::test_txt_file_exists PASSED                           [ 33%]
+tests/test_all.py::test_python_impl PASSED                               [ 66%]
+tests/test_all.py::test_mapreduce_impl PASSED                            [100%]
+
+============================== 3 passed in 0.04s ===============================
