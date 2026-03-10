@@ -1,0 +1,10 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.8, pytest-9.0.2, pluggy-1.6.0 -- /home/vicamilogm/code/vicamilogm-dotcom/data-engineering-challenges/05-Projects/04-No-SQl-Databases/02-MongoDB/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /home/vicamilogm/code/vicamilogm-dotcom/data-engineering-challenges/05-Projects/04-No-SQl-Databases/02-MongoDB
+configfile: pyproject.toml
+collecting ... collected 1 item
+
+tests/test_query.py::test_pass PASSED                                    [100%]
+
+============================== 1 passed in 0.23s ===============================

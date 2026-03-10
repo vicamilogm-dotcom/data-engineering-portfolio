@@ -1,10 +1,14 @@
+import os
 from pymongo import MongoClient
 from dotenv import load_dotenv
-import os
 
-# Load your username and password from the .env file
-pass  # YOUR CODE HERE
+# Esta magia encuentra la ruta exacta de tu archivo .env, 
+# sin importar si lo corres tú o lo corre pytest
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ENV_PATH = os.path.join(BASE_DIR, ".env")
 
+# Forzamos a cargar ese archivo específico
+load_dotenv(dotenv_path=ENV_PATH)
 
 def get_database() -> MongoClient:
     """
@@ -13,10 +17,13 @@ def get_database() -> MongoClient:
     :return: a PyMongo Client object representing the connection to the MongoDB server
     using the restaurant database
     """
-    CONNECTION_STRING = None
     # Use your username and password to log in to MongoDB
+    username = os.getenv("MONGO_USER")
+    password = os.getenv("MONGO_PASS")
+    
     # it should be in the following format: mongodb://<username>:<password>@<host>:<port>/
-    pass  # YOUR CODE HERE
+    CONNECTION_STRING = f"mongodb://{username}:{password}@localhost:27017/"
+    
     # Create a connection using MongoClient
     client = MongoClient(CONNECTION_STRING)
 
